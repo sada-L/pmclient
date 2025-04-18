@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="pmclient/App.axaml" value="pmclient/pmclient.csproj" />
+        <entry key="pmclient/Views/HomeView.axaml" value="pmclient/pmclient.csproj" />
+        <entry key="pmclient/Views/LoginView.axaml" value="pmclient/pmclient.csproj" />
+        <entry key="pmclient/Views/MainView.axaml" value="pmclient/pmclient.csproj" />
+        <entry key="pmclient/Views/MainWindow.axaml" value="pmclient/pmclient.csproj" />
+        <entry key="pmclient/Views/ProfileView.axaml" value="pmclient/pmclient.csproj" />
+        <entry key="pmclient/Views/RegisterView.axaml" value="pmclient/pmclient.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
