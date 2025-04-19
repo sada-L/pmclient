@@ -14,19 +14,25 @@ using pmclient.Services;
 
 namespace pmclient.ViewModels;
 
-public class LoginViewModel : ViewModelBase, IRoutableViewModel
+public class LoginViewModel :  ViewModelBase, IRoutableViewModel
 {
-    private readonly IIdentityWebApi _identityWebApi;
-    private readonly IUsersWebApi _usersWebApi;
+    private readonly IIdentityWebApi? _identityWebApi;
+    private readonly IUsersWebApi? _usersWebApi;
     private string _errorMessage = string.Empty;
+    private string _email = string.Empty;
+    private string _password = string.Empty;
     private LoginRequest _loginRequest = new LoginRequest();
 
-    public IScreen HostScreen { get; }
-
-    public LoginRequest LoginRequest
+    public string Email
     {
-        get => _loginRequest;
-        set => this.RaiseAndSetIfChanged(ref _loginRequest, value);
+        get => _email;
+        set => this.RaiseAndSetIfChanged(ref _email, value);
+    }
+
+    public string Password
+    {
+        get => _password;
+        set => this.RaiseAndSetIfChanged(ref _password, value);
     }
 
     public string ErrorMessage
@@ -35,17 +41,29 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
     }
 
+    public IScreen HostScreen { get; }
     public string UrlPathSegment => "/login";
 
-    ReactiveCommand<Unit, IRoutableViewModel> LoginCommand { get; }
+    public ReactiveCommand<Unit, IRoutableViewModel> LoginCommand { get; set; }
+    public ReactiveCommand<Unit, IRoutableViewModel> RegisterCommand { get; set; }
 
-    public LoginViewModel(IIdentityWebApi identityWebApi, IUsersWebApi usersWebApi)
+    public LoginViewModel()
     {
-        HostScreen = Locator.Current.GetService<IScreen>()!;
-        _identityWebApi = identityWebApi;
-        _usersWebApi = usersWebApi;
-        
+        Email = "admin@gmail.com";
+        Password = "123456";
+        LoginCommand = ReactiveCommand.CreateFromObservable(Login);
+        RegisterCommand = ReactiveCommand.CreateFromObservable(Login);
+    }
+
+    public LoginViewModel(IIdentityWebApi? identityWebApi = null, IUsersWebApi? usersWebApi = null, IScreen? screen = null)
+    {
+        _identityWebApi = identityWebApi ?? Locator.Current.GetService<IIdentityWebApi>();
+        _usersWebApi = usersWebApi ?? Locator.Current.GetService<IUsersWebApi>();
+        HostScreen = screen ?? Locator.Current.GetService<IScreen>()!; 
+            
         LoginCommand = ReactiveCommand.CreateFromObservable(Login, CanExecLogin());
+        RegisterCommand = ReactiveCommand.CreateFromObservable( () => 
+            HostScreen.Router.Navigate.Execute(new RegisterViewModel(HostScreen)));
     }
 
     private IObservable<IRoutableViewModel> Login() => LoginAsync()
@@ -55,7 +73,10 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
 
     private IObservable<bool> LoginAsync() => Observable.FromAsync(async (cancellationToken) =>
     {
-        var authResponse = await _identityWebApi.LoginAsync(LoginRequest, cancellationToken);
+        _loginRequest.Email = _email;
+        _loginRequest.Password = _password;
+        
+        var authResponse = await _identityWebApi.LoginAsync(_loginRequest, cancellationToken);
         if (!authResponse.IsSuccessStatusCode)
         {
             ErrorMessage = "Invalid username or password";
@@ -81,8 +102,8 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
 
     private IObservable<bool> CanExecLogin() =>
         this.WhenAnyValue(
-            x => x.LoginRequest.Username,
-            x => x.LoginRequest.Password,
+            x => x.Email,
+            x => x.Password,
             (username, password) =>
                 !string.IsNullOrWhiteSpace(username) &&
                 !string.IsNullOrWhiteSpace(password));
