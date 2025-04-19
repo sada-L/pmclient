@@ -2,7 +2,28 @@
 			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
 			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-			x:Class="pmclient.Views.LoginView">
-	Welcome to Avalonia!
+			x:DataType="vm:LoginViewModel"
+			x:Class="pmclient.Views.LoginView"
+			Background="{DynamicResource Light}">
+	<Design.DataContext>
+		<vm:LoginViewModel/>
+	</Design.DataContext>
+	
+	<Border Background="{StaticResource AspDark}" Padding="30" HorizontalAlignment="Center" 
+			VerticalAlignment="Center" CornerRadius="25" BoxShadow="5 5 10 0 darkgray">
+		<StackPanel Spacing="15">
+			<TextBlock Text="Login" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}"/>
+			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email"/>
+			<TextBox Classes="STextBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*"/>
+			
+			<Button Classes="SButton" Command="{Binding RegisterCommand}" 
+					Padding="2" Margin="0" Content="Register new account"/>
+			
+			<Button Classes="SButton" Command="{Binding LoginCommand}" 
+					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
+					Background="{DynamicResource Dark}" Content="Sign in"/>
+		</StackPanel>
+	</Border>
 </UserControl>

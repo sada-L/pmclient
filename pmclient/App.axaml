@@ -11,5 +11,64 @@
   
     <Application.Styles>
         <FluentTheme />
+        
+        <Style Selector="Window">
+            <Setter Property="Height" Value="600"/>
+            <Setter Property="MinHeight" Value="600"/>
+            <Setter Property="Width" Value="800"/>
+            <Setter Property="MinWidth" Value="800"/>
+            <Setter Property="FontFamily" Value="{DynamicResource MainFont}"/>
+            <Setter Property="WindowStartupLocation" Value="CenterScreen"/>
+        </Style>
+         
+        <Style Selector="Button.SButton">
+           <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
+           <Setter Property="Background" Value="Transparent"/> 
+           <Setter Property="CornerRadius" Value="10"/> 
+           
+           <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+               <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
+               <Setter Property="Background" Value="{DynamicResource AspNeutral}"/>
+           </Style> 
+           
+           <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+               <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
+               <Setter Property="Background" Value="{DynamicResource AspNeutral}"/>
+           </Style>
+           
+           <Style Selector="^:disable /template/ ContentPresenter#PART_ContentPresenter">
+               <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
+               <Setter Property="Background" Value="{DynamicResource AspNeutral}"/>
+           </Style>
+        </Style>
+         
+        <Style Selector="TextBox.STextBox">
+           <Setter Property="CornerRadius" Value="10"/> 
+           
+           <Style Selector="^:pointerover">
+                <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
+           </Style> 
+           
+           <Style Selector="^:focus">
+               <Setter Property="Foreground" Value="{DynamicResource Dark}"/>
+               
+               <Style Selector="^ /template/ Border#PART_BorderElement">
+                   <Setter Property="Background" Value="{DynamicResource Neutral}"/>
+                   <Setter Property="BorderBrush" Value="{DynamicResource AspNeutral}"/>
+               </Style>
+           </Style>
+        </Style>
     </Application.Styles>
+             
+    <Application.Resources>
+        <FontFamily x:Key="MainFont">Roboto</FontFamily>
+        <FontFamily x:Key="Icons">avares://pmclient/Assets/FontAwesome.otf#FontAwesome</FontFamily>
+        <Color x:Key="Dark">#00171F</Color>
+        <Color x:Key="Neutral">#ECE5F0</Color>
+        <Color x:Key="Light">#FFFFFA</Color>
+        <Color x:Key="AspDark">#702632</Color>
+        <Color x:Key="AspNeutral">#912F40</Color>
+    </Application.Resources>
+             
+             
 </Application>
