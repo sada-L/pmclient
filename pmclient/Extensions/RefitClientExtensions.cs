@@ -16,7 +16,8 @@ public static class RefitClientExtensions
    {
       string baseAddress = ApiEndpoints.BaseAddress;
 
-      services.AddRefitClient<TClient>()
+      services
+         .AddRefitClient<TClient>()
          .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
          .AddHttpMessageHandler<TMessageHandler>();
       
@@ -28,7 +29,8 @@ public static class RefitClientExtensions
    {
       string baseAddress = ApiEndpoints.BaseAddress;
 
-      services.AddRefitClient<TClient>()
+      services
+         .AddRefitClient<TClient>()
          .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
          .AddHttpMessageHandler<BearerAuthorizationMessageHandler>();
       

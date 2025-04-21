@@ -2,20 +2,20 @@ namespace pmclient.Helpers;
 
 public static class ApiEndpoints
 {
-   public const string BaseAddress = "https://localhost:44311/";
+   public const string BaseAddress = "http://localhost:8080/api/v1";
 
    public static class Authentication
    {
-      private const string Base = "/auth";
+      private const string Base = "/users";
       
       public const string Login = Base + "/login";
-      public const string Register = Base + "/register";
+      public const string Register = Base + "/create";
    }
 
    public static class Users
    {
       private const string Base = "/users";
       
-      public const string GetUserByEmail = Base + "/{email}";
+      public const string GetCurrentUser = Base + "/current";
    }
 }

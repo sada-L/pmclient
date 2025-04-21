@@ -6,8 +6,9 @@ using Refit;
 
 namespace pmclient.RefitClients;
 
+[Headers("Bearer")]
 public interface IUsersWebApi
 {
-    [Get(ApiEndpoints.Users.GetUserByEmail)]
-    Task<IApiResponse<User>> GetUserByEmail(string email, CancellationToken cancellationToken);
+    [Get(ApiEndpoints.Users.GetCurrentUser)]
+    Task<IApiResponse<User>> GetCurrentUser(CancellationToken cancellationToken);
 }

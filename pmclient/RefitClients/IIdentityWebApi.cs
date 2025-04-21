@@ -9,8 +9,8 @@ namespace pmclient.RefitClients;
 public interface IIdentityWebApi
 {
   [Post(ApiEndpoints.Authentication.Login)]
-  Task<IApiResponse<string>> LoginAsync(LoginRequest request, CancellationToken cancellationToken );
+  Task<IApiResponse<string>> LoginAsync([Body]LoginRequest request, CancellationToken cancellationToken );
   
   [Post(ApiEndpoints.Authentication.Register)]
-  Task<IApiResponse<string>> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken );
+  Task<IApiResponse<string>> RegisterAsync([Body]RegisterRequest request, CancellationToken cancellationToken );
 }

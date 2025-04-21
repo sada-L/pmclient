@@ -22,8 +22,8 @@ public static class Bootstrapper
         services.AddOptionsWithValidateOnStart<ApiKeySettings>()
              .Configure(settings =>
              {
-                 settings.ApiKey = Environment.GetEnvironmentVariable("API_KEY")!;
-                 settings.HeaderName = Environment.GetEnvironmentVariable("HEADER_NAME")!;
+                 settings.ApiKey = Environment.GetEnvironmentVariable("API_KEY") ?? "X-API-KEY";
+                 settings.HeaderName = Environment.GetEnvironmentVariable("HEADER_NAME") ?? "X-HEADER-NAME";
              });
         
         services.AddTransient<BearerAuthorizationMessageHandler>();
