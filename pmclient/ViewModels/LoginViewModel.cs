@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Security.Claims;
 using pmclient.Services;
+using Refit;
 
 namespace pmclient.ViewModels;
 
@@ -51,6 +52,7 @@ public class LoginViewModel :  ViewModelBase, IRoutableViewModel
     {
         Email = "admin@gmail.com";
         Password = "123456";
+        HostScreen = Locator.Current.GetService<IScreen>()!; 
         LoginCommand = ReactiveCommand.CreateFromObservable(Login);
         RegisterCommand = ReactiveCommand.CreateFromObservable(Login);
     }
@@ -63,39 +65,40 @@ public class LoginViewModel :  ViewModelBase, IRoutableViewModel
             
         LoginCommand = ReactiveCommand.CreateFromObservable(Login, CanExecLogin());
         RegisterCommand = ReactiveCommand.CreateFromObservable( () => 
-            HostScreen.Router.Navigate.Execute(new RegisterViewModel(HostScreen)));
+            HostScreen.Router.Navigate.Execute(new RegisterViewModel(_identityWebApi, _usersWebApi, HostScreen)));
     }
 
     private IObservable<IRoutableViewModel> Login() => LoginAsync()
         .Where(result => result)
-        .ObserveOn(RxApp.TaskpoolScheduler)
-        .SelectMany(_ => HostScreen.Router.Navigate.Execute(Locator.Current.GetService<HomeViewModel>()!));
+        .ObserveOn(RxApp.MainThreadScheduler)
+        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen)));
 
     private IObservable<bool> LoginAsync() => Observable.FromAsync(async (cancellationToken) =>
     {
         _loginRequest.Email = _email;
         _loginRequest.Password = _password;
         
-        var authResponse = await _identityWebApi.LoginAsync(_loginRequest, cancellationToken);
+        var authResponse = await _identityWebApi!.LoginAsync(_loginRequest, cancellationToken);
         if (!authResponse.IsSuccessStatusCode)
         {
             ErrorMessage = "Invalid username or password";
             return false;
         }
 
-        string token = authResponse.Content!;
-        var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        // string token = authResponse.Content!;
+        // var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
-        string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
-        StaticStorage.JwtToken = authResponse.Content!;
+        // string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
+        var token = authResponse.Content!.Replace("\"", "");
+        StaticStorage.JwtToken = token;
 
-        var userResponse = await _usersWebApi.GetUserByEmail(email, cancellationToken);
+        var userResponse = await _usersWebApi!.GetCurrentUser(cancellationToken);
         if (!userResponse.IsSuccessStatusCode)
         {
             ErrorMessage = "Invalid username or password";
             return false;
         }
-
+        
         StaticStorage.User = userResponse.Content;
         return true;
     });

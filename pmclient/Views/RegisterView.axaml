@@ -27,6 +27,9 @@
 			<Button Classes="SButton" Command="{Binding RegisterCommand}" 
 					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
 					Background="{DynamicResource Dark}" Content="Register"/>
+			
+			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+					   Foreground="{DynamicResource Light}"/> 
 		</StackPanel>
 	</Border>
 </UserControl>
