@@ -71,9 +71,9 @@ public class LoginViewModel :  ViewModelBase, IRoutableViewModel
     private IObservable<IRoutableViewModel> Login() => LoginAsync()
         .Where(result => result)
         .ObserveOn(RxApp.MainThreadScheduler)
-        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen)));
+        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(null, HostScreen)));
 
-    private IObservable<bool> LoginAsync() => Observable.FromAsync(async (cancellationToken) =>
+    private IObservable<bool> LoginAsync() => Observable.FromAsync(async cancellationToken =>
     {
         _loginRequest.Email = _email;
         _loginRequest.Password = _password;
@@ -85,10 +85,6 @@ public class LoginViewModel :  ViewModelBase, IRoutableViewModel
             return false;
         }
 
-        // string token = authResponse.Content!;
-        // var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
-
-        // string email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
         var token = authResponse.Content!.Replace("\"", "");
         StaticStorage.JwtToken = token;
 

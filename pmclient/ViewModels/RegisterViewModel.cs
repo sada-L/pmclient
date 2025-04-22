@@ -80,8 +80,8 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
 
     private IObservable<IRoutableViewModel> Register() => RegisterAsync()
         .Where(result => result)
-        .ObserveOn(RxApp.TaskpoolScheduler)
-        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel()));
+        .ObserveOn(RxApp.MainThreadScheduler)
+        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(null, HostScreen)));
 
     private IObservable<bool> RegisterAsync() => Observable.FromAsync(async cancellationToken =>
     {
@@ -99,10 +99,9 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
             return false;
         }
 
-        var token = authResponse.Content!;
-        // var tokenHandler = new JwtSecurityTokenHandler().ReadJwtToken(token);
-
-        // var email = tokenHandler.Claims.First(claim => claim.Type is ClaimTypes.Email).Value;
+        var token = authResponse.Content!.Replace("\"", "");
+        StaticStorage.JwtToken = token;
+        
         var userResponse = await _usersWebApi!.GetCurrentUser(cancellationToken);
         if (!userResponse.IsSuccessStatusCode)
         {
@@ -110,7 +109,6 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
             return false;
         }
 
-        StaticStorage.JwtToken = token;
         StaticStorage.User = userResponse.Content;
         return true;
     });
