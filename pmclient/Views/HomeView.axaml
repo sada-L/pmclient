@@ -3,10 +3,87 @@
 			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
-			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			xmlns:view="clr-namespace:pmclient.Views"
+			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
 			x:Class="pmclient.Views.HomeView"
 			x:DataType="vm:HomeViewModel">
-	<StackPanel HorizontalAlignment="Center">
-		<TextBlock Text="{Binding User.Username}"></TextBlock>
-	</StackPanel>
+	<Design.DataContext>
+		<vm:HomeViewModel/>
+	</Design.DataContext>
+	
+	<UserControl.Styles>
+		<Style Selector="Border.SBorder">
+			<Setter Property="BorderBrush" Value="LightGray"/>
+			<Setter Property="BorderThickness" Value="2"/>
+		</Style>
+		<Style Selector="Button">
+			<Setter Property="CornerRadius" Value="10"/>
+		</Style>
+	</UserControl.Styles>
+	<SplitView PanePlacement="Left"
+		       CompactPaneLength="45"
+			   DisplayMode="CompactInline"
+			   OpenPaneLength="300">
+		<SplitView.Pane>
+			<ListBox ItemsSource="{Binding}">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<view:GroupListView/>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+		</SplitView.Pane>
+		<Border Classes="SBorder">
+			<Grid RowDefinitions="Auto, *" ColumnDefinitions="*, 2*">
+				<Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="0 0 0 2">
+					<Grid  ColumnDefinitions="*, Auto, *">
+						<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
+							<Button/>
+							<Button/>
+						</StackPanel>
+						
+						<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
+							<TextBox Watermark="Search" Width="280" CornerRadius="10"/>
+							<Button Content="New" DockPanel.Dock="Right"/>	
+							<Button Content="New Item" DockPanel.Dock="Right"/>	
+						</StackPanel>
+						
+						<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="10">
+							<Button/>	
+							<Button/>	
+							<Button/>	
+						</StackPanel>
+					</Grid>
+				</Border>
+			
+				<Border Grid.Row="1" Grid.Column="0" Classes="SBorder" BorderThickness="0 0 2 0 ">
+					<DockPanel>
+						<Border Classes="SBorder" DockPanel.Dock="Top" BorderThickness="0 0 0 2">
+							<DockPanel Margin="10" >
+								<Button DockPanel.Dock="Right">
+									
+								</Button>
+								
+								<ComboBox HorizontalAlignment="Stretch" Margin="0 0 10 0" BorderBrush="Transparent">
+									
+								</ComboBox>	
+							</DockPanel>
+						</Border>
+						
+						
+						<ListBox ItemsSource="{Binding Cards}" 
+								 SelectedItem="{Binding SelectedCard}">
+							<ListBox.ItemTemplate>
+								<DataTemplate>
+									<view:CardListView/>
+								</DataTemplate>
+							</ListBox.ItemTemplate>
+						</ListBox>
+					</DockPanel>
+				</Border>
+				
+				<ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding SelectedCard}"/>
+			</Grid>
+		</Border>
+	</SplitView>
 </UserControl>
