@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			x:DataType="vm:CardViewModel"
+			x:Class="pmclient.Views.CardView">
+	<Design.DataContext>
+		<vm:CardViewModel/>
+	</Design.DataContext>
+	
+	<UserControl.Styles>
+		<Style Selector="TextBox">
+			<Setter Property="BorderBrush" Value="Transparent"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="HorizontalContentAlignment" Value="Left"/>
+			<Setter Property="VerticalContentAlignment" Value="Center"/>
+			<Setter Property="CornerRadius" Value="10"/>
+		</Style>
+		
+		<Style Selector="Button">
+			<Setter Property="Background" Value="Transparent"/>
+		</Style>
+	</UserControl.Styles>
+	
+	<Grid RowDefinitions="Auto, *">
+		<StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+			<Button Content="Edit"/>
+			<Button Content="Opt"/>
+		</StackPanel>
+		
+		<StackPanel Grid.Row="1" Margin="10" Spacing="10">
+			<StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
+				<Image Source="{Binding Image}" MaxWidth="70"/>	
+				<TextBox Text="{Binding Title}" FontSize="30"/>
+			</StackPanel>
+			
+			<Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="10">
+				<StackPanel>
+					<TextBox Text="{Binding Username}" UseFloatingWatermark="True" Watermark="username"/>
+					<TextBox Text="{Binding Password}" UseFloatingWatermark="True" Watermark="password"/>
+				</StackPanel>
+			</Border>
+			
+			<TextBox Text="{Binding Url}" UseFloatingWatermark="True" Watermark="website"/>
+			<TextBox Text="{Binding Notes}" UseFloatingWatermark="True" Watermark="notes"/>
+		</StackPanel>
+	</Grid>
+</UserControl>

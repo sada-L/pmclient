@@ -1,0 +1,22 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="100"
+			x:Class="pmclient.Views.CardListView"
+			x:DataType="vm:CardViewModel" >
+	<Design.DataContext>
+		<vm:CardViewModel/>
+	</Design.DataContext>
+	
+	<Border Background="White" CornerRadius="10" BorderThickness="2" BorderBrush="LightGray">
+		<DockPanel Margin="5">
+			<Image Source="{Binding Image}" MaxWidth="40" HorizontalAlignment="Left" VerticalAlignment="Center"/>	
+			<StackPanel VerticalAlignment="Center">
+				<TextBlock Text="{Binding Title}" FontSize="20"/>	
+				<TextBlock Text="{Binding Url}"/>
+			</StackPanel>
+		</DockPanel>
+	</Border>
+</UserControl>
