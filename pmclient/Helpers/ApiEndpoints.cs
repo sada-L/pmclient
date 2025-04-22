@@ -18,4 +18,11 @@ public static class ApiEndpoints
       
       public const string GetCurrentUser = Base + "/current";
    }
+   
+   public static class Cards
+   {
+      private const string Base = "/cards";
+      
+      public const string GetCardsByUser = Base + "/current";
+   }
 }
