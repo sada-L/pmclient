@@ -45,6 +45,8 @@ public static class Bootstrapper
         Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginView());
         Locator.CurrentMutable.Register<IViewFor<RegisterViewModel>>(() => new RegisterView());
         Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
+        Locator.CurrentMutable.Register<IViewFor<CardViewModel>>(() => new CardListView());
+        Locator.CurrentMutable.Register<IViewFor<CardViewModel>>(() => new CardView());
         
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }

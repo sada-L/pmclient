@@ -9,9 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Extensions\" />
         <AvaloniaResource Include="Assets\**"/>
-        <Folder Include="Settings\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,7 +23,15 @@
             <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Avalonia.ReactiveUI" Version="11.2.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.4" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.4" />
+        <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.4" />
         <PackageReference Include="Refit" Version="8.0.0" />
+        <PackageReference Include="Refit.HttpClientFactory" Version="8.0.0" />
+        <PackageReference Include="Scrutor" Version="6.0.1" />
+        <PackageReference Include="Splat.Microsoft.Extensions.DependencyInjection" Version="15.3.1" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.8.0" />
     </ItemGroup>
 </Project>
