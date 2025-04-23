@@ -18,40 +18,60 @@
 		</Style>
 		<Style Selector="Button">
 			<Setter Property="CornerRadius" Value="10"/>
+			<Setter Property="Background" Value="Transparent"/>
 		</Style>
 	</UserControl.Styles>
+					
 	<SplitView PanePlacement="Left"
+			   IsPaneOpen="True"
 		       CompactPaneLength="45"
 			   DisplayMode="CompactInline"
-			   OpenPaneLength="300">
+			   OpenPaneLength="170">
 		<SplitView.Pane>
-			<ListBox ItemsSource="{Binding}">
-				<ListBox.ItemTemplate>
-					<DataTemplate>
-						<view:GroupListView/>
-					</DataTemplate>
-				</ListBox.ItemTemplate>
-			</ListBox>
+			<DockPanel>
+				<DockPanel DockPanel.Dock="Top" Margin="10">
+					<Button Content="-" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+					<TextBlock Text="PassManager" VerticalAlignment="Center"/>
+				</DockPanel>
+				<TreeView ItemsSource="{Binding Groups}" 
+						  SelectedItem="{Binding SelectedGroup}">
+					<TreeView.ItemTemplate>
+						<TreeDataTemplate ItemsSource="{Binding SubGroups}">
+							<view:GroupListView/>
+						</TreeDataTemplate>
+					</TreeView.ItemTemplate>
+				</TreeView>
+			</DockPanel>
 		</SplitView.Pane>
+		
 		<Border Classes="SBorder">
 			<Grid RowDefinitions="Auto, *" ColumnDefinitions="*, 2*">
 				<Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="0 0 0 2">
 					<Grid  ColumnDefinitions="*, Auto, *">
 						<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
-							<Button/>
-							<Button/>
+							<Button>
+								<Button.Content>
+									<TextBlock Classes="Icon" Text="&#xf060;"/>
+								</Button.Content>
+							</Button>
+							
+							<Button>
+								<Button.Content>
+									<TextBlock Classes="Icon" Text="&#xf061;"/>
+								</Button.Content>
+							</Button>
 						</StackPanel>
 						
 						<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
 							<TextBox Watermark="Search" Width="280" CornerRadius="10"/>
-							<Button Content="New" DockPanel.Dock="Right"/>	
-							<Button Content="New Item" DockPanel.Dock="Right"/>	
-						</StackPanel>
-						
-						<StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10" Margin="10">
-							<Button/>	
-							<Button/>	
-							<Button/>	
+							<Button DockPanel.Dock="Right">
+								<Button.Content>
+									<StackPanel Orientation="Horizontal" Spacing="5"> 
+										<TextBlock Classes="Icon" Text="&#xf067;"/>	 
+										<TextBlock Text="New Item"/>	 
+									</StackPanel>
+								</Button.Content>
+							</Button>
 						</StackPanel>
 					</Grid>
 				</Border>
@@ -59,9 +79,11 @@
 				<Border Grid.Row="1" Grid.Column="0" Classes="SBorder" BorderThickness="0 0 2 0 ">
 					<DockPanel>
 						<Border Classes="SBorder" DockPanel.Dock="Top" BorderThickness="0 0 0 2">
-							<DockPanel Margin="10" >
+							<DockPanel Margin="10">
 								<Button DockPanel.Dock="Right">
-									
+									<Button.Content>
+										<TextBlock Classes="Icon" Text="&#xf161;"></TextBlock>
+									</Button.Content>
 								</Button>
 								
 								<ComboBox HorizontalAlignment="Stretch" Margin="0 0 10 0" BorderBrush="Transparent">
@@ -70,9 +92,9 @@
 							</DockPanel>
 						</Border>
 						
-						
-						<ListBox ItemsSource="{Binding Cards}" 
-								 SelectedItem="{Binding SelectedCard}">
+						<ListBox ItemsSource="{Binding SelectedGroup.Cards}" 
+								 SelectedItem="{Binding SelectedCard}"
+								 SelectedIndex="{Binding SelectedCardIndex}">
 							<ListBox.ItemTemplate>
 								<DataTemplate>
 									<view:CardListView/>

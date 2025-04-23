@@ -5,6 +5,9 @@ using System.Linq;
 using System.Reactive;
 using System.Threading;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Controls.Models.TreeDataGrid;
+using DynamicData;
 using pmclient.Helpers;
 using pmclient.Models;
 using pmclient.RefitClients;
@@ -17,11 +20,20 @@ namespace pmclient.ViewModels;
 
 public class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
-    private CardViewModel _selectedCard;
     private readonly ICardWebApi? _cardWebApi;
+    private readonly IGroupWebApi? _groupWebApi;
     private User _user;
-    private ObservableCollection<CardViewModel> _cards;
-
+    private List<Card> _cards = [];
+    private List<Group> _groups = [];
+        
+    
+    private CardViewModel _selectedCard;
+    private GroupViewModel _selectedGroup;
+    private GroupViewModel _favoriteCards;
+    private GroupViewModel _allCards;
+    private int _selectedCardIndex;
+    private ObservableCollection<GroupViewModel> _vmGroups;
+    private string _errorMessage;
     public User User
     {
         get => _user;
@@ -34,10 +46,28 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _selectedCard, value);
     }
 
-    public ObservableCollection<CardViewModel> Cards
+    public GroupViewModel SelectedGroup
     {
-        get => _cards;
-        set => this.RaiseAndSetIfChanged(ref _cards, value);
+        get => _selectedGroup;
+        set => this.RaiseAndSetIfChanged(ref _selectedGroup, value);
+    }
+
+    public ObservableCollection<GroupViewModel> Groups
+    {
+        get => _vmGroups;
+        set => this.RaiseAndSetIfChanged(ref _vmGroups, value);
+    }
+
+    public int SelectedCardIndex
+    {
+        get => _selectedCardIndex;
+        set => this.RaiseAndSetIfChanged(ref _selectedCardIndex, value);
+    }
+
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
     }
     
     public ReactiveCommand<Unit, Unit> LoadDataCommand { get; }
@@ -53,28 +83,107 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
            Id = 1,
            Email = "user@gmail.com",
            Username = "user",
-       }; 
-       
-       Cards = new ObservableCollection<CardViewModel>(new List<CardViewModel>()
+       };
+
+       var cards = new List<Card>()
        {
-           new CardViewModel(), 
-           new CardViewModel()
+           new Card()
            {
-               Title = "card lulu"
-           } 
-       });
+               Id = 1, Title = "card1", Username = "username", Image = "\uf2bc", Url = "www.card.com",
+               Password = "123456", Notes = "notes", GroupId = 1, IsFavorite = true,
+           },
+           new Card()
+           {
+               Id = 2, Title = "card2", Username = "username", Image = "\uf2bc", Url = "www.card.com",
+               Password = "123456", Notes = "notes", GroupId = 1, IsFavorite = false, 
+           },
+           new Card()
+           {
+               Id = 3, Title = "card3", Username = "username", Image = "\uf2bc", Url = "www.card.com",
+               Password = "123456", Notes = "notes", GroupId = 2, IsFavorite = false,
+           },
+       };
        
-       SelectedCard = Cards.FirstOrDefault();
+
+       var groups = new List<Group>()
+       {
+           new Group(){Id = 1, Title = "Group1", Image = "\uf02e", GroupId = null},
+           new Group(){Id = 2, Title = "group2", Image = "\uf02e", GroupId = 1},
+           new Group(){Id = 3, Title = "group3", Image = "\uf02e", GroupId = 1},
+           new Group(){Id = 4, Title = "Group4", Image = "\uf02e", GroupId = null},
+           new Group(){Id = 5, Title = "group5", Image = "\uf02e", GroupId = 4},
+       };
+       
+       _allCards = new GroupViewModel(new Group()
+       {
+           Id = 0,
+           Title = "All Items",
+           Image = "\uf2ba",
+           GroupId = null
+       }, cards, null);
+       
+       _favoriteCards = new GroupViewModel(new Group()
+       {
+           Id = 0,
+           Title = "Favorites",
+           Image = "\uf005",
+           GroupId = null
+       }, cards.Where(x => x.IsFavorite).ToList(), null);
+
+       var vmgroups = groups
+           .Where(x => x.GroupId == null)
+           .Select(x => new GroupViewModel(x, cards, null, groups)).ToList();
+
+       Groups = new ObservableCollection<GroupViewModel>()
+       {
+           _allCards,
+           _favoriteCards,
+       };
+       
+       Groups.AddRange(vmgroups);
+       
+       this.WhenAnyValue(x => x.SelectedGroup)
+           .Subscribe(x => SelectedCardIndex = 0);
+       
+       SelectedGroup = Groups.FirstOrDefault();
     }
 
-    public HomeViewModel(ICardWebApi? cardWebApi = null, IScreen? hostScreen = null)
+    public HomeViewModel(IScreen? hostScreen = null, ICardWebApi? cardWebApi = null, IGroupWebApi? groupWebApi = null)
     {
         User = StaticStorage.User!;
         HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
         _cardWebApi = cardWebApi ?? Locator.Current.GetService<ICardWebApi>()!;
-
+        _groupWebApi = groupWebApi ?? Locator.Current.GetService<IGroupWebApi>()!;
+        
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
         LoadDataCommand.Execute().Subscribe();
+        
+         _allCards = new GroupViewModel(new Group()
+       {
+           Id = 0,
+           Title = "All Items",
+           Image = "\uf2ba",
+           GroupId = null
+       }, _cards!, null);
+       
+       _favoriteCards = new GroupViewModel(new Group()
+       {
+           Id = 0,
+           Title = "Favorites",
+           Image = "\uf005",
+           GroupId = null
+       }, _cards!.Where(x => x.IsFavorite).ToList(), null);
+
+        Groups = [ _allCards, _favoriteCards ];
+        
+        Groups.AddRange(_groups
+            .Where(x => x.GroupId == null)
+            .Select(x => new GroupViewModel(x, _cards, null, _groups)).ToList());
+        
+        SelectedGroup = Groups.FirstOrDefault();   
+        
+        this.WhenAnyValue(x => x.SelectedGroup)
+            .Subscribe(x => SelectedCardIndex = 0);
     }
 
     private async Task LoadDataAsync(CancellationToken cancellationToken)
@@ -82,10 +191,24 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         try
         {
            var cardResponse = await _cardWebApi!.GetCardByUser(cancellationToken);
-           Cards = new ObservableCollection<CardViewModel>(cardResponse.Content!.Select(x => new CardViewModel(x)));
+           if (!cardResponse.IsSuccessStatusCode)
+           {
+               ErrorMessage = "error"; 
+               return;
+           }
+           _cards = cardResponse.Content;
+
+           var groupResponse = await _groupWebApi!.GetGroupsByUser(cancellationToken);
+           if (!groupResponse.IsSuccessStatusCode)
+           {
+               ErrorMessage = "error";
+               return;
+           }
+           _groups = groupResponse.Content;
         }
         catch (Exception e)
         {
+            ErrorMessage = "error";
             return;
         }
     }
