@@ -31,6 +31,8 @@ public static class Bootstrapper
      
         services.AddWebApiClient<IIdentityWebApi, ApiKeyAuthorizationMessageHandler>()
              .AddWebApiClient<IUsersWebApi>();
+             .AddWebApiClient<IUsersWebApi>()
+             .AddWebApiClient<ICardWebApi>()
     
         services.AddSingleton<IScreen,MainWindowViewModel>();
         

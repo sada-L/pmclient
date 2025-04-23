@@ -9,4 +9,6 @@ public sealed class Card
    public required string Image { get; init; }
    public required string Notes { get; init; }
    public required string Password { get; init; }
+   public required int? GroupId { get; init; }
+   public required bool IsFavorite { get; init; }
 }

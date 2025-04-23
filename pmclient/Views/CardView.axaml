@@ -3,7 +3,7 @@
 			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
-			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			mc:Ignorable="d" 
 			x:DataType="vm:CardViewModel"
 			x:Class="pmclient.Views.CardView">
 	<Design.DataContext>
@@ -26,18 +26,34 @@
 	
 	<Grid RowDefinitions="Auto, *">
 		<StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-			<Button Content="Edit"/>
-			<Button Content="Opt"/>
+			<Button Command="{Binding EditCommand}">
+				<Button.Content>
+					<StackPanel Orientation="Horizontal" Spacing="2">
+						<TextBlock Classes="Icon" Text="&#xf044;"/>
+						<TextBlock Text="Edit"/>
+					</StackPanel>
+				</Button.Content>
+			</Button>
+			<Button>
+				<Button.Content>
+					<TextBlock Classes="Icon" Text="&#xf142;" FontSize="20"/>
+				</Button.Content>
+			</Button>
 		</StackPanel>
 		
-		<StackPanel Grid.Row="1" Margin="10" Spacing="10">
+		<StackPanel Grid.Row="1" Margin="10" Spacing="10" IsEnabled="{Binding IsEnabled}">
 			<StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
-				<Image Source="{Binding Image}" MaxWidth="70"/>	
+				<Panel>
+					<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="45"/>
+					<TextBlock Classes="Icon" Text="&#xf005;" FontSize="25" Foreground="Gold" 
+								HorizontalAlignment="Right" VerticalAlignment="Bottom"
+								IsVisible="{Binding IsFavorite}"/>
+				</Panel>
 				<TextBox Text="{Binding Title}" FontSize="30"/>
 			</StackPanel>
 			
 			<Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="10">
-				<StackPanel>
+				<StackPanel Spacing="2">
 					<TextBox Text="{Binding Username}" UseFloatingWatermark="True" Watermark="username"/>
 					<TextBox Text="{Binding Password}" UseFloatingWatermark="True" Watermark="password"/>
 				</StackPanel>
