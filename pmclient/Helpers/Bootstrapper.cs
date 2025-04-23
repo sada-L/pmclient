@@ -1,4 +1,5 @@
 using System;
+using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Microsoft.Extensions.DependencyInjection;
 using pmclient.Extensions;
@@ -30,9 +31,9 @@ public static class Bootstrapper
         services.AddTransient<ApiKeyAuthorizationMessageHandler>();
      
         services.AddWebApiClient<IIdentityWebApi, ApiKeyAuthorizationMessageHandler>()
-             .AddWebApiClient<IUsersWebApi>();
              .AddWebApiClient<IUsersWebApi>()
              .AddWebApiClient<ICardWebApi>()
+             .AddWebApiClient<IGroupWebApi>();
     
         services.AddSingleton<IScreen,MainWindowViewModel>();
         
@@ -49,6 +50,7 @@ public static class Bootstrapper
         Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
         Locator.CurrentMutable.Register<IViewFor<CardViewModel>>(() => new CardListView());
         Locator.CurrentMutable.Register<IViewFor<CardViewModel>>(() => new CardView());
+        Locator.CurrentMutable.Register<IViewFor<GroupViewModel>>(() => new GroupListView());
         
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }
