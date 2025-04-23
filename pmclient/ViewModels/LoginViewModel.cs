@@ -71,7 +71,7 @@ public class LoginViewModel :  ViewModelBase, IRoutableViewModel
     private IObservable<IRoutableViewModel> Login() => LoginAsync()
         .Where(result => result)
         .ObserveOn(RxApp.MainThreadScheduler)
-        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(null, HostScreen)));
+        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen)));
 
     private IObservable<bool> LoginAsync() => Observable.FromAsync(async cancellationToken =>
     {

@@ -81,7 +81,7 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
     private IObservable<IRoutableViewModel> Register() => RegisterAsync()
         .Where(result => result)
         .ObserveOn(RxApp.MainThreadScheduler)
-        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(null, HostScreen)));
+        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen)));
 
     private IObservable<bool> RegisterAsync() => Observable.FromAsync(async cancellationToken =>
     {
