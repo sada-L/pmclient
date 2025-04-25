@@ -21,7 +21,7 @@
 	</Window.Styles>
 	
 	<Panel>
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10">
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="15">
 			<Button Command="{Binding MinimizeCommand}">
 				<Button.Content>
 					<TextBlock Classes="Icon" Text="&#xf2d1;"/>

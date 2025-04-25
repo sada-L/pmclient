@@ -22,90 +22,87 @@
 		</Style>
 	</UserControl.Styles>
 					
-	<SplitView PanePlacement="Left"
-			   IsPaneOpen="True"
-		       CompactPaneLength="45"
-			   DisplayMode="CompactInline"
-			   OpenPaneLength="170">
-		<SplitView.Pane>
-			<DockPanel>
-				<DockPanel DockPanel.Dock="Top" Margin="10">
-					<Button Content="-" DockPanel.Dock="Right" VerticalAlignment="Center"/>
+	<Border Classes="SBorder"> 
+		<Grid RowDefinitions="Auto, *" ColumnDefinitions="auto, *, 2*">
+			<Border Grid.Row="0" Grid.Column="0" Padding="10" Classes="SBorder" BorderThickness="0 0 0 2">
+				<DockPanel>
+					<Button DockPanel.Dock="Right" VerticalAlignment="Center">
+						<Button.Content>
+							<TextBlock Classes="Icon" Text="&#xf141;" FontSize="25"/>
+						</Button.Content>
+					</Button>
 					<TextBlock Text="PassManager" VerticalAlignment="Center"/>
 				</DockPanel>
-				<TreeView ItemsSource="{Binding Groups}" 
-						  SelectedItem="{Binding SelectedGroup}">
-					<TreeView.ItemTemplate>
-						<TreeDataTemplate ItemsSource="{Binding SubGroups}">
-							<view:GroupListView/>
-						</TreeDataTemplate>
-					</TreeView.ItemTemplate>
-				</TreeView>
-			</DockPanel>
-		</SplitView.Pane>
+			</Border>
+			
+			<TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Groups}" 
+					SelectedItem="{Binding SelectedGroup}">
+				<TreeView.ItemTemplate>
+					<TreeDataTemplate ItemsSource="{Binding SubGroups}">
+						<view:GroupListView/>
+					</TreeDataTemplate>
+				</TreeView.ItemTemplate>
+			</TreeView>
+			
+			<Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="2 0 0 2">
+				<Grid  ColumnDefinitions="*, Auto, *">
+					<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
+						<Button Command="{Binding LoadDataCommand}">
+							<Button.Content>
+								<TextBlock Classes="Icon" Text="&#xf060;"/>
+							</Button.Content>
+						</Button>
+						
+						<Button>
+							<Button.Content>
+								<TextBlock Classes="Icon" Text="&#xf061;"/>
+							</Button.Content>
+						</Button>
+					</StackPanel>
+					
+					<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
+						<TextBox Watermark="Search" Width="280" CornerRadius="10"/>
+						<Button DockPanel.Dock="Right">
+							<Button.Content>
+								<StackPanel Orientation="Horizontal" Spacing="5"> 
+									<TextBlock Classes="Icon" Text="&#xf067;"/>	 
+									<TextBlock Text="New Item"/>	 
+								</StackPanel>
+							</Button.Content>
+						</Button>
+					</StackPanel>
+				</Grid>
+			</Border>
 		
-		<Border Classes="SBorder">
-			<Grid RowDefinitions="Auto, *" ColumnDefinitions="*, 2*">
-				<Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="0 0 0 2">
-					<Grid  ColumnDefinitions="*, Auto, *">
-						<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
-							<Button>
+			<Border Grid.Row="1" Grid.Column="1" Classes="SBorder" BorderThickness="2 0 2 0 ">
+				<DockPanel>
+					<Border Classes="SBorder" DockPanel.Dock="Top" BorderThickness="0 0 0 2">
+						<DockPanel Margin="10">
+							<Button DockPanel.Dock="Right">
 								<Button.Content>
-									<TextBlock Classes="Icon" Text="&#xf060;"/>
+									<TextBlock Classes="Icon" Text="&#xf161;"/>
 								</Button.Content>
 							</Button>
 							
-							<Button>
-								<Button.Content>
-									<TextBlock Classes="Icon" Text="&#xf061;"/>
-								</Button.Content>
-							</Button>
-						</StackPanel>
-						
-						<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
-							<TextBox Watermark="Search" Width="280" CornerRadius="10"/>
-							<Button DockPanel.Dock="Right">
-								<Button.Content>
-									<StackPanel Orientation="Horizontal" Spacing="5"> 
-										<TextBlock Classes="Icon" Text="&#xf067;"/>	 
-										<TextBlock Text="New Item"/>	 
-									</StackPanel>
-								</Button.Content>
-							</Button>
-						</StackPanel>
-					</Grid>
-				</Border>
-			
-				<Border Grid.Row="1" Grid.Column="0" Classes="SBorder" BorderThickness="0 0 2 0 ">
-					<DockPanel>
-						<Border Classes="SBorder" DockPanel.Dock="Top" BorderThickness="0 0 0 2">
-							<DockPanel Margin="10">
-								<Button DockPanel.Dock="Right">
-									<Button.Content>
-										<TextBlock Classes="Icon" Text="&#xf161;"></TextBlock>
-									</Button.Content>
-								</Button>
+							<ComboBox HorizontalAlignment="Stretch" Margin="0 0 10 0" BorderBrush="Transparent">
 								
-								<ComboBox HorizontalAlignment="Stretch" Margin="0 0 10 0" BorderBrush="Transparent">
-									
-								</ComboBox>	
-							</DockPanel>
-						</Border>
-						
-						<ListBox ItemsSource="{Binding SelectedGroup.Cards}" 
-								 SelectedItem="{Binding SelectedCard}"
-								 SelectedIndex="{Binding SelectedCardIndex}">
-							<ListBox.ItemTemplate>
-								<DataTemplate>
-									<view:CardListView/>
-								</DataTemplate>
-							</ListBox.ItemTemplate>
-						</ListBox>
-					</DockPanel>
-				</Border>
-				
-				<ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding SelectedCard}"/>
-			</Grid>
-		</Border>
-	</SplitView>
+							</ComboBox>	
+						</DockPanel>
+					</Border>
+					
+					<ListBox ItemsSource="{Binding SelectedGroup.Cards}" 
+							 SelectedItem="{Binding SelectedCard}"
+							 SelectedIndex="{Binding SelectedCardIndex}">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<view:CardListView/>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</DockPanel>
+			</Border>
+			
+			<ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding SelectedCard}"/>
+		</Grid>
+	</Border>
 </UserControl>
