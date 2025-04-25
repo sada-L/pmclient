@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using pmclient.Models;
 using ReactiveUI;
+using Group = pmclient.Models.Group;
 
 namespace pmclient.ViewModels;
 
 public class GroupViewModel : ViewModelBase
 {
-    private Group _group;
     private string _title;
     private string _image;
     private ObservableCollection<GroupViewModel> _subGroups;
@@ -50,7 +51,6 @@ public class GroupViewModel : ViewModelBase
     }
     
     public ICommand AddGroupCommand { get; }
-    
 
     public GroupViewModel()
     {
@@ -59,13 +59,12 @@ public class GroupViewModel : ViewModelBase
     
     public GroupViewModel(Group group, List<Card> cards, ICommand addGroupCommand, List<Group>? groups = null)
     {
-        _group = group;
         Title = group.Title;
         Id = group.Id;
-        Image = group.Image;
+        Image = Regex.Unescape(group.Image);
         AddGroupCommand = addGroupCommand;
         
-        if (group.Id == 0)
+        if (group.Id == -1)
             Cards = new ObservableCollection<CardViewModel>(cards
                 .Select(x => new CardViewModel(x)));
         else

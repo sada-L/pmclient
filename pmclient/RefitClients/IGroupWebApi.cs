@@ -7,6 +7,7 @@ using Refit;
 
 namespace pmclient.RefitClients;
 
+[Headers("Bearer")]
 public interface IGroupWebApi
 {
     [Get(ApiEndpoints.Groups.GetGroupsByUser)]
