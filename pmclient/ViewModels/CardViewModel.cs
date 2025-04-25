@@ -1,4 +1,5 @@
 using System.Reactive;
+using System.Text.RegularExpressions;
 using Avalonia.Media.Imaging;
 using pmclient.Models;
 using pmclient.Views;
@@ -8,11 +9,10 @@ namespace pmclient.ViewModels;
 
 public class CardViewModel : ViewModelBase
 {
-    private Card _card;
     private string _title;
     private string _username;
     private string _password;
-    private string _url;
+    private string _Website;
     private string _notes;  
     private string _image;
     private int? _groupId; 
@@ -37,10 +37,10 @@ public class CardViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _password, value);
     }
 
-    public string Url
+    public string Website
     {
-        get => _url;
-        set => this.RaiseAndSetIfChanged(ref _url, value);
+        get => _Website;
+        set => this.RaiseAndSetIfChanged(ref _Website, value);
     }
 
     public string Notes
@@ -72,15 +72,16 @@ public class CardViewModel : ViewModelBase
         get => _isEnabled;
         set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
     }
+    
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
     
     public CardViewModel()
     {
-        _card = new Card
+        var card = new Card
         {
             Id = 1,
             Title = "Title",
-            Url = "www.site.com",
+            Website = "www.site.com",
             Image = "\uf2bc",
             Username = "Username",
             Notes = "Notes",
@@ -88,30 +89,28 @@ public class CardViewModel : ViewModelBase
             GroupId = 1,
             IsFavorite = true,
         };
-        Title = _card.Title;
-        Url = _card.Url;
-        Username = _card.Username;
-        Notes = _card.Notes;
-        Password = _card.Password;
-        GroupId = _card.GroupId;
-        IsFavorite = _card.IsFavorite;
-        Image = _card.Image;
-        IsEnabled = false;
+        Title = card.Title;
+        Website = card.Website;
+        Username = card.Username;
+        Notes = card.Notes;
+        Password = card.Password;
+        GroupId = card.GroupId;
+        IsFavorite = card.IsFavorite;
+        Image = Regex.Unescape(card.Image);
 
         EditCommand = ReactiveCommand.Create(() => { IsEnabled = !IsEnabled; });
     }
     
     public CardViewModel(Card card)
     {
-        _card = card;
-        Title = _card.Title;
-        Url = _card.Url;
-        Username = _card.Username;
-        Notes = _card.Notes;
-        Password = _card.Password;
-        GroupId = _card.GroupId;
-        IsFavorite = _card.IsFavorite;
-        Image = _card.Image;
+        Title = card.Title;
+        Website = card.Website;
+        Username = card.Username;
+        Notes = card.Notes;
+        Password = card.Password;
+        GroupId = card.GroupId;
+        IsFavorite = card.IsFavorite;
+        Image = Regex.Unescape(card.Image);
         
         EditCommand = ReactiveCommand.Create(() => { IsEnabled = !IsEnabled; });
     }

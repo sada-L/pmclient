@@ -10,7 +10,7 @@
 		<vm:CardViewModel/>
 	</Design.DataContext>
 	
-	<Border Background="White" CornerRadius="10" BorderThickness="2" BorderBrush="LightGray">
+	<Border>
 		<DockPanel Margin="5">
 			<Panel>
 				<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="40"/>
@@ -20,7 +20,7 @@
 			</Panel>
 			<StackPanel VerticalAlignment="Center">
 				<TextBlock Text="{Binding Title}" FontSize="20"/>	
-				<TextBlock Text="{Binding Url}"/>
+				<TextBlock Text="{Binding Website}"/>
 			</StackPanel>
 		</DockPanel>
 	</Border>

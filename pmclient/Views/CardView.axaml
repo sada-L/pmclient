@@ -59,7 +59,7 @@
 				</StackPanel>
 			</Border>
 			
-			<TextBox Text="{Binding Url}" UseFloatingWatermark="True" Watermark="website"/>
+			<TextBox Text="{Binding Website}" UseFloatingWatermark="True" Watermark="website"/>
 			<TextBox Text="{Binding Notes}" UseFloatingWatermark="True" Watermark="notes"/>
 		</StackPanel>
 	</Grid>
