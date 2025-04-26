@@ -6,10 +6,11 @@ public static class ApiEndpoints
 
    public static class Authentication
    {
-      private const string Base = "/users";
+      private const string Base = "/auth";
       
       public const string Login = Base + "/login";
-      public const string Register = Base + "/create";
+      public const string Register = Base + "/register";  
+      public const string Token = Base + "/refresh";
    }
 
    public static class Users

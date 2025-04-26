@@ -8,6 +8,7 @@ using ReactiveUI;
 using Splat;
 using pmclient.HttpHandlers;
 using pmclient.RefitClients;
+using pmclient.Services;
 using pmclient.ViewModels;
 using pmclient.Views;
 using Splat.Microsoft.Extensions.DependencyInjection;
@@ -34,6 +35,9 @@ public static class Bootstrapper
              .AddWebApiClient<IUsersWebApi>()
              .AddWebApiClient<ICardWebApi>()
              .AddWebApiClient<IGroupWebApi>();
+
+        services.AddSingleton<AuthService>();
+        services.AddSingleton<UserService>();
     
         services.AddSingleton<IScreen,MainWindowViewModel>();
         

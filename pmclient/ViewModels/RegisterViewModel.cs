@@ -1,12 +1,6 @@
 using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
-using System.Threading;
-using System.Threading.Tasks;
 using pmclient.Contracts.Requests.Auth;
 using pmclient.RefitClients;
 using pmclient.Services;
@@ -17,9 +11,8 @@ namespace pmclient.ViewModels;
 
 public class RegisterViewModel : ViewModelBase, IRoutableViewModel
 {
-    private readonly IIdentityWebApi? _identityWebApi;
-    private readonly IUsersWebApi? _usersWebApi;
-    private RegisterRequest _request = null!;
+    private readonly AuthService? _authService;
+    private readonly UserService? _userService;
     private string _email = string.Empty;
     private string _username = string.Empty;
     private string _password = string.Empty;
@@ -31,16 +24,19 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
         get => _email;
         set => this.RaiseAndSetIfChanged(ref _email, value);
     }
+
     public string Username
     {
         get => _username;
         set => this.RaiseAndSetIfChanged(ref _username, value);
     }
+
     public string Password
     {
         get => _password;
         set => this.RaiseAndSetIfChanged(ref _password, value);
     }
+
     public string ConfirmPassword
     {
         get => _confirmPassword;
@@ -50,12 +46,15 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
     public string ErrorMessage
     {
         get => _errorMessage;
-        set => this.RaiseAndSetIfChanged(ref _errorMessage, value); 
+        set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
     }
-    
+
     public IScreen HostScreen { get; }
-    public string UrlPathSegment { get; } = "register";
+
+    public string UrlPathSegment => "/register";
+
     public ReactiveCommand<Unit, IRoutableViewModel> RegisterCommand { get; }
+
     public ReactiveCommand<Unit, IRoutableViewModel> BackCommand { get; }
 
     public RegisterViewModel()
@@ -65,54 +64,42 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
         Password = "password";
         ConfirmPassword = "password";
         RegisterCommand = ReactiveCommand.CreateFromObservable(Register);
+    }
+
+    public RegisterViewModel(IScreen? screen = null, AuthService? authService = null, UserService? userService = null)
+    {
+        HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
+        _userService = userService ?? Locator.Current.GetService<UserService>()!;
+        _authService = authService ?? Locator.Current.GetService<AuthService>()!;
+
+        RegisterCommand = ReactiveCommand.CreateFromObservable(Register, CanExecRegister());
         BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
     }
-    
-    public RegisterViewModel(IIdentityWebApi? identityWebApi = null, IUsersWebApi? usersWebApi = null, IScreen? screen = null)
-    {
-       HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
-       _usersWebApi = usersWebApi ?? Locator.Current.GetService<IUsersWebApi>()!;
-       _identityWebApi = identityWebApi ?? Locator.Current.GetService<IIdentityWebApi>()!;
-       
-       RegisterCommand = ReactiveCommand.CreateFromObservable(Register, CanExecRegister());
-       BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
-    }
 
-    private IObservable<IRoutableViewModel> Register() => RegisterAsync()
-        .Where(result => result)
-        .ObserveOn(RxApp.MainThreadScheduler)
-        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen)));
-
-    private IObservable<bool> RegisterAsync() => Observable.FromAsync(async cancellationToken =>
+    private IObservable<IRoutableViewModel> Register() => Observable.FromAsync(async cancellationToken =>
     {
-        _request = new RegisterRequest
+        var request = new RegisterRequest
         {
             Email = Email,
             Username = Username,
             Password = Password,
-        }; 
-        
-        var authResponse = await _identityWebApi!.RegisterAsync(_request, cancellationToken);
-        if (!authResponse.IsSuccessStatusCode)
+        };
+
+        if (!await _authService!.RegisterAsync(request, cancellationToken))
         {
             ErrorMessage = "Registration failed";
-            return false;
+            return null;
         }
 
-        var token = authResponse.Content!.Replace("\"", "");
-        StaticStorage.JwtToken = token;
-        
-        var userResponse = await _usersWebApi!.GetCurrentUser(cancellationToken);
-        if (!userResponse.IsSuccessStatusCode)
+        if (!await _userService!.GetUserAsync(cancellationToken))
         {
             ErrorMessage = "Registration failed";
-            return false;
+            return null;
         }
 
-        StaticStorage.User = userResponse.Content;
-        return true;
-    });
-    
+        return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
+    }).ObserveOn(RxApp.MainThreadScheduler).SelectMany(x => x!);
+
     private IObservable<bool> CanExecRegister() =>
         this.WhenAnyValue(
             x => x.Email,
@@ -123,6 +110,6 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
                 !string.IsNullOrWhiteSpace(email) &&
                 !string.IsNullOrWhiteSpace(username) &&
                 !string.IsNullOrWhiteSpace(password) &&
-                !string.IsNullOrWhiteSpace(confirmPassword) && 
+                !string.IsNullOrWhiteSpace(confirmPassword) &&
                 password == confirmPassword);
 }

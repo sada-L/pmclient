@@ -2,7 +2,7 @@ namespace pmclient.Contracts.Requests.Auth;
 
 public sealed class LoginRequest
 {
-   public string Email { get; set; } = null!;
+   public required string Email { get; init; } 
    
-   public string Password { get; set; } = null!;
+   public required string Password { get; init; } 
 }

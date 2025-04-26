@@ -26,16 +26,17 @@
 		<Grid RowDefinitions="Auto, *" ColumnDefinitions="auto, *, 2*">
 			<Border Grid.Row="0" Grid.Column="0" Padding="10" Classes="SBorder" BorderThickness="0 0 0 2">
 				<DockPanel>
-					<Button DockPanel.Dock="Right" VerticalAlignment="Center">
+					<Button DockPanel.Dock="Right" VerticalAlignment="Center" Command="{Binding LoadDataCommand}" >
 						<Button.Content>
-							<TextBlock Classes="Icon" Text="&#xf141;" FontSize="25"/>
+							<TextBlock Classes="Icon" Text="&#xf021;" FontSize="20"/>
 						</Button.Content>
 					</Button>
 					<TextBlock Text="PassManager" VerticalAlignment="Center"/>
 				</DockPanel>
 			</Border>
 			
-			<TreeView Grid.Row="1" Grid.Column="0" ItemsSource="{Binding Groups}" 
+			<TreeView Grid.Row="1" Grid.Column="0" 
+					ItemsSource="{Binding Groups}" 
 					SelectedItem="{Binding SelectedGroup}">
 				<TreeView.ItemTemplate>
 					<TreeDataTemplate ItemsSource="{Binding SubGroups}">
@@ -47,7 +48,7 @@
 			<Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="2 0 0 2">
 				<Grid  ColumnDefinitions="*, Auto, *">
 					<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
-						<Button Command="{Binding LoadDataCommand}">
+						<Button >
 							<Button.Content>
 								<TextBlock Classes="Icon" Text="&#xf060;"/>
 							</Button.Content>
@@ -90,7 +91,7 @@
 						</DockPanel>
 					</Border>
 					
-					<ListBox ItemsSource="{Binding SelectedGroup.Cards}" 
+					<ListBox ItemsSource="{Binding Cards}" 
 							 SelectedItem="{Binding SelectedCard}"
 							 SelectedIndex="{Binding SelectedCardIndex}">
 						<ListBox.ItemTemplate>

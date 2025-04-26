@@ -1,28 +1,21 @@
 using System;
 using System.Reactive;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Reactive.Linq;
 using pmclient.Contracts.Requests.Auth;
 using pmclient.RefitClients;
+using pmclient.Services;
 using ReactiveUI;
 using Splat;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Security.Claims;
-using pmclient.Services;
-using Refit;
 
 namespace pmclient.ViewModels;
 
-public class LoginViewModel :  ViewModelBase, IRoutableViewModel
+public class LoginViewModel : ViewModelBase, IRoutableViewModel
 {
-    private readonly IIdentityWebApi? _identityWebApi;
-    private readonly IUsersWebApi? _usersWebApi;
+    private readonly AuthService? _authService;
+    private readonly UserService? _userService;
     private string _errorMessage = string.Empty;
     private string _email = string.Empty;
     private string _password = string.Empty;
-    private LoginRequest _loginRequest = new LoginRequest();
 
     public string Email
     {
@@ -43,61 +36,55 @@ public class LoginViewModel :  ViewModelBase, IRoutableViewModel
     }
 
     public IScreen HostScreen { get; }
+    
     public string UrlPathSegment => "/login";
 
-    public ReactiveCommand<Unit, IRoutableViewModel> LoginCommand { get; set; }
+    public ReactiveCommand<Unit, IRoutableViewModel> LoginCommand { get; set; } 
+    
     public ReactiveCommand<Unit, IRoutableViewModel> RegisterCommand { get; set; }
 
     public LoginViewModel()
     {
         Email = "admin@gmail.com";
         Password = "123456";
-        HostScreen = Locator.Current.GetService<IScreen>()!; 
+        HostScreen = Locator.Current.GetService<IScreen>()!;
         LoginCommand = ReactiveCommand.CreateFromObservable(Login);
         RegisterCommand = ReactiveCommand.CreateFromObservable(Login);
     }
 
-    public LoginViewModel(IIdentityWebApi? identityWebApi = null, IUsersWebApi? usersWebApi = null, IScreen? screen = null)
+    public LoginViewModel(IScreen? screen = null, AuthService? authService = null, UserService? userService = null)
     {
-        _identityWebApi = identityWebApi ?? Locator.Current.GetService<IIdentityWebApi>();
-        _usersWebApi = usersWebApi ?? Locator.Current.GetService<IUsersWebApi>();
-        HostScreen = screen ?? Locator.Current.GetService<IScreen>()!; 
-            
+        _authService = authService ?? Locator.Current.GetService<AuthService>();
+        _userService = userService ?? Locator.Current.GetService<UserService>();
+        HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
+
         LoginCommand = ReactiveCommand.CreateFromObservable(Login, CanExecLogin());
-        RegisterCommand = ReactiveCommand.CreateFromObservable( () => 
-            HostScreen.Router.Navigate.Execute(new RegisterViewModel(_identityWebApi, _usersWebApi, HostScreen)));
+        RegisterCommand = ReactiveCommand.CreateFromObservable(() =>
+            HostScreen.Router.Navigate.Execute(new RegisterViewModel(HostScreen, _authService, _userService)));
     }
 
-    private IObservable<IRoutableViewModel> Login() => LoginAsync()
-        .Where(result => result)
-        .ObserveOn(RxApp.MainThreadScheduler)
-        .SelectMany(_ => HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen)));
-
-    private IObservable<bool> LoginAsync() => Observable.FromAsync(async cancellationToken =>
+    private IObservable<IRoutableViewModel> Login() => Observable.FromAsync(async cancellationToken =>
     {
-        _loginRequest.Email = _email;
-        _loginRequest.Password = _password;
-        
-        var authResponse = await _identityWebApi!.LoginAsync(_loginRequest, cancellationToken);
-        if (!authResponse.IsSuccessStatusCode)
+        var request = new LoginRequest
+        {
+            Email = Email,
+            Password = Password,
+        };
+
+        if (!await _authService!.LoginAsync(request, cancellationToken))
         {
             ErrorMessage = "Invalid username or password";
-            return false;
+            return null;
         }
 
-        var token = authResponse.Content!.Replace("\"", "");
-        StaticStorage.JwtToken = token;
-
-        var userResponse = await _usersWebApi!.GetCurrentUser(cancellationToken);
-        if (!userResponse.IsSuccessStatusCode)
+        if (!await _userService!.GetUserAsync(cancellationToken))
         {
             ErrorMessage = "Invalid username or password";
-            return false;
+            return null;
         }
         
-        StaticStorage.User = userResponse.Content;
-        return true;
-    });
+        return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
+    }).ObserveOn(RxApp.MainThreadScheduler).SelectMany(x => x!);
 
     private IObservable<bool> CanExecLogin() =>
         this.WhenAnyValue(

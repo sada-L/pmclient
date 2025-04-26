@@ -19,9 +19,6 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
     private readonly ICardWebApi? _cardWebApi;
     private readonly IGroupWebApi? _groupWebApi;
-    private User _user;
-    private List<Card> _cards = [];
-    private List<Group> _groups = [];
 
     private CardViewModel _selectedCard;
     private GroupViewModel _selectedGroup;
@@ -29,14 +26,9 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     private GroupViewModel _allCards;
     private GroupViewModel _deletedCards;
     private int _selectedCardIndex;
-    private ObservableCollection<GroupViewModel> _vmGroups;
+    private ObservableCollection<CardViewModel> _cardViewModels;
+    private ObservableCollection<GroupViewModel> _groupViewModels;
     private string _errorMessage;
-
-    public User User
-    {
-        get => _user;
-        set => this.RaiseAndSetIfChanged(ref _user, value);
-    }
 
     public CardViewModel SelectedCard
     {
@@ -50,10 +42,16 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _selectedGroup, value);
     }
 
+    public ObservableCollection<CardViewModel> Cards
+    {
+        get => _cardViewModels;
+        set => this.RaiseAndSetIfChanged(ref _cardViewModels, value);
+    }
+
     public ObservableCollection<GroupViewModel> Groups
     {
-        get => _vmGroups;
-        set => this.RaiseAndSetIfChanged(ref _vmGroups, value);
+        get => _groupViewModels;
+        set => this.RaiseAndSetIfChanged(ref _groupViewModels, value);
     }
 
     public int SelectedCardIndex
@@ -76,13 +74,6 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     public HomeViewModel()
     {
-        User = new User()
-        {
-            Id = 1,
-            Email = "user@gmail.com",
-            Username = "user",
-        };
-
         var cards = new List<Card>()
         {
             new Card()
@@ -111,6 +102,21 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
             new Group() { Id = 5, Title = "group5", Image = "\uf02e", GroupId = 4 },
         };
 
+        SetData(cards, groups);
+    }
+
+    public HomeViewModel(IScreen? hostScreen = null, ICardWebApi? cardWebApi = null, IGroupWebApi? groupWebApi = null)
+    {
+        HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
+        _cardWebApi = cardWebApi ?? Locator.Current.GetService<ICardWebApi>()!;
+        _groupWebApi = groupWebApi ?? Locator.Current.GetService<IGroupWebApi>()!;
+
+        LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
+        LoadDataCommand.Execute().Subscribe();
+    }
+
+    private void SetData(List<Card> cards, List<Group> groups)
+    {
         _allCards = new GroupViewModel(new Group()
         {
             Id = -1,
@@ -123,7 +129,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             Id = -1,
             Title = "Favorites",
-            Image = "\uf005",
+            Image = "\uf006",
             GroupId = 0
         }, cards.Where(x => x.IsFavorite).ToList(), null);
 
@@ -131,76 +137,27 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             Id = -1,
             Title = "Recently Deleted",
-            Image = "\uf1f8",
+            Image = "\uf014",
             GroupId = 0
         }, new List<Card>(), null);
-
-
-        var vmgroups = groups
-            .Where(x => x.GroupId == 0)
-            .Select(x => new GroupViewModel(x, cards, null, groups)).ToList();
-
-        Groups = new ObservableCollection<GroupViewModel>();
-        Groups.Add(_allCards);
-        Groups.Add(_favoriteCards);
-        Groups.AddRange(vmgroups);
-        Groups.Add(_deletedCards);
-
-        this.WhenAnyValue(x => x.SelectedGroup)
-            .Subscribe(x => SelectedCardIndex = 0);
-
-        SelectedGroup = Groups.FirstOrDefault();
-    }
-
-    public HomeViewModel(IScreen? hostScreen = null, ICardWebApi? cardWebApi = null, IGroupWebApi? groupWebApi = null)
-    {
-        User = StaticStorage.User!;
-        HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
-        _cardWebApi = cardWebApi ?? Locator.Current.GetService<ICardWebApi>()!;
-        _groupWebApi = groupWebApi ?? Locator.Current.GetService<IGroupWebApi>()!;
-
-        LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
-        LoadDataCommand.Execute().Subscribe();
-    }
-
-    private void SetList()
-    {
-        _allCards = new GroupViewModel(new Group()
-        {
-            Id = -1,
-            Title = "All Items",
-            Image = "\uf2ba",
-            GroupId = 0
-        }, _cards, null);
-
-        _favoriteCards = new GroupViewModel(new Group()
-        {
-            Id = -1,
-            Title = "Favorites",
-            Image = "\uf005",
-            GroupId = 0
-        }, _cards.Where(x => x.IsFavorite).ToList(), null);
-
-        _deletedCards = new GroupViewModel(new Group()
-        {
-            Id = -1,
-            Title = "Recently Deleted",
-            Image = "\uf1f8",
-            GroupId = 0
-        }, new List<Card>(), null);
-
-        var vmgroups = _groups
-            .Where(x => x.GroupId == 0)
-            .Select(x => new GroupViewModel(x, _cards, null, _groups)).ToList();
 
         Groups = [_allCards, _favoriteCards];
-        Groups.AddRange(vmgroups);
+        
+        Groups.AddRange(groups
+            .Where(x => x.GroupId == 0)
+            .Select(x => new GroupViewModel(x, cards, null, groups)).ToList());
+        
         Groups.Add(_deletedCards);
 
+        SelectedGroup = Groups.FirstOrDefault() ?? _allCards;
+        
+        Cards = new ObservableCollection<CardViewModel>(SelectedGroup.Cards);
+        
         this.WhenAnyValue(x => x.SelectedGroup)
             .Subscribe(x => SelectedCardIndex = 0);
 
-        SelectedGroup = Groups.FirstOrDefault() ?? _allCards;
+        this.WhenAnyValue(x => x.SelectedGroup.Cards)
+            .BindTo(this, x => x.Cards);
     }
 
     private async Task LoadDataAsync(CancellationToken cancellationToken)
@@ -214,7 +171,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
                 return;
             }
 
-            _cards = cardResponse.Content ?? new List<Card>();
+            var cards = cardResponse.Content ?? new List<Card>();
 
             var groupResponse = await _groupWebApi!.GetGroupsByUser(cancellationToken);
             if (!groupResponse.IsSuccessStatusCode)
@@ -223,9 +180,9 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
                 return;
             }
 
-            _groups = groupResponse.Content ?? new List<Group>();
+            var groups = groupResponse.Content ?? new List<Group>();
 
-            SetList();
+            SetData(cards, groups);
         }
         catch (Exception e)
         {
