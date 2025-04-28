@@ -3,64 +3,150 @@
 			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
-			mc:Ignorable="d" 
+			xmlns:view="clr-namespace:pmclient.Views"
+			mc:Ignorable="d" d:DesignWidth="400"
 			x:DataType="vm:CardViewModel"
 			x:Class="pmclient.Views.CardView">
 	<Design.DataContext>
-		<vm:CardViewModel/>
+		<vm:CardViewModel />
 	</Design.DataContext>
-	
+
 	<UserControl.Styles>
 		<Style Selector="TextBox">
-			<Setter Property="BorderBrush" Value="Transparent"/>
-			<Setter Property="VerticalAlignment" Value="Center"/>
-			<Setter Property="HorizontalContentAlignment" Value="Left"/>
-			<Setter Property="VerticalContentAlignment" Value="Center"/>
-			<Setter Property="CornerRadius" Value="10"/>
+			<Setter Property="BorderBrush" Value="Transparent" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="HorizontalContentAlignment" Value="Left" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+			<Setter Property="CornerRadius" Value="10" />
 		</Style>
-		
+
 		<Style Selector="Button">
-			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="Background" Value="Transparent" />
 		</Style>
 	</UserControl.Styles>
-	
+
 	<Grid RowDefinitions="Auto, *">
+		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
+			<StackPanel.Styles>
+				<Style Selector="ComboBox">
+					<Setter Property="BorderThickness" Value="0" />
+					<Style Selector="^ /template/ PathIcon#DropDownGlyph">
+						<Setter Property="IsVisible" Value="False"></Setter>
+					</Style>
+				</Style>
+			</StackPanel.Styles>
+			<ComboBox ItemsSource="{Binding }" SelectedItem="{Binding }">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<view:GroupListView />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+			<Separator Width="1" Height="25" />
+			<ComboBox ItemsSource="{Binding}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<view:GroupListView />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+		</StackPanel>
+
 		<StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-			<Button Command="{Binding EditCommand}">
-				<Button.Content>
-					<StackPanel Orientation="Horizontal" Spacing="2">
-						<TextBlock Classes="Icon" Text="&#xf044;"/>
-						<TextBlock Text="Edit"/>
-					</StackPanel>
-				</Button.Content>
-			</Button>
+			<Panel>
+				<StackPanel Spacing="10" Orientation="Horizontal" IsVisible="{Binding IsEnabled}">
+					<Button Command="{Binding SaveCommand}">
+						<Button.Content>
+							<StackPanel Orientation="Horizontal" Spacing="2">
+								<TextBlock Classes="Icon" Text="&#xf0c7;" />
+								<TextBlock Text="Save" />
+							</StackPanel>
+						</Button.Content>
+					</Button>
+
+					<Button Command="{Binding CancelCommand}">
+						<Button.Content>
+							<StackPanel Orientation="Horizontal" Spacing="2">
+								<TextBlock Classes="Icon" Text="&#xf0e2;" />
+								<TextBlock Text="Cancel" />
+							</StackPanel>
+						</Button.Content>
+					</Button>
+				</StackPanel>
+
+				<Button Command="{Binding EditCommand}"
+						IsVisible="{Binding !IsEnabled}">
+					<Button.Content>
+						<StackPanel Orientation="Horizontal" Spacing="2">
+							<TextBlock Classes="Icon" Text="&#xf044;" />
+							<TextBlock Text="Edit" />
+						</StackPanel>
+					</Button.Content>
+				</Button>
+			</Panel>
 			<Button>
 				<Button.Content>
-					<TextBlock Classes="Icon" Text="&#xf142;" FontSize="20"/>
+					<TextBlock Classes="Icon" Text="&#xf142;" FontSize="20" />
 				</Button.Content>
+				<Button.Flyout>
+					<Flyout>
+						<MenuFlyoutPresenter Margin="-15">
+							<MenuItem Header="Delete" Command="{Binding DeleteCommand}">
+								<MenuItem.Icon>
+									<TextBlock Classes="Icon" Text="&#xf014;" />
+								</MenuItem.Icon>
+							</MenuItem>
+
+							<MenuItem Header="Favorite" Command="{Binding FavoriteCommand}">
+								<MenuItem.Icon>
+									<TextBlock Classes="Icon" Text="&#xf006;" />
+								</MenuItem.Icon>
+							</MenuItem>
+						</MenuFlyoutPresenter>
+					</Flyout>
+				</Button.Flyout>
 			</Button>
 		</StackPanel>
-		
+
 		<StackPanel Grid.Row="1" Margin="10" Spacing="10" IsEnabled="{Binding IsEnabled}">
 			<StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
 				<Panel>
-					<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="45"/>
-					<TextBlock Classes="Icon" Text="&#xf005;" FontSize="25" Foreground="Gold" 
+					<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="45">
+						<TextBlock.ContextFlyout>
+							<Flyout>
+								<ListBox ItemsSource="{Binding Images}" Margin="10"
+										SelectedItem="{Binding Image}">
+									<ListBox.ItemsPanel>
+										<ItemsPanelTemplate>
+											<WrapPanel />
+										</ItemsPanelTemplate>
+									</ListBox.ItemsPanel>
+									<ListBox.ItemTemplate>
+										<DataTemplate>
+											<TextBlock FontSize="25" Classes="Icon" Text="{Binding}" />
+										</DataTemplate>
+									</ListBox.ItemTemplate>
+								</ListBox>
+							</Flyout>
+						</TextBlock.ContextFlyout>
+					</TextBlock>
+
+					<TextBlock Classes="Icon" Text="&#xf005;" FontSize="25" Foreground="Gold"
 								HorizontalAlignment="Right" VerticalAlignment="Bottom"
-								IsVisible="{Binding IsFavorite}"/>
+								IsVisible="{Binding IsFavorite}" />
 				</Panel>
-				<TextBox Text="{Binding Title}" FontSize="30"/>
+				<TextBox Text="{Binding Title}" FontSize="30" />
 			</StackPanel>
-			
+
 			<Border BorderThickness="1" BorderBrush="LightGray" CornerRadius="10">
 				<StackPanel Spacing="2">
-					<TextBox Text="{Binding Username}" UseFloatingWatermark="True" Watermark="username"/>
-					<TextBox Text="{Binding Password}" UseFloatingWatermark="True" Watermark="password"/>
+					<TextBox Text="{Binding Username}" UseFloatingWatermark="True" Watermark="username" />
+					<TextBox Text="{Binding Password}" UseFloatingWatermark="True" Watermark="password" />
 				</StackPanel>
 			</Border>
-			
-			<TextBox Text="{Binding Website}" UseFloatingWatermark="True" Watermark="website"/>
-			<TextBox Text="{Binding Notes}" UseFloatingWatermark="True" Watermark="notes"/>
+
+			<TextBox Text="{Binding Website}" UseFloatingWatermark="True" Watermark="website" />
+			<TextBox Text="{Binding Notes}" UseFloatingWatermark="True" Watermark="notes" />
 		</StackPanel>
 	</Grid>
 </UserControl>

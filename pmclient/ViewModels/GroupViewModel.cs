@@ -1,10 +1,6 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using Avalonia.Media.Imaging;
-using pmclient.Models;
 using ReactiveUI;
 using Group = pmclient.Models.Group;
 
@@ -12,24 +8,37 @@ namespace pmclient.ViewModels;
 
 public class GroupViewModel : ViewModelBase
 {
+    private Group _group;
+    private int _id;
     private string _title;
     private string _image;
+    private int _groupId;
     private ObservableCollection<GroupViewModel> _subGroups;
     private ObservableCollection<CardViewModel> _cards;
-    private bool _isExpanded; 
+    private bool _isExpanded;
 
-    public int Id { get; init; }
-    
+    public int Id
+    {
+        get => _id;
+        set => this.RaiseAndSetIfChanged(ref _id, value);
+    }
+
     public string Title
     {
-       get => _title;
-       set => this.RaiseAndSetIfChanged(ref _title, value);
+        get => _title;
+        set => this.RaiseAndSetIfChanged(ref _title, value);
     }
 
     public string Image
     {
         get => _image;
         set => this.RaiseAndSetIfChanged(ref _image, value);
+    }
+
+    public int GroupId
+    {
+        get => _groupId;
+        set => this.RaiseAndSetIfChanged(ref _groupId, value);
     }
 
     public bool IsExpanded
@@ -49,32 +58,21 @@ public class GroupViewModel : ViewModelBase
         get => _subGroups;
         set => this.RaiseAndSetIfChanged(ref _subGroups, value);
     }
-    
+
     public ICommand AddGroupCommand { get; }
 
     public GroupViewModel()
     {
-        
+        Cards = new ObservableCollection<CardViewModel>();
+        SubGroups = new ObservableCollection<GroupViewModel>();
     }
-    
-    public GroupViewModel(Group group, List<Card> cards, ICommand addGroupCommand, List<Group>? groups = null)
-    {
-        Title = group.Title;
-        Id = group.Id;
-        Image = Regex.Unescape(group.Image);
-        AddGroupCommand = addGroupCommand;
-        
-        if (group.Id == -1)
-            Cards = new ObservableCollection<CardViewModel>(cards
-                .Select(x => new CardViewModel(x)));
-        else
-            Cards = new ObservableCollection<CardViewModel>(cards
-                .Where(x => x.GroupId == group.Id)
-                .Select(x => new CardViewModel(x)));
 
-        if (groups != null)
-            SubGroups = new ObservableCollection<GroupViewModel>(groups
-                .Where(x => x.GroupId == group.Id)
-                .Select(x => new GroupViewModel(x, cards, addGroupCommand, groups)));
+    public GroupViewModel(Group group)
+    {
+        _group = group;
+        Id = group.Id;
+        Title = group.Title;
+        GroupId = group.GroupId;
+        Image = Regex.Unescape(group.Image);
     }
 }

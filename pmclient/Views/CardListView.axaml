@@ -5,22 +5,22 @@
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
 			mc:Ignorable="d" d:DesignWidth="" d:DesignHeight=""
 			x:Class="pmclient.Views.CardListView"
-			x:DataType="vm:CardViewModel" >
+			x:DataType="vm:CardViewModel">
 	<Design.DataContext>
-		<vm:CardViewModel/>
+		<vm:CardViewModel />
 	</Design.DataContext>
-	
+
 	<Border>
 		<DockPanel Margin="5">
 			<Panel>
-				<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="40"/>
-				<TextBlock Classes="Icon" Text="&#xf005;" FontSize="20" Foreground="Gold" 
+				<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="40" />
+				<TextBlock Classes="Icon" Text="&#xf005;" FontSize="20" Foreground="Gold"
 							HorizontalAlignment="Right" VerticalAlignment="Bottom"
-							IsVisible="{Binding IsFavorite}"/>
+							IsVisible="{Binding IsFavorite}" />
 			</Panel>
 			<StackPanel VerticalAlignment="Center">
-				<TextBlock Text="{Binding Title}" FontSize="20"/>	
-				<TextBlock Text="{Binding Website}"/>
+				<TextBlock Text="{Binding Title}" FontSize="20" />
+				<TextBlock Text="{Binding Website}" />
 			</StackPanel>
 		</DockPanel>
 	</Border>

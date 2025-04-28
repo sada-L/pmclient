@@ -8,102 +8,138 @@
 			x:Class="pmclient.Views.HomeView"
 			x:DataType="vm:HomeViewModel">
 	<Design.DataContext>
-		<vm:HomeViewModel/>
+		<vm:HomeViewModel />
 	</Design.DataContext>
-	
+
 	<UserControl.Styles>
 		<Style Selector="Border.SBorder">
-			<Setter Property="BorderBrush" Value="LightGray"/>
-			<Setter Property="BorderThickness" Value="2"/>
+			<Setter Property="BorderBrush" Value="LightGray" />
+			<Setter Property="BorderThickness" Value="2" />
 		</Style>
 		<Style Selector="Button">
-			<Setter Property="CornerRadius" Value="10"/>
-			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="CornerRadius" Value="10" />
+			<Setter Property="Background" Value="Transparent" />
+		</Style>
+		<Style Selector="MenuItem.SMenuItem">
+			<Setter Property="FontFamily" Value="{DynamicResource Icons}" />
+			<Setter Property="Command" Value="{Binding SortCommand}" />
+			<Setter Property="CommandParameter" Value="{Binding SelectedIndex, ElementName=SortMenu}" />
 		</Style>
 	</UserControl.Styles>
-					
-	<Border Classes="SBorder"> 
+
+	<Border Classes="SBorder">
 		<Grid RowDefinitions="Auto, *" ColumnDefinitions="auto, *, 2*">
+
+			<!--Header_Left-->
 			<Border Grid.Row="0" Grid.Column="0" Padding="10" Classes="SBorder" BorderThickness="0 0 0 2">
 				<DockPanel>
-					<Button DockPanel.Dock="Right" VerticalAlignment="Center" Command="{Binding LoadDataCommand}" >
+					<!--Refresh-->
+					<Button DockPanel.Dock="Right" VerticalAlignment="Center" Command="{Binding LoadDataCommand}">
 						<Button.Content>
-							<TextBlock Classes="Icon" Text="&#xf021;" FontSize="20"/>
+							<TextBlock Classes="Icon" Text="&#xf021;" FontSize="20" />
 						</Button.Content>
 					</Button>
-					<TextBlock Text="PassManager" VerticalAlignment="Center"/>
+
+					<!--AppName-->
+					<TextBlock Text="PassManager" VerticalAlignment="Center" />
 				</DockPanel>
 			</Border>
-			
-			<TreeView Grid.Row="1" Grid.Column="0" 
-					ItemsSource="{Binding Groups}" 
+
+			<!--Groups-->
+			<TreeView Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEnabled}"
+					ItemsSource="{Binding CurrentGroups}"
 					SelectedItem="{Binding SelectedGroup}">
 				<TreeView.ItemTemplate>
 					<TreeDataTemplate ItemsSource="{Binding SubGroups}">
-						<view:GroupListView/>
+						<view:GroupListView />
 					</TreeDataTemplate>
 				</TreeView.ItemTemplate>
 			</TreeView>
-			
-			<Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="2 0 0 2">
-				<Grid  ColumnDefinitions="*, Auto, *">
+
+			<!--Header_Right-->
+			<Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="2 0 0 2"
+					IsEnabled="{Binding IsEnabled}">
+				<Grid ColumnDefinitions="*, Auto, *">
 					<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
-						<Button >
-							<Button.Content>
-								<TextBlock Classes="Icon" Text="&#xf060;"/>
-							</Button.Content>
-						</Button>
-						
+						<!--Back-->
 						<Button>
 							<Button.Content>
-								<TextBlock Classes="Icon" Text="&#xf061;"/>
+								<TextBlock Classes="Icon" Text="&#xf060;" />
+							</Button.Content>
+						</Button>
+
+						<!--Next-->
+						<Button>
+							<Button.Content>
+								<TextBlock Classes="Icon" Text="&#xf061;" />
 							</Button.Content>
 						</Button>
 					</StackPanel>
-					
+
 					<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
-						<TextBox Watermark="Search" Width="280" CornerRadius="10"/>
-						<Button DockPanel.Dock="Right">
+						<!--Search-->
+						<TextBox Watermark="Search" Width="280" CornerRadius="10" Text="{Binding Search}" />
+
+						<!--Add-->
+						<Button DockPanel.Dock="Right" Command="{Binding AddCardCommand}"
+								IsEnabled="{Binding IsAddEnabled}">
 							<Button.Content>
-								<StackPanel Orientation="Horizontal" Spacing="5"> 
-									<TextBlock Classes="Icon" Text="&#xf067;"/>	 
-									<TextBlock Text="New Item"/>	 
+								<StackPanel Orientation="Horizontal" Spacing="5">
+									<TextBlock Classes="Icon" Text="&#xf067;" />
+									<TextBlock Text="New Item" />
 								</StackPanel>
 							</Button.Content>
 						</Button>
 					</StackPanel>
 				</Grid>
 			</Border>
-		
-			<Border Grid.Row="1" Grid.Column="1" Classes="SBorder" BorderThickness="2 0 2 0 ">
+
+			<!--Main-->
+			<Border Grid.Row="1" Grid.Column="1" Classes="SBorder" BorderThickness="2 0 2 0 "
+					IsEnabled="{Binding IsEnabled}">
 				<DockPanel>
 					<Border Classes="SBorder" DockPanel.Dock="Top" BorderThickness="0 0 0 2">
 						<DockPanel Margin="10">
+							<!--Sort-->
 							<Button DockPanel.Dock="Right">
 								<Button.Content>
-									<TextBlock Classes="Icon" Text="&#xf161;"/>
+									<TextBlock Classes="Icon" Text="&#xf161;" />
 								</Button.Content>
+								<Button.Flyout>
+									<Flyout>
+										<MenuFlyoutPresenter x:Name="SortMenu" Margin="-15">
+											<MenuItem Classes="SMenuItem" Header="&#xf15d; Title" />
+											<MenuItem Classes="SMenuItem" Header="&#xf15e; Title" />
+											<Separator />
+											<MenuItem Classes="SMenuItem" Header="&#xf15d; Website" />
+											<MenuItem Classes="SMenuItem" Header="&#xf15e; Website" />
+											<Separator />
+											<MenuItem Classes="SMenuItem" Header="&#xf15d; Username" />
+											<MenuItem Classes="SMenuItem" Header="&#xf15e; Username" />
+											<Separator />
+											<MenuItem Classes="SMenuItem" Header="&#xf161; Auto" />
+										</MenuFlyoutPresenter>
+									</Flyout>
+								</Button.Flyout>
 							</Button>
-							
-							<ComboBox HorizontalAlignment="Stretch" Margin="0 0 10 0" BorderBrush="Transparent">
-								
-							</ComboBox>	
 						</DockPanel>
 					</Border>
-					
-					<ListBox ItemsSource="{Binding Cards}" 
-							 SelectedItem="{Binding SelectedCard}"
-							 SelectedIndex="{Binding SelectedCardIndex}">
+
+					<!--Cards-->
+					<ListBox ItemsSource="{Binding CurrentCards}"
+							SelectedItem="{Binding SelectedCard}"
+							SelectedIndex="{Binding SelectedCardIndex}">
 						<ListBox.ItemTemplate>
 							<DataTemplate>
-								<view:CardListView/>
+								<view:CardListView />
 							</DataTemplate>
 						</ListBox.ItemTemplate>
 					</ListBox>
 				</DockPanel>
 			</Border>
-			
-			<ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding SelectedCard}"/>
+
+			<!--Card-->
+			<ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding SelectedCard}" />
 		</Grid>
 	</Border>
 </UserControl>

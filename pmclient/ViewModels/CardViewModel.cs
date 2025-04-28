@@ -1,24 +1,32 @@
+using System.Collections.Generic;
 using System.Reactive;
 using System.Text.RegularExpressions;
-using Avalonia.Media.Imaging;
+using System.Windows.Input;
 using pmclient.Models;
-using pmclient.Views;
 using ReactiveUI;
 
 namespace pmclient.ViewModels;
 
 public class CardViewModel : ViewModelBase
 {
+    private Card _card;
+    private int _id;
     private string _title;
     private string _username;
     private string _password;
-    private string _Website;
-    private string _notes;  
+    private string _website;
+    private string _notes;
     private string _image;
-    private int? _groupId; 
+    private int _groupId;
     private bool _isFavorite;
     private bool _isEnabled;
-    
+
+    public int Id
+    {
+        get => _id;
+        set => this.RaiseAndSetIfChanged(ref _id, value);
+    }
+
     public string Title
     {
         get => _title;
@@ -39,8 +47,8 @@ public class CardViewModel : ViewModelBase
 
     public string Website
     {
-        get => _Website;
-        set => this.RaiseAndSetIfChanged(ref _Website, value);
+        get => _website;
+        set => this.RaiseAndSetIfChanged(ref _website, value);
     }
 
     public string Notes
@@ -49,7 +57,7 @@ public class CardViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _notes, value);
     }
 
-    public int? GroupId
+    public int GroupId
     {
         get => _groupId;
         set => this.RaiseAndSetIfChanged(ref _groupId, value);
@@ -72,14 +80,37 @@ public class CardViewModel : ViewModelBase
         get => _isEnabled;
         set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
     }
-    
+
+    public List<string> Images { get; } =
+    [
+        "\uf1c5",
+        "\uf2ba",
+        "\uf2bc",
+        "\uf097",
+        "\uf274",
+        "\uf2c3",
+        "\uf015",
+        "\uf114",
+        "\uf03e"
+    ];
+
+    public ReactiveCommand<Unit, Unit> DeleteCommand { get; set; }
+
+    public ICommand ConfirmCommand { get; set; }
+
+    public ReactiveCommand<Unit, Unit> FavoriteCommand { get; }
+
     public ReactiveCommand<Unit, Unit> EditCommand { get; }
-    
+
+    public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> CancelCommand { get; }
+
     public CardViewModel()
     {
         var card = new Card
         {
-            Id = 1,
+            Id = 0,
             Title = "Title",
             Website = "www.site.com",
             Image = "\uf2bc",
@@ -87,22 +118,28 @@ public class CardViewModel : ViewModelBase
             Notes = "Notes",
             Password = "Password",
             GroupId = 1,
-            IsFavorite = true,
+            IsFavorite = false,
         };
-        Title = card.Title;
-        Website = card.Website;
-        Username = card.Username;
-        Notes = card.Notes;
-        Password = card.Password;
-        GroupId = card.GroupId;
-        IsFavorite = card.IsFavorite;
-        Image = Regex.Unescape(card.Image);
 
-        EditCommand = ReactiveCommand.Create(() => { IsEnabled = !IsEnabled; });
+        SetData(card);
+        EditCommand = ReactiveCommand.Create(Edit);
+        SaveCommand = ReactiveCommand.Create(Save);
+        CancelCommand = ReactiveCommand.Create(Cancel);
     }
-    
+
     public CardViewModel(Card card)
     {
+        SetData(card);
+        EditCommand = ReactiveCommand.Create(Edit);
+        SaveCommand = ReactiveCommand.Create(Save);
+        CancelCommand = ReactiveCommand.Create(Cancel);
+        FavoriteCommand = ReactiveCommand.Create(Favorite);
+    }
+
+    private void SetData(Card card)
+    {
+        _card = card;
+        Id = card.Id;
         Title = card.Title;
         Website = card.Website;
         Username = card.Username;
@@ -111,7 +148,42 @@ public class CardViewModel : ViewModelBase
         GroupId = card.GroupId;
         IsFavorite = card.IsFavorite;
         Image = Regex.Unescape(card.Image);
-        
-        EditCommand = ReactiveCommand.Create(() => { IsEnabled = !IsEnabled; });
+    }
+
+    private void Edit()
+    {
+        IsEnabled = !IsEnabled;
+    }
+
+    private void Save()
+    {
+        var card = new Card
+        {
+            Id = _card.Id,
+            Title = Title,
+            Username = Username,
+            Website = Website,
+            Password = Password,
+            GroupId = GroupId,
+            IsFavorite = IsFavorite,
+            Image = Image,
+            Notes = Notes,
+        };
+        SetData(card);
+        IsEnabled = !IsEnabled;
+        ConfirmCommand.Execute(true);
+    }
+
+    private void Cancel()
+    {
+        SetData(_card);
+        IsEnabled = !IsEnabled;
+        ConfirmCommand.Execute(false);
+    }
+
+    private void Favorite()
+    {
+        IsFavorite = !IsFavorite;
+        ConfirmCommand.Execute(true);
     }
 }
