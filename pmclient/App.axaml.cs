@@ -19,7 +19,7 @@ public partial class App : Application
     public override void OnFrameworkInitializationCompleted()
     {
         Bootstrapper.ConfigureServices();
-        
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();

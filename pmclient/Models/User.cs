@@ -5,10 +5,12 @@ namespace pmclient.Models;
 
 public sealed class User
 {
-    [JsonPropertyName("id")] 
+    [JsonPropertyName("id")]
     public required int Id { get; init; }
-    [JsonPropertyName("username")]
+
+    [JsonPropertyName("username")] 
     public required string Username { get; init; }
+
     [JsonPropertyName("email")] 
     public required string Email { get; init; }
 }

@@ -8,28 +8,28 @@
 			x:DataType="vm:RegisterViewModel"
 			Background="{StaticResource Light}">
 	<Design.DataContext>
-		<vm:RegisterViewModel/>
+		<vm:RegisterViewModel />
 	</Design.DataContext>
-	
-	<Border Background="{StaticResource AspDark}" Padding="30" HorizontalAlignment="Center" 
+
+	<Border Background="{StaticResource AspDark}" Padding="30" HorizontalAlignment="Center"
 			VerticalAlignment="Center" CornerRadius="25" BoxShadow="5 5 10 0 darkgray">
 		<StackPanel Spacing="15">
-			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}"/>
-			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email"/>
-			<TextBox Classes="STextBox" Text="{Binding Username}" Watermark="Username"/> 
-			<TextBox Classes="STextBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*"/>
-			<TextBox Classes="STextBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" PasswordChar="*"/>
-			
-			<Button Classes="SButton" Command="{Binding BackCommand}" 
-					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-					Background="{DynamicResource Dark}" Content="Back"/>
-			
-			<Button Classes="SButton" Command="{Binding RegisterCommand}" 
-					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-					Background="{DynamicResource Dark}" Content="Register"/>
-			
+			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}" />
+			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email" />
+			<TextBox Classes="STextBox" Text="{Binding Username}" Watermark="Username" />
+			<TextBox Classes="STextBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" />
+			<TextBox Classes="STextBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" PasswordChar="*" />
+
+			<Button Classes="SButton" Command="{Binding BackCommand}"
+					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+					Background="{DynamicResource Dark}" Content="Back" />
+
+			<Button Classes="SButton" Command="{Binding RegisterCommand}"
+					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+					Background="{DynamicResource Dark}" Content="Register" />
+
 			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-					   Foreground="{DynamicResource Light}"/> 
+						Foreground="{DynamicResource Light}" />
 		</StackPanel>
 	</Border>
 </UserControl>

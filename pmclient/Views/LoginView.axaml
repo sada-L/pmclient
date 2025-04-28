@@ -7,25 +7,25 @@
 			x:DataType="vm:LoginViewModel"
 			x:Class="pmclient.Views.LoginView">
 	<Design.DataContext>
-		<vm:LoginViewModel/>
+		<vm:LoginViewModel />
 	</Design.DataContext>
-	
-	<Border Background="{StaticResource AspDark}" Padding="30" HorizontalAlignment="Center" 
+
+	<Border Background="{StaticResource AspDark}" Padding="30" HorizontalAlignment="Center"
 			VerticalAlignment="Center" CornerRadius="25" BoxShadow="5 5 10 0 darkgray">
 		<StackPanel Spacing="15">
-			<TextBlock Text="Login" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}"/>
-			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email"/>
-			<TextBox Classes="STextBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*"/>
-			
-			<Button Classes="SButton" Command="{Binding RegisterCommand}" 
-					Padding="2" Margin="0" Content="Register new account"/>
-			
-			<Button Classes="SButton" Command="{Binding LoginCommand}" 
-					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" 
-					Background="{DynamicResource Dark}" Content="Sign in"/>
-			
+			<TextBlock Text="Login" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}" />
+			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email" />
+			<TextBox Classes="STextBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" />
+
+			<Button Classes="SButton" Command="{Binding RegisterCommand}"
+					Padding="2" Margin="0" Content="Register new account" />
+
+			<Button Classes="SButton" Command="{Binding LoginCommand}"
+					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+					Background="{DynamicResource Dark}" Content="Sign in" />
+
 			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-					   Foreground="{DynamicResource Light}"/> 
+						Foreground="{DynamicResource Light}" />
 		</StackPanel>
 	</Border>
 </UserControl>

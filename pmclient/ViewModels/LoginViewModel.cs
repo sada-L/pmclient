@@ -36,11 +36,11 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
     }
 
     public IScreen HostScreen { get; }
-    
+
     public string UrlPathSegment => "/login";
 
-    public ReactiveCommand<Unit, IRoutableViewModel> LoginCommand { get; set; } 
-    
+    public ReactiveCommand<Unit, IRoutableViewModel> LoginCommand { get; set; }
+
     public ReactiveCommand<Unit, IRoutableViewModel> RegisterCommand { get; set; }
 
     public LoginViewModel()
@@ -82,7 +82,7 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
             ErrorMessage = "Invalid username or password";
             return null;
         }
-        
+
         return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
     }).ObserveOn(RxApp.MainThreadScheduler).SelectMany(x => x!);
 

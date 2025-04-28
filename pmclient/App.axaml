@@ -1,102 +1,102 @@
 <Application xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             x:Class="pmclient.App"
-             xmlns:local="using:pmclient"
-             RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			x:Class="pmclient.App"
+			xmlns:local="using:pmclient"
+			RequestedThemeVariant="Default">
+	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
-    <Application.DataTemplates>
-        <local:ViewLocator/>
-    </Application.DataTemplates>
-  
-    <Application.Styles>
-        <FluentTheme />
-       
-        <Style Selector="UserControl">
-            <Setter Property="Background" Value="Transparent"/>
-        </Style>
-        
-        <Style Selector="Button.SButton">
-           <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
-           <Setter Property="Background" Value="Transparent"/> 
-           <Setter Property="CornerRadius" Value="10"/> 
-           
-           <Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-               <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
-               <Setter Property="Background" Value="{DynamicResource AspNeutral}"/>
-           </Style> 
-           
-           <Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-               <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
-               <Setter Property="Background" Value="{DynamicResource AspNeutral}"/>
-           </Style>
-           
-           <Style Selector="^:disable /template/ ContentPresenter#PART_ContentPresenter">
-               <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
-               <Setter Property="Background" Value="{DynamicResource AspNeutral}"/>
-           </Style>
-        </Style>
-         
-        <Style Selector="TextBox.STextBox">
-           <Setter Property="CornerRadius" Value="10"/> 
-           
-           <Style Selector="^:pointerover">
-                <Setter Property="Foreground" Value="{DynamicResource Light}"/> 
-           </Style> 
-           
-           <Style Selector="^:focus">
-               <Setter Property="Foreground" Value="{DynamicResource Dark}"/>
-               
-               <Style Selector="^ /template/ Border#PART_BorderElement">
-                   <Setter Property="Background" Value="{DynamicResource Neutral}"/>
-                   <Setter Property="BorderBrush" Value="{DynamicResource AspNeutral}"/>
-               </Style>
-           </Style>
-           
-           <Style Selector="^:disabled">
-               <Setter Property="Foreground" Value="Black" />
+	<Application.DataTemplates>
+		<local:ViewLocator />
+	</Application.DataTemplates>
 
-               <Style Selector="^ /template/ Border#PART_BorderElement">
-                   <Setter Property="Background" Value="Transparent" />
-               </Style>
+	<Application.Styles>
+		<FluentTheme />
 
-               <Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
-                   <Setter Property="Foreground" Value="Black" />
-               </Style>
-           </Style>
-        </Style>
-        
-        <Style Selector="TextBox">
-            <Style Selector="^:disabled">
-                <Setter Property="Foreground" Value="Black" />
-                
-                <Style Selector="^ /template/ Border#PART_BorderElement">
-                    <Setter Property="BorderBrush" Value="{DynamicResource AspNeutral}" />
-                    <Setter Property="Background" Value="Transparent"/>
-                </Style>
+		<Style Selector="UserControl">
+			<Setter Property="Background" Value="Transparent" />
+		</Style>
 
-                <Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
-                    <Setter Property="Foreground" Value="{DynamicResource AspDark}" />
-                </Style>
-            </Style>
-        </Style>    
-         
-        <Style Selector="TextBlock.Icon">
-            <Setter Property="FontFamily" Value="{DynamicResource Icons}"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-        </Style>
-    </Application.Styles>
-             
-    <Application.Resources>
-        <FontFamily x:Key="MainFont">Roboto</FontFamily>
-        <FontFamily x:Key="Icons">avares://pmclient/Assets/FontAwesome.otf#FontAwesome</FontFamily>
-        <Color x:Key="Dark">#00171F</Color>
-        <Color x:Key="Neutral">#ECE5F0</Color>
-        <Color x:Key="Light">#FFFFFA</Color>
-        <Color x:Key="AspDark">#702632</Color>
-        <Color x:Key="AspNeutral">#912F40</Color>
-    </Application.Resources>
-             
-             
+		<Style Selector="Button.SButton">
+			<Setter Property="Foreground" Value="{DynamicResource Light}" />
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="CornerRadius" Value="10" />
+
+			<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource Light}" />
+				<Setter Property="Background" Value="{DynamicResource AspNeutral}" />
+			</Style>
+
+			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource Light}" />
+				<Setter Property="Background" Value="{DynamicResource AspNeutral}" />
+			</Style>
+
+			<Style Selector="^:disable /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="{DynamicResource Light}" />
+				<Setter Property="Background" Value="{DynamicResource AspNeutral}" />
+			</Style>
+		</Style>
+
+		<Style Selector="TextBox.STextBox">
+			<Setter Property="CornerRadius" Value="10" />
+
+			<Style Selector="^:pointerover">
+				<Setter Property="Foreground" Value="{DynamicResource Light}" />
+			</Style>
+
+			<Style Selector="^:focus">
+				<Setter Property="Foreground" Value="{DynamicResource Dark}" />
+
+				<Style Selector="^ /template/ Border#PART_BorderElement">
+					<Setter Property="Background" Value="{DynamicResource Neutral}" />
+					<Setter Property="BorderBrush" Value="{DynamicResource AspNeutral}" />
+				</Style>
+			</Style>
+
+			<Style Selector="^:disabled">
+				<Setter Property="Foreground" Value="Black" />
+
+				<Style Selector="^ /template/ Border#PART_BorderElement">
+					<Setter Property="Background" Value="Transparent" />
+				</Style>
+
+				<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
+					<Setter Property="Foreground" Value="Black" />
+				</Style>
+			</Style>
+		</Style>
+
+		<Style Selector="TextBox">
+			<Style Selector="^:disabled">
+				<Setter Property="Foreground" Value="Black" />
+
+				<Style Selector="^ /template/ Border#PART_BorderElement">
+					<Setter Property="BorderBrush" Value="{DynamicResource AspNeutral}" />
+					<Setter Property="Background" Value="Transparent" />
+				</Style>
+
+				<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
+					<Setter Property="Foreground" Value="{DynamicResource AspDark}" />
+				</Style>
+			</Style>
+		</Style>
+
+		<Style Selector="TextBlock.Icon">
+			<Setter Property="FontFamily" Value="{DynamicResource Icons}" />
+			<Setter Property="HorizontalAlignment" Value="Center" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+	</Application.Styles>
+
+	<Application.Resources>
+		<FontFamily x:Key="MainFont">Roboto</FontFamily>
+		<FontFamily x:Key="Icons">avares://pmclient/Assets/FontAwesome.otf#FontAwesome</FontFamily>
+		<Color x:Key="Dark">#00171F</Color>
+		<Color x:Key="Neutral">#ECE5F0</Color>
+		<Color x:Key="Light">#FFFFFA</Color>
+		<Color x:Key="AspDark">#702632</Color>
+		<Color x:Key="AspNeutral">#912F40</Color>
+	</Application.Resources>
+
+
 </Application>

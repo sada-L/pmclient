@@ -43,7 +43,7 @@ public class AuthService
         var refreshToken = await TokenStorage.LoadTokenAsync();
         if (refreshToken == null) return false;
 
-        var request = new RefreshRequest{ RefreshToken = refreshToken };
+        var request = new RefreshRequest { RefreshToken = refreshToken };
         var response = await _identityWebApi!.RefreshTokenAsync(request, cancellationToken);
         if (!response.IsSuccessStatusCode) return false;
 

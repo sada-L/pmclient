@@ -10,30 +10,30 @@ namespace pmclient.Extensions;
 
 public static class RefitClientExtensions
 {
-   public static IServiceCollection AddWebApiClient<TClient, TMessageHandler>(this IServiceCollection services)
-      where TClient : class
-      where TMessageHandler : DelegatingHandler
-   {
-      string baseAddress = ApiEndpoints.BaseAddress;
+    public static IServiceCollection AddWebApiClient<TClient, TMessageHandler>(this IServiceCollection services)
+        where TClient : class
+        where TMessageHandler : DelegatingHandler
+    {
+        string baseAddress = ApiEndpoints.BaseAddress;
 
-      services
-         .AddRefitClient<TClient>()
-         .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
-         .AddHttpMessageHandler<TMessageHandler>();
-      
-      return services;
-   }
-   
-   public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services)
-      where TClient : class
-   {
-      string baseAddress = ApiEndpoints.BaseAddress;
+        services
+            .AddRefitClient<TClient>()
+            .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
+            .AddHttpMessageHandler<TMessageHandler>();
 
-      services
-         .AddRefitClient<TClient>()
-         .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
-         .AddHttpMessageHandler<BearerAuthorizationMessageHandler>();
-      
-      return services;
-   }
+        return services;
+    }
+
+    public static IServiceCollection AddWebApiClient<TClient>(this IServiceCollection services)
+        where TClient : class
+    {
+        string baseAddress = ApiEndpoints.BaseAddress;
+
+        services
+            .AddRefitClient<TClient>()
+            .ConfigureHttpClient(config => config.BaseAddress = new Uri(baseAddress))
+            .AddHttpMessageHandler<BearerAuthorizationMessageHandler>();
+
+        return services;
+    }
 }

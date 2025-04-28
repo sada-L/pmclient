@@ -9,9 +9,9 @@ namespace pmclient.Helpers;
 public static class TokenStorage
 {
     private static readonly string StoragePath = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PassManager", "token.dat" );
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PassManager", "token.dat");
 
-    private static readonly byte[] Key = Encoding.UTF8.GetBytes("your-32-char-long-key-here-12345"); 
+    private static readonly byte[] Key = Encoding.UTF8.GetBytes("your-32-char-long-key-here-12345");
 
     public static async Task SaveTokenAsync(string token)
     {
@@ -19,7 +19,7 @@ public static class TokenStorage
 
         using Aes aes = Aes.Create();
         aes.Key = Key;
-        aes.IV = new byte[16]; 
+        aes.IV = new byte[16];
 
         using var encryptor = aes.CreateEncryptor();
         await using var fileStream = new FileStream(StoragePath, FileMode.Create);
@@ -47,7 +47,7 @@ public static class TokenStorage
     {
         if (File.Exists(StoragePath))
             File.Delete(StoragePath);
-        
+
         return Task.CompletedTask;
     }
 }

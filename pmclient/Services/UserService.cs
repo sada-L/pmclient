@@ -16,10 +16,10 @@ public class UserService
 
     public async Task<bool> GetUserAsync(CancellationToken cancellationToken)
     {
-       var response = await _usersWebApi.GetCurrentUser(cancellationToken);
-       if (!response.IsSuccessStatusCode) return false;
-       
-       StaticStorage.User = response.Content!;
-       return true;
+        var response = await _usersWebApi.GetCurrentUser(cancellationToken);
+        if (!response.IsSuccessStatusCode) return false;
+
+        StaticStorage.User = response.Content!;
+        return true;
     }
 }
