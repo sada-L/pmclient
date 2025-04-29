@@ -15,10 +15,10 @@
 		<StackPanel Spacing="15">
 			<TextBlock Text="Login" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}" />
 			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email" />
-			<TextBox Classes="STextBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" />
+			<TextBox Classes="STextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
 
 			<Button Classes="SButton" Command="{Binding RegisterCommand}"
-					Padding="2" Margin="0" Content="Register new account" />
+					Padding="2" Margin="0" Content="Register new account" HorizontalAlignment="Center" />
 
 			<Button Classes="SButton" Command="{Binding LoginCommand}"
 					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"

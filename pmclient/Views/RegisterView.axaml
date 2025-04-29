@@ -17,8 +17,8 @@
 			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}" />
 			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email" />
 			<TextBox Classes="STextBox" Text="{Binding Username}" Watermark="Username" />
-			<TextBox Classes="STextBox" Text="{Binding Password}" Watermark="Password" PasswordChar="*" />
-			<TextBox Classes="STextBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" PasswordChar="*" />
+			<TextBox Classes="STextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
+			<TextBox Classes="STextBox PasswordBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" />
 
 			<Button Classes="SButton" Command="{Binding BackCommand}"
 					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"

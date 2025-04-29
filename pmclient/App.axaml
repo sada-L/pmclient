@@ -38,6 +38,7 @@
 		</Style>
 
 		<Style Selector="TextBox.STextBox">
+			<Setter Property="UseFloatingWatermark" Value="True" />
 			<Setter Property="CornerRadius" Value="10" />
 
 			<Style Selector="^:pointerover">
@@ -53,32 +54,44 @@
 				</Style>
 			</Style>
 
-			<Style Selector="^:disabled">
-				<Setter Property="Foreground" Value="Black" />
-
-				<Style Selector="^ /template/ Border#PART_BorderElement">
-					<Setter Property="Background" Value="Transparent" />
-				</Style>
-
-				<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
-					<Setter Property="Foreground" Value="Black" />
-				</Style>
+			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
+				<Setter Property="Foreground" Value="{DynamicResource AspDark}" />
 			</Style>
 		</Style>
+		
+		<Style Selector="TextBox.PasswordBox[AcceptsReturn=False][IsReadOnly=False]:not(TextBox:empty)">
+			<Setter Property="PasswordChar" Value="*"/>
+			<Setter Property="TextInputOptions.ContentType" Value="Password"/>
+			<Setter Property="InnerRightContent">
+				<Template>
+					<ToggleButton IsChecked="{Binding $parent[TextBox].RevealPassword, Mode=TwoWay}">
+						<ToggleButton.Styles>
+							<Style Selector="ToggleButton">
+								<Setter Property="Background" Value="Transparent" />
+								<Setter Property="CornerRadius" Value="10" />
+								<Setter Property="VerticalAlignment" Value="Stretch" />
 
-		<Style Selector="TextBox">
-			<Style Selector="^:disabled">
-				<Setter Property="Foreground" Value="Black" />
+								<Style Selector="^:checked">
+									<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+										<Setter Property="Background" Value="Transparent" />
+									</Style>
 
-				<Style Selector="^ /template/ Border#PART_BorderElement">
-					<Setter Property="BorderBrush" Value="{DynamicResource AspNeutral}" />
-					<Setter Property="Background" Value="Transparent" />
-				</Style>
+									<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+										<Setter Property="Background" Value="Transparent" />
+									</Style>
+								</Style>
+							</Style>
+						</ToggleButton.Styles>
 
-				<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
-					<Setter Property="Foreground" Value="{DynamicResource AspDark}" />
-				</Style>
-			</Style>
+						<Panel>
+							<PathIcon Data="{DynamicResource PasswordBoxRevealButtonData}" Height="8" Width="12"
+									IsVisible="{Binding !$parent[ToggleButton].IsChecked}" />
+							<PathIcon Data="{DynamicResource PasswordBoxHideButtonData}" Height="12" Width="12"
+									IsVisible="{Binding $parent[ToggleButton].IsChecked}" />
+						</Panel>
+					</ToggleButton>
+				</Template>
+			</Setter>
 		</Style>
 
 		<Style Selector="TextBlock.Icon">
