@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using ReactiveUI;
@@ -15,7 +17,8 @@ public class GroupViewModel : ViewModelBase
     private int _groupId;
     private ObservableCollection<GroupViewModel> _subGroups;
     private ObservableCollection<CardViewModel> _cards;
-    private bool _isExpanded;
+    private bool _isEnable;
+    private bool _isVisible;
 
     public int Id
     {
@@ -41,11 +44,30 @@ public class GroupViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _groupId, value);
     }
 
-    public bool IsExpanded
+    public bool IsEnable
     {
-        get => _isExpanded;
-        set => this.RaiseAndSetIfChanged(ref _isExpanded, value);
+        get => _isEnable;
+        set => this.RaiseAndSetIfChanged(ref _isEnable, value);
     }
+
+    public bool IsVisible
+    {
+        get => _isVisible;
+        set => this.RaiseAndSetIfChanged(ref _isVisible, value);
+    }
+
+    public List<string> Images { get; } =
+    [
+        "\uf1c5",
+        "\uf2ba",
+        "\uf2bc",
+        "\uf097",
+        "\uf274",
+        "\uf2c3",
+        "\uf015",
+        "\uf114",
+        "\uf03e"
+    ];
 
     public ObservableCollection<CardViewModel> Cards
     {
@@ -59,7 +81,17 @@ public class GroupViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _subGroups, value);
     }
 
-    public ICommand AddGroupCommand { get; }
+    public ICommand ConfirmCommand { get; set; }
+
+    public ICommand AddCommand { get; set; }
+
+    public ICommand DeleteCommand { get; set; }
+
+    public ReactiveCommand<Unit, Unit> EditCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> CancelCommand { get; }
 
     public GroupViewModel()
     {
@@ -74,5 +106,47 @@ public class GroupViewModel : ViewModelBase
         Title = group.Title;
         GroupId = group.GroupId;
         Image = Regex.Unescape(group.Image);
+        Cards = new ObservableCollection<CardViewModel>();
+        SubGroups = new ObservableCollection<GroupViewModel>();
+        IsVisible = Id > 0 && GroupId == 0;
+
+        EditCommand = ReactiveCommand.Create(Edit);
+        SaveCommand = ReactiveCommand.Create(Save);
+        CancelCommand = ReactiveCommand.Create(Cancel);
+    }
+
+    private void SetData(Group group)
+    {
+        _group = group;
+        Id = group.Id;
+        Title = group.Title;
+        GroupId = group.GroupId;
+        Image = Regex.Unescape(group.Image);
+    }
+
+    private void Edit()
+    {
+        IsEnable = !IsEnable;
+    }
+
+    private void Save()
+    {
+        ConfirmCommand.Execute(true);
+        var group = new Group
+        {
+            Id = Id,
+            Title = Title,
+            GroupId = GroupId,
+            Image = Image,
+        };
+        SetData(group);
+        IsEnable = !IsEnable;
+    }
+
+    private void Cancel()
+    {
+        SetData(_group);
+        IsEnable = !IsEnable;
+        ConfirmCommand.Execute(false);
     }
 }

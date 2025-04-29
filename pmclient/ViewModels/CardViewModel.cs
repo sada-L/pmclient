@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
@@ -19,7 +20,12 @@ public class CardViewModel : ViewModelBase
     private string _image;
     private int _groupId;
     private bool _isFavorite;
-    private bool _isEnabled;
+    private bool _isEnable;
+
+    private GroupViewModel _headerGroup = new GroupViewModel();
+    private GroupViewModel _currentGroup = new GroupViewModel();
+    private ObservableCollection<GroupViewModel> _headerGroups = new ObservableCollection<GroupViewModel>();
+    private ObservableCollection<GroupViewModel> _currentGroups = new ObservableCollection<GroupViewModel>();
 
     public int Id
     {
@@ -75,10 +81,34 @@ public class CardViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _image, value);
     }
 
-    public bool IsEnabled
+    public bool IsEnable
     {
-        get => _isEnabled;
-        set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
+        get => _isEnable;
+        set => this.RaiseAndSetIfChanged(ref _isEnable, value);
+    }
+
+    public GroupViewModel HeaderGroup
+    {
+        get => _headerGroup;
+        set => this.RaiseAndSetIfChanged(ref _headerGroup, value);
+    }
+
+    public GroupViewModel CurrentGroup
+    {
+        get => _currentGroup;
+        set => this.RaiseAndSetIfChanged(ref _currentGroup, value);
+    }
+
+    public ObservableCollection<GroupViewModel> HeaderGroups
+    {
+        get => _headerGroups;
+        set => this.RaiseAndSetIfChanged(ref _headerGroups, value);
+    }
+
+    public ObservableCollection<GroupViewModel> CurrentGroups
+    {
+        get => _currentGroups;
+        set => this.RaiseAndSetIfChanged(ref _currentGroups, value);
     }
 
     public List<string> Images { get; } =
@@ -94,9 +124,9 @@ public class CardViewModel : ViewModelBase
         "\uf03e"
     ];
 
-    public ReactiveCommand<Unit, Unit> DeleteCommand { get; set; }
-
     public ICommand ConfirmCommand { get; set; }
+
+    public ReactiveCommand<Unit, Unit> DeleteCommand { get; set; }
 
     public ReactiveCommand<Unit, Unit> FavoriteCommand { get; }
 
@@ -152,14 +182,15 @@ public class CardViewModel : ViewModelBase
 
     private void Edit()
     {
-        IsEnabled = !IsEnabled;
+        IsEnable = !IsEnable;
     }
 
     private void Save()
     {
+        ConfirmCommand.Execute(true);
         var card = new Card
         {
-            Id = _card.Id,
+            Id = Id,
             Title = Title,
             Username = Username,
             Website = Website,
@@ -170,14 +201,13 @@ public class CardViewModel : ViewModelBase
             Notes = Notes,
         };
         SetData(card);
-        IsEnabled = !IsEnabled;
-        ConfirmCommand.Execute(true);
+        IsEnable = !IsEnable;
     }
 
     private void Cancel()
     {
         SetData(_card);
-        IsEnabled = !IsEnabled;
+        IsEnable = !IsEnable;
         ConfirmCommand.Execute(false);
     }
 

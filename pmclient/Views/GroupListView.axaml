@@ -10,12 +10,12 @@
 		<vm:GroupViewModel />
 	</Design.DataContext>
 
-	<StackPanel Margin="5" Spacing="10" Orientation="Horizontal">
+	<StackPanel Spacing="10" Orientation="Horizontal">
 		<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="25" />
 		<TextBlock Text="{Binding Title}" VerticalAlignment="Center" />
-		<Button Content="+" Command="{Binding AddGroupCommand}" Background="Transparent"
-				Padding="2 -3 2 2" FontSize="20" CornerRadius="10"
-				VerticalContentAlignment="Center" VerticalAlignment="Center"
-				IsVisible="{Binding IsExpanded}" />
+		<!-- <Button Content="+" Command="{Binding AddGroupCommand}" Background="Transparent" -->
+		<!-- 		Padding="2 -3 2 2" FontSize="20" CornerRadius="10" -->
+		<!-- 		VerticalContentAlignment="Center" VerticalAlignment="Center" -->
+		<!-- 		IsVisible="{Binding IsExpanded}" /> -->
 	</StackPanel>
 </UserControl>

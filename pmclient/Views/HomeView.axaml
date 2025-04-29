@@ -51,7 +51,15 @@
 					SelectedItem="{Binding SelectedGroup}">
 				<TreeView.ItemTemplate>
 					<TreeDataTemplate ItemsSource="{Binding SubGroups}">
-						<view:GroupListView />
+						<DockPanel>
+							<Button DockPanel.Dock="Right" IsVisible="{Binding IsVisible}"
+									Command="{Binding AddCommand}">
+								<Button.Content>
+									<TextBlock Classes="Icon" Text="&#xf067;" />
+								</Button.Content>
+							</Button>
+							<view:GroupListView />
+						</DockPanel>
 					</TreeDataTemplate>
 				</TreeView.ItemTemplate>
 			</TreeView>
@@ -81,14 +89,30 @@
 						<TextBox Watermark="Search" Width="280" CornerRadius="10" Text="{Binding Search}" />
 
 						<!--Add-->
-						<Button DockPanel.Dock="Right" Command="{Binding AddCardCommand}"
-								IsEnabled="{Binding IsAddEnabled}">
+						<Button DockPanel.Dock="Right">
 							<Button.Content>
 								<StackPanel Orientation="Horizontal" Spacing="5">
 									<TextBlock Classes="Icon" Text="&#xf067;" />
 									<TextBlock Text="New Item" />
 								</StackPanel>
 							</Button.Content>
+							<Button.Flyout>
+								<MenuFlyout>
+									<MenuItem Header="New Card" Command="{Binding AddCardCommand}"
+											IsEnabled="{Binding IsAddEnabled}">
+										<MenuItem.Icon>
+											<TextBlock Classes="Icon" Text="&#xf2c3;" />
+										</MenuItem.Icon>
+									</MenuItem>
+									<Separator />
+									<MenuItem Header="New Group" Command="{Binding AddGroupCommand}"
+											IsEnabled="{Binding IsEnabled}">
+										<MenuItem.Icon>
+											<TextBlock Classes="Icon" Text="&#xf2ba;" />
+										</MenuItem.Icon>
+									</MenuItem>
+								</MenuFlyout>
+							</Button.Flyout>
 						</Button>
 					</StackPanel>
 				</Grid>
@@ -131,7 +155,9 @@
 							SelectedIndex="{Binding SelectedCardIndex}">
 						<ListBox.ItemTemplate>
 							<DataTemplate>
-								<view:CardListView />
+								<StackPanel>
+									<view:CardListView />
+								</StackPanel>
 							</DataTemplate>
 						</ListBox.ItemTemplate>
 					</ListBox>
@@ -139,7 +165,10 @@
 			</Border>
 
 			<!--Card-->
-			<ContentControl Grid.Row="1" Grid.Column="2" Content="{Binding SelectedCard}" />
+			<Panel Grid.Row="1" Grid.Column="2">
+				<ContentControl Content="{Binding SelectedCard}" Background="White" />
+				<ContentControl Content="{Binding SelectedGroup}" IsVisible="{Binding IsGroupAdd}" />
+			</Panel>
 		</Grid>
 	</Border>
 </UserControl>
