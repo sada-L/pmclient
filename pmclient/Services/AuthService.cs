@@ -53,7 +53,7 @@ public class AuthService
         return true;
     }
 
-    public async Task LogoutAsync()
+    public static async Task LogoutAsync()
     {
         StaticStorage.JwtToken = null;
         StaticStorage.User = null;

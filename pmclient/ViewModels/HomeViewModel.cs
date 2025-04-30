@@ -9,6 +9,7 @@ using System.Windows.Input;
 using DynamicData;
 using pmclient.Models;
 using pmclient.RefitClients;
+using pmclient.Services;
 using ReactiveUI;
 using Splat;
 
@@ -100,6 +101,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     public ICommand LoadDataCommand { get; }
 
+    public ICommand LogoutCommand { get; }
+
     public ICommand SortCommand { get; }
 
     public ICommand AddCardCommand { get; }
@@ -165,6 +168,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         AddCardCommand = ReactiveCommand.Create(AddCard);
         AddGroupCommand = ReactiveCommand.Create(AddHeaderGroup);
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
+        LogoutCommand = ReactiveCommand.CreateFromObservable(LogOut);
         LoadDataCommand.Execute(null);
     }
 
@@ -450,6 +454,12 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
             return;
         }
     }
+
+    private IObservable<IRoutableViewModel> LogOut() => Observable.FromAsync(async token =>
+    {
+        await AuthService.LogoutAsync();
+        return HostScreen.Router.Navigate.Execute(new LoginViewModel(HostScreen));
+    }).ObserveOn(RxApp.MainThreadScheduler).SelectMany(x => x);
 
     private void InitList()
     {
