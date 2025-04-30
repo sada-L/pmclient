@@ -83,11 +83,9 @@ public class GroupViewModel : ViewModelBase
 
     public ICommand ConfirmCommand { get; set; }
 
-    public ICommand AddCommand { get; set; }
+    public ICommand AddSubGroupCommand { get; set; }
 
     public ICommand DeleteCommand { get; set; }
-
-    public ReactiveCommand<Unit, Unit> EditCommand { get; }
 
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
 
@@ -110,7 +108,6 @@ public class GroupViewModel : ViewModelBase
         SubGroups = new ObservableCollection<GroupViewModel>();
         IsVisible = Id > 0 && GroupId == 0;
 
-        EditCommand = ReactiveCommand.Create(Edit);
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
     }
@@ -122,11 +119,6 @@ public class GroupViewModel : ViewModelBase
         Title = group.Title;
         GroupId = group.GroupId;
         Image = Regex.Unescape(group.Image);
-    }
-
-    private void Edit()
-    {
-        IsEnable = !IsEnable;
     }
 
     private void Save()

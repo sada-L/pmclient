@@ -21,6 +21,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     private readonly IGroupWebApi? _groupWebApi;
     private List<CardViewModel> _userCards;
     private List<GroupViewModel> _userGroups;
+    private List<CardViewModel> _updateCards;
+    private List<GroupViewModel> _updateGroups;
     private List<CardViewModel> _newCards;
     private List<GroupViewModel> _newGroups;
 
@@ -87,12 +89,6 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
     }
 
-    public bool IsAddEnabled
-    {
-        get => _isAddEnabled;
-        set => this.RaiseAndSetIfChanged(ref _isAddEnabled, value);
-    }
-
     public bool IsGroupAdd
     {
         get => _isGroupAdd;
@@ -108,6 +104,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     public ICommand AddCardCommand { get; }
 
     public ICommand AddGroupCommand { get; }
+
+    public ICommand EditGroupCommand { get; }
 
     public IScreen HostScreen { get; }
 
@@ -164,9 +162,11 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _groupWebApi = groupWebApi ?? Locator.Current.GetService<IGroupWebApi>()!;
 
         InitList();
+
         SortCommand = ReactiveCommand.Create<int>(SortCards);
-        AddCardCommand = ReactiveCommand.Create(AddCard);
+        AddCardCommand = ReactiveCommand.Create(AddCard, CanAddCard());
         AddGroupCommand = ReactiveCommand.Create(AddHeaderGroup);
+        EditGroupCommand = ReactiveCommand.Create(EditGroup, CanEditGroup());
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
         LogoutCommand = ReactiveCommand.CreateFromObservable(LogOut);
         LoadDataCommand.Execute(null);
@@ -185,27 +185,22 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
             Username = "",
             Notes = "",
             Password = "",
-            GroupId = SelectedGroup.Id switch
-            {
-                -1 => 0,
-                -2 => 0,
-                -3 => 0,
-                _ => SelectedGroup.Id
-            },
-            IsFavorite = SelectedGroup.Id switch
-            {
-                -2 => true,
-                _ => false,
-            },
+            GroupId = SelectedGroup.Id,
+            IsFavorite = false,
         };
 
         var cardViewModel = new CardViewModel(card) { IsEnable = true };
         SetCardProperties(cardViewModel);
-        _newCards.Add(cardViewModel);
 
         SelectedGroup.Cards.Add(cardViewModel);
         SelectedCard = cardViewModel;
+        SelectedCard = cardViewModel;
     }
+
+    private IObservable<bool> CanAddCard() =>
+        this.WhenAnyValue(x => x.SelectedGroup)
+            .WhereNotNull()
+            .Select(x => x.Id > 0);
 
     private void AddHeaderGroup()
     {
@@ -214,10 +209,35 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         var group = new Group
         {
-            Id = _userGroups.Last().Id + 1,
+            Id = -1,
             Title = "",
             Image = "\uf097",
             GroupId = 0,
+        };
+
+        var groupViewModel = new GroupViewModel(group)
+        {
+            ConfirmCommand = ReactiveCommand.Create<bool>(ConfirmGroupChanges),
+            AddSubGroupCommand = ReactiveCommand.Create<GroupViewModel>(AddSubGroup),
+            IsEnable = true
+        };
+
+        _newGroups.Add(groupViewModel);
+
+        SelectedGroup = groupViewModel;
+    }
+
+    private void AddSubGroup(GroupViewModel header)
+    {
+        IsEnabled = false;
+        IsGroupAdd = true;
+
+        var group = new Group
+        {
+            Id = -1,
+            Title = "",
+            Image = "\uf097",
+            GroupId = header.Id,
         };
 
         var groupViewModel = new GroupViewModel(group)
@@ -231,9 +251,28 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SelectedGroup = groupViewModel;
     }
 
+    private void EditGroup()
+    {
+        SelectedGroup.IsEnable = true;
+        IsGroupAdd = true;
+        IsEnabled = false;
+    }
+
+    private IObservable<bool> CanEditGroup() =>
+        this.WhenAnyValue(x => x.SelectedGroup)
+            .WhereNotNull()
+            .Select(x => x.Id > 0);
+
     private void DeleteCard()
     {
-        if (SelectedGroup.Id < 0) return;
+        var selectedGroup = SelectedGroup;
+        var selectedCard = SelectedCard;
+
+        _userCards.Remove(selectedCard);
+        _deleted.Cards.Add(selectedCard);
+        selectedGroup.Cards.Remove(selectedCard);
+        SetHandlers();
+        SelectedGroup = selectedGroup;
     }
 
     private void ConfirmCardChanges(bool confirmed)
@@ -244,27 +283,27 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             if (card.Id == 0)
             {
-                card.Id = _userCards.Last().Id + 1;
-                card.GroupId = card.CurrentGroup.Id == 0 ? SelectedCard.HeaderGroup.Id : SelectedCard.CurrentGroup.Id;
+                if (_userCards.Count == 0)
+                    card.Id = 1;
+                else
+                    card.Id = _userCards.Last().Id + 1;
+
+                card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
+                _newCards.Add(card);
                 _userCards.Add(card);
-                SetCurrentCards(card);
             }
             else
             {
-                card.GroupId = card.CurrentGroup.Id == 0 ? SelectedCard.HeaderGroup.Id : SelectedCard.CurrentGroup.Id;
-                SetCurrentCards(card);
+                card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
+                if (!_updateCards.Contains(card))
+                    _updateCards.Add(card);
             }
+
+            SetCurrentCards(card);
         }
         else
         {
-            if (SelectedCard.Id == 0)
-            {
-                SetCurrentCards();
-            }
-            else
-            {
-                SetCurrentCards(card);
-            }
+            SetCurrentCards(SelectedCard.Id == 0 ? null : SelectedCard);
         }
     }
 
@@ -274,12 +313,27 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         if (confirmed)
         {
-            _userGroups.Add(group);
+            if (group.Id == -1)
+            {
+                if (_userGroups.Count == 0)
+                    group.Id = 1;
+                else
+                    group.Id = _userGroups.Last().Id + 1;
+
+                _newGroups.Add(group);
+                _userGroups.Add(group);
+            }
+            else
+            {
+                if (!_newGroups.Contains(group))
+                    _newGroups.Add(group);
+            }
+
             SetCurrentGroup(group);
         }
         else
         {
-            SetCurrentGroup();
+            SetCurrentGroup(group.Id == 0 ? null : group);
         }
     }
 
@@ -289,13 +343,13 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         IsEnabled = true;
         SetHandlers();
-        SelectedGroup = _userGroups.First(g => g.Id == card.GroupId);
+        SelectedGroup = _userGroups.FirstOrDefault(g => g.Id == card.GroupId) ?? new GroupViewModel();
         SelectedCard = card;
     }
 
-    private void SetCurrentGroup(GroupViewModel group = null)
+    private void SetCurrentGroup(GroupViewModel? group = null)
     {
-        group ??= _userGroups.First();
+        group ??= _userGroups.FirstOrDefault() ?? new GroupViewModel();
 
         IsEnabled = true;
         if (IsGroupAdd) IsGroupAdd = false;
@@ -353,12 +407,14 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             group.SubGroups.Clear();
             group.SubGroups.AddRange(_userGroups.Where(x => x.GroupId == group.Id));
+            group.AddSubGroupCommand = ReactiveCommand.Create<GroupViewModel>(AddSubGroup);
         }
 
         foreach (var card in _userCards)
         {
             SetCardProperties(card);
             card.WhenAnyValue(x => x.HeaderGroup)
+                .WhereNotNull()
                 .Subscribe(x =>
                 {
                     card.CurrentGroups.Clear();
@@ -373,6 +429,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             group.Cards.Clear();
             group.Cards.AddRange(_userCards.Where(x => x.GroupId == group.Id));
+            group.ConfirmCommand = ReactiveCommand.Create<bool>(ConfirmGroupChanges);
         }
 
         SetList();
@@ -398,15 +455,12 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private void SetHandlers()
     {
-        SelectedGroup = new GroupViewModel();
-        CurrentCards = new ObservableCollection<CardViewModel>();
-
         this.WhenAnyValue(x => x.SelectedGroup)
+            .WhereNotNull()
             .Subscribe(x =>
             {
                 CurrentCards.Clear();
                 CurrentCards.AddRange(x.Cards);
-                IsAddEnabled = x.Id > 0;
             });
 
         this.WhenAnyValue(x => x.Search)
@@ -463,9 +517,14 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private void InitList()
     {
-        _newCards = new List<CardViewModel>();
-        _newGroups = new List<GroupViewModel>();
-        _headerGroups = new List<GroupViewModel>();
+        SelectedGroup = new GroupViewModel();
+
+        CurrentCards = [];
+        _newCards = [];
+        _newGroups = [];
+        _updateCards = [];
+        _updateGroups = [];
+        _headerGroups = [];
 
         _allItems = new GroupViewModel(new Group
         {
@@ -477,7 +536,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         _favorites = new GroupViewModel(new Group
         {
-            Id = -2,
+            Id = -1,
             Title = "Favorites",
             Image = "\uf006",
             GroupId = 0
@@ -485,7 +544,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         _deleted = new GroupViewModel(new Group
         {
-            Id = -3,
+            Id = -1,
             Title = "Recently Deleted",
             Image = "\uf014",
             GroupId = 0

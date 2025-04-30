@@ -34,10 +34,25 @@
 			<Border Grid.Row="0" Grid.Column="0" Padding="10" Classes="SBorder" BorderThickness="0 0 0 2">
 				<DockPanel>
 					<!--Refresh-->
-					<Button DockPanel.Dock="Right" VerticalAlignment="Center" Command="{Binding LoadDataCommand}">
+					<Button DockPanel.Dock="Right" VerticalAlignment="Center">
 						<Button.Content>
-							<TextBlock Classes="Icon" Text="&#xf021;" FontSize="20" />
+							<TextBlock Classes="Icon" Text="&#xf141;" FontSize="20" />
 						</Button.Content>
+						<Button.Flyout>
+							<MenuFlyout>
+								<MenuItem Header="Edit Group" Command="{Binding EditGroupCommand}">
+									<MenuItem.Icon>
+										<TextBlock Classes="Icon" Text="&#xf044;" />
+									</MenuItem.Icon>
+								</MenuItem>
+								<Separator />
+								<MenuItem Header="Log Out" Command="{Binding LogoutCommand}">
+									<MenuItem.Icon>
+										<TextBlock Classes="Icon" Text="&#xf08b;" />
+									</MenuItem.Icon>
+								</MenuItem>
+							</MenuFlyout>
+						</Button.Flyout>
 					</Button>
 
 					<!--AppName-->
@@ -53,7 +68,7 @@
 					<TreeDataTemplate ItemsSource="{Binding SubGroups}">
 						<DockPanel>
 							<Button DockPanel.Dock="Right" IsVisible="{Binding IsVisible}"
-									Command="{Binding AddCommand}">
+									Command="{Binding AddSubGroupCommand}" CommandParameter="{Binding}">
 								<Button.Content>
 									<TextBlock Classes="Icon" Text="&#xf067;" />
 								</Button.Content>
@@ -69,17 +84,10 @@
 					IsEnabled="{Binding IsEnabled}">
 				<Grid ColumnDefinitions="*, Auto, *">
 					<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
-						<!--Back-->
-						<Button>
+						<!--Refresh-->
+						<Button DockPanel.Dock="Right" VerticalAlignment="Center" Command="{Binding LoadDataCommand}">
 							<Button.Content>
-								<TextBlock Classes="Icon" Text="&#xf060;" />
-							</Button.Content>
-						</Button>
-
-						<!--Next-->
-						<Button>
-							<Button.Content>
-								<TextBlock Classes="Icon" Text="&#xf061;" />
+								<TextBlock Classes="Icon" Text="&#xf021;" FontSize="20" />
 							</Button.Content>
 						</Button>
 					</StackPanel>
@@ -98,8 +106,7 @@
 							</Button.Content>
 							<Button.Flyout>
 								<MenuFlyout>
-									<MenuItem Header="New Card" Command="{Binding AddCardCommand}"
-											IsEnabled="{Binding IsAddEnabled}">
+									<MenuItem Header="New Card" Command="{Binding AddCardCommand}">
 										<MenuItem.Icon>
 											<TextBlock Classes="Icon" Text="&#xf2c3;" />
 										</MenuItem.Icon>
@@ -166,8 +173,9 @@
 
 			<!--Card-->
 			<Panel Grid.Row="1" Grid.Column="2">
-				<ContentControl Content="{Binding SelectedCard}" Background="White" />
-				<ContentControl Content="{Binding SelectedGroup}" IsVisible="{Binding IsGroupAdd}" />
+				<ContentControl Content="{Binding SelectedCard}" />
+				<ContentControl Content="{Binding SelectedGroup}" Background="White"
+								IsVisible="{Binding IsGroupAdd}" />
 			</Panel>
 		</Grid>
 	</Border>

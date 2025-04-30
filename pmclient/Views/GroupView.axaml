@@ -3,7 +3,6 @@
 			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
-			xmlns:view="clr-namespace:pmclient.Views"
 			xmlns:conv="clr-namespace:pmclient.Converters"
 			mc:Ignorable="d" d:DesignWidth="400"
 			x:DataType="vm:GroupViewModel"
@@ -42,38 +41,25 @@
 
 	<Grid RowDefinitions="Auto, *">
 		<StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
-			<Panel>
-				<StackPanel Spacing="10" Orientation="Horizontal" IsVisible="{Binding IsEnable}">
-					<Button Command="{Binding SaveCommand}">
-						<Button.Content>
-							<StackPanel Orientation="Horizontal" Spacing="2">
-								<TextBlock Classes="Icon" Text="&#xf0c7;" />
-								<TextBlock Text="Save" />
-							</StackPanel>
-						</Button.Content>
-					</Button>
-
-					<Button Command="{Binding CancelCommand}">
-						<Button.Content>
-							<StackPanel Orientation="Horizontal" Spacing="2">
-								<TextBlock Classes="Icon" Text="&#xf0e2;" />
-								<TextBlock Text="Cancel" />
-							</StackPanel>
-						</Button.Content>
-					</Button>
-				</StackPanel>
-
-				<Button Command="{Binding EditCommand}"
-						IsVisible="{Binding !IsEnable}">
+			<StackPanel Spacing="10" Orientation="Horizontal">
+				<Button Command="{Binding SaveCommand}">
 					<Button.Content>
 						<StackPanel Orientation="Horizontal" Spacing="2">
-							<TextBlock Classes="Icon" Text="&#xf044;" />
-							<TextBlock Text="Edit" />
+							<TextBlock Classes="Icon" Text="&#xf0c7;" />
+							<TextBlock Text="Save" />
 						</StackPanel>
 					</Button.Content>
 				</Button>
-			</Panel>
 
+				<Button Command="{Binding CancelCommand}">
+					<Button.Content>
+						<StackPanel Orientation="Horizontal" Spacing="2">
+							<TextBlock Classes="Icon" Text="&#xf0e2;" />
+							<TextBlock Text="Cancel" />
+						</StackPanel>
+					</Button.Content>
+				</Button>
+			</StackPanel>
 			<Button>
 				<Button.Content>
 					<TextBlock Classes="Icon" Text="&#xf142;" FontSize="20" />
