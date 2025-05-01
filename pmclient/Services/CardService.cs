@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using pmclient.Models;
 using pmclient.RefitClients;
-using Refit;
 using Splat;
 
 namespace pmclient.Services;
@@ -27,5 +26,10 @@ public class CardService
     {
         var response = await _cardWebApi!.AddCard(card, cancellationToken);
         return response.IsSuccessStatusCode ? response.Content : 0;
+    }
+
+    public async Task UpdateCard(Card card, CancellationToken cancellationToken = default)
+    {
+        await _cardWebApi!.UpdateCard(card, cancellationToken);
     }
 }

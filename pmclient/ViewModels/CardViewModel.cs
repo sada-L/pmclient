@@ -166,6 +166,11 @@ public class CardViewModel : ViewModelBase
         FavoriteCommand = ReactiveCommand.Create(Favorite);
     }
 
+    public Card GetCard()
+    {
+        return _card; 
+    }
+
     private void SetData(Card card)
     {
         _card = card;
