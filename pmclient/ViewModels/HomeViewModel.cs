@@ -17,14 +17,10 @@ namespace pmclient.ViewModels;
 
 public class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
-    private readonly ICardWebApi? _cardWebApi;
-    private readonly IGroupWebApi? _groupWebApi;
+    private readonly CardService? _cardService;
+    private readonly GroupService? _groupService;
     private List<CardViewModel> _userCards;
     private List<GroupViewModel> _userGroups;
-    private List<CardViewModel> _updateCards;
-    private List<GroupViewModel> _updateGroups;
-    private List<CardViewModel> _newCards;
-    private List<GroupViewModel> _newGroups;
 
     private CardViewModel _selectedCard;
     private GroupViewModel _selectedGroup;
@@ -155,11 +151,11 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SetData(cards, groups);
     }
 
-    public HomeViewModel(IScreen? hostScreen = null, ICardWebApi? cardWebApi = null, IGroupWebApi? groupWebApi = null)
+    public HomeViewModel(IScreen? hostScreen = null, CardService? cardService = null, GroupService? groupService = null)
     {
         HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
-        _cardWebApi = cardWebApi ?? Locator.Current.GetService<ICardWebApi>()!;
-        _groupWebApi = groupWebApi ?? Locator.Current.GetService<IGroupWebApi>()!;
+        _cardService = cardService ?? Locator.Current.GetService<CardService>()!;
+        _groupService = groupService ?? Locator.Current.GetService<GroupService>()!;
 
         InitList();
 
@@ -217,12 +213,10 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         var groupViewModel = new GroupViewModel(group)
         {
-            ConfirmCommand = ReactiveCommand.Create<bool>(ConfirmGroupChanges),
+            ConfirmCommand = ReactiveCommand.CreateFromTask<bool>(ConfirmGroupChanges),
             AddSubGroupCommand = ReactiveCommand.Create<GroupViewModel>(AddSubGroup),
             IsEnable = true
         };
-
-        _newGroups.Add(groupViewModel);
 
         SelectedGroup = groupViewModel;
     }
@@ -242,11 +236,9 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         var groupViewModel = new GroupViewModel(group)
         {
-            ConfirmCommand = ReactiveCommand.Create<bool>(ConfirmGroupChanges),
+            ConfirmCommand = ReactiveCommand.CreateFromTask<bool>(ConfirmGroupChanges),
             IsEnable = true
         };
-
-        _newGroups.Add(groupViewModel);
 
         SelectedGroup = groupViewModel;
     }
@@ -275,7 +267,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SelectedGroup = selectedGroup;
     }
 
-    private void ConfirmCardChanges(bool confirmed)
+    private async Task ConfirmCardChanges(bool confirmed)
     {
         var card = SelectedCard;
 
@@ -283,20 +275,14 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             if (card.Id == 0)
             {
-                if (_userCards.Count == 0)
-                    card.Id = 1;
-                else
-                    card.Id = _userCards.Last().Id + 1;
-
                 card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
-                _newCards.Add(card);
+                card.Id = await _cardService!.AddCard(card.GetCard());
                 _userCards.Add(card);
             }
             else
             {
                 card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
-                if (!_updateCards.Contains(card))
-                    _updateCards.Add(card);
+                await _cardService!.UpdateCard(card.GetCard());
             }
 
             SetCurrentCards(card);
@@ -307,7 +293,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         }
     }
 
-    private void ConfirmGroupChanges(bool confirmed)
+    private async Task ConfirmGroupChanges(bool confirmed)
     {
         var group = SelectedGroup;
 
@@ -315,18 +301,12 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             if (group.Id == -1)
             {
-                if (_userGroups.Count == 0)
-                    group.Id = 1;
-                else
-                    group.Id = _userGroups.Last().Id + 1;
-
-                _newGroups.Add(group);
+                group.Id = await _groupService!.AddGroup(group.GetGroup());
                 _userGroups.Add(group);
             }
             else
             {
-                if (!_newGroups.Contains(group))
-                    _newGroups.Add(group);
+                await _groupService!.UpdateGroup(group.GetGroup());
             }
 
             SetCurrentGroup(group);
@@ -429,7 +409,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             group.Cards.Clear();
             group.Cards.AddRange(_userCards.Where(x => x.GroupId == group.Id));
-            group.ConfirmCommand = ReactiveCommand.Create<bool>(ConfirmGroupChanges);
+            group.ConfirmCommand = ReactiveCommand.CreateFromTask<bool>(ConfirmGroupChanges);
         }
 
         SetList();
@@ -450,7 +430,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
                             card.CurrentGroups.First();
 
         card.DeleteCommand = ReactiveCommand.Create(DeleteCard);
-        card.ConfirmCommand = ReactiveCommand.Create<bool>(ConfirmCardChanges);
+        card.ConfirmCommand = ReactiveCommand.CreateFromTask<bool>(ConfirmCardChanges);
     }
 
     private void SetHandlers()
@@ -482,30 +462,17 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     {
         try
         {
-            var cardResponse = await _cardWebApi!.GetCardByUser(cancellationToken);
-            if (!cardResponse.IsSuccessStatusCode)
-            {
-                ErrorMessage = "error";
-                return;
-            }
+            var cardResponse = await _cardService!.GetCardsByUser(cancellationToken);
+            var cards = cardResponse ?? [];
 
-            var cards = cardResponse.Content ?? new List<Card>();
-
-            var groupResponse = await _groupWebApi!.GetGroupsByUser(cancellationToken);
-            if (!groupResponse.IsSuccessStatusCode)
-            {
-                ErrorMessage = "error";
-                return;
-            }
-
-            var groups = groupResponse.Content ?? new List<Group>();
+            var groupResponse = await _groupService!.GetGroupsByUser(cancellationToken);
+            var groups = groupResponse ?? [];
 
             SetData(cards, groups);
         }
         catch (Exception e)
         {
             ErrorMessage = "error";
-            return;
         }
     }
 
@@ -520,10 +487,6 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SelectedGroup = new GroupViewModel();
 
         CurrentCards = [];
-        _newCards = [];
-        _newGroups = [];
-        _updateCards = [];
-        _updateGroups = [];
         _headerGroups = [];
 
         _allItems = new GroupViewModel(new Group
