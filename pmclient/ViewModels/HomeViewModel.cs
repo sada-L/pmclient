@@ -276,7 +276,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
             if (card.Id == 0)
             {
                 card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
-                card.Id = await _cardService!.AddCard(card.GetCard());
+                card.Id = await _cardService!.CreateCard(card.GetCard());
                 _userCards.Add(card);
             }
             else
@@ -301,7 +301,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             if (group.Id == -1)
             {
-                group.Id = await _groupService!.AddGroup(group.GetGroup());
+                group.Id = await _groupService!.CreateGroup(group.GetGroup());
                 _userGroups.Add(group);
             }
             else

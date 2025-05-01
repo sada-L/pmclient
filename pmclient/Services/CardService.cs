@@ -22,9 +22,9 @@ public class CardService
         return response.IsSuccessStatusCode ? response.Content : null;
     }
 
-    public async Task<int> AddCard(Card card, CancellationToken cancellationToken = default)
+    public async Task<int> CreateCard(Card card, CancellationToken cancellationToken = default)
     {
-        var response = await _cardWebApi!.AddCard(card, cancellationToken);
+        var response = await _cardWebApi!.CreateCard(card, cancellationToken);
         return response.IsSuccessStatusCode ? response.Content : 0;
     }
 

@@ -25,7 +25,7 @@ public static class ApiEndpoints
         private const string Base = "/cards";
 
         public const string GetCardsByUser = Base + "/current";
-        public const string AddCard = Base + "/add";
+        public const string CreateCard = Base + "/create";
         public const string UpdateCard = Base + "/update";
     }
 
@@ -34,7 +34,7 @@ public static class ApiEndpoints
         private const string Base = "/groups";
 
         public const string GetGroupsByUser = Base + "/current";
-        public const string AddGroup = Base + "/add";
+        public const string CreateGroup = Base + "/create";
         public const string UpdateGroup = Base + "/update";
     }
 }

@@ -22,9 +22,9 @@ public class GroupService
         return response.IsSuccessStatusCode ? response.Content : null;
     }
 
-    public async Task<int> AddGroup(Group group, CancellationToken cancellationToken = default)
+    public async Task<int> CreateGroup(Group group, CancellationToken cancellationToken = default)
     {
-        var response = await _groupWebApi!.AddGroup(group, cancellationToken);
+        var response = await _groupWebApi!.CreateGroup(group, cancellationToken);
         return response.IsSuccessStatusCode ? response.Content : 0;
     }
 

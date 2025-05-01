@@ -13,8 +13,8 @@ public interface ICardWebApi
     [Get(ApiEndpoints.Cards.GetCardsByUser)]
     Task<IApiResponse<List<Card>>> GetCardByUser(CancellationToken cancellationToken);
 
-    [Post(ApiEndpoints.Cards.AddCard)]
-    Task<IApiResponse<int>> AddCard(Card card, CancellationToken cancellationToken);
+    [Post(ApiEndpoints.Cards.CreateCard)]
+    Task<IApiResponse<int>> CreateCard(Card card, CancellationToken cancellationToken);
 
     [Put(ApiEndpoints.Cards.UpdateCard)]
     Task<IApiResponse> UpdateCard(Card card, CancellationToken cancellationToken);
