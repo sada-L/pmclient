@@ -35,5 +35,6 @@ public static class ApiEndpoints
 
         public const string GetGroupsByUser = Base + "/current";
         public const string AddGroup = Base + "/add";
+        public const string UpdateGroup = Base + "/update";
     }
 }

@@ -112,6 +112,11 @@ public class GroupViewModel : ViewModelBase
         CancelCommand = ReactiveCommand.Create(Cancel);
     }
 
+    public Group GetGroup()
+    {
+        return _group;
+    }
+
     private void SetData(Group group)
     {
         _group = group;

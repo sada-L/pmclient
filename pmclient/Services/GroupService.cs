@@ -27,4 +27,9 @@ public class GroupService
         var response = await _groupWebApi!.AddGroup(group, cancellationToken);
         return response.IsSuccessStatusCode ? response.Content : 0;
     }
+
+    public async Task UpdateGroup(Group group, CancellationToken cancellationToken = default)
+    {
+        await _groupWebApi!.UpdateGroup(group, cancellationToken);
+    }
 }
