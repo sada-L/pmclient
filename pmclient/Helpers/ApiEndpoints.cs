@@ -25,6 +25,7 @@ public static class ApiEndpoints
         private const string Base = "/cards";
 
         public const string GetCardsByUser = Base + "/current";
+        public const string AddCard = Base + "/add";
     }
 
     public static class Groups

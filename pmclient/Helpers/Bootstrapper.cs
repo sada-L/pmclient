@@ -38,6 +38,7 @@ public static class Bootstrapper
 
         services.AddSingleton<AuthService>();
         services.AddSingleton<UserService>();
+        services.AddSingleton<CardService>();
 
         services.AddSingleton<IScreen, MainWindowViewModel>();
 
