@@ -14,8 +14,11 @@ public interface IGroupWebApi
     Task<IApiResponse<List<Group>>> GetGroupsByUser(CancellationToken cancellationToken);
 
     [Post(ApiEndpoints.Groups.CreateGroup)]
-    Task<IApiResponse<int>> CreateGroup(Group group, CancellationToken cancellationToken);
+    Task<IApiResponse<int>> CreateGroup([Body] Group group, CancellationToken cancellationToken);
 
     [Put(ApiEndpoints.Groups.UpdateGroup)]
-    Task<IApiResponse> UpdateGroup(Group group, CancellationToken cancellationToken);
+    Task<IApiResponse> UpdateGroup(int id, [Body] Group group, CancellationToken cancellationToken);
+
+    [Delete(ApiEndpoints.Groups.DeleteGroup)]
+    Task<IApiResponse> DeleteGroup(int id, CancellationToken cancellationToken);
 }

@@ -30,6 +30,11 @@ public class GroupService
 
     public async Task UpdateGroup(Group group, CancellationToken cancellationToken = default)
     {
-        await _groupWebApi!.UpdateGroup(group, cancellationToken);
+        await _groupWebApi!.UpdateGroup(group.Id, group, cancellationToken);
+    }
+
+    public async Task DeleteGroup(int id, CancellationToken cancellationToken = default)
+    {
+        await _groupWebApi!.DeleteGroup(id, cancellationToken);
     }
 }
