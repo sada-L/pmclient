@@ -17,7 +17,9 @@ public static class ApiEndpoints
     {
         private const string Base = "/users";
 
-        public const string GetCurrentUser = Base + "/current";
+        public const string GetCurrentUser = Base + "/me";
+        public const string UpdateCurrentUser = Base + "/me";
+        public const string DeleteCurrentUser = Base + "/me";
     }
 
     public static class Cards
