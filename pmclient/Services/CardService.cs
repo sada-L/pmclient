@@ -30,6 +30,11 @@ public class CardService
 
     public async Task UpdateCard(Card card, CancellationToken cancellationToken = default)
     {
-        await _cardWebApi!.UpdateCard(card, cancellationToken);
+        await _cardWebApi!.UpdateCard(card.Id, card, cancellationToken);
+    }
+
+    public async Task DeleteCard(int id, CancellationToken cancellationToken = default)
+    {
+        await _cardWebApi!.DeleteCard(id, cancellationToken);
     }
 }
