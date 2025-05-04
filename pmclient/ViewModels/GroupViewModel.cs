@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 using ReactiveUI;
 using Group = pmclient.Models.Group;
@@ -13,7 +12,7 @@ public class GroupViewModel : ViewModelBase
     private Group _group;
     private int _id;
     private string _title;
-    private string _image;
+    private char _image;
     private int _groupId;
     private ObservableCollection<GroupViewModel> _subGroups;
     private ObservableCollection<CardViewModel> _cards;
@@ -32,7 +31,7 @@ public class GroupViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _title, value);
     }
 
-    public string Image
+    public char Image
     {
         get => _image;
         set => this.RaiseAndSetIfChanged(ref _image, value);
@@ -56,17 +55,17 @@ public class GroupViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isVisible, value);
     }
 
-    public List<string> Images { get; } =
+    public List<char> Images { get; } =
     [
-        "\uf1c5",
-        "\uf2ba",
-        "\uf2bc",
-        "\uf097",
-        "\uf274",
-        "\uf2c3",
-        "\uf015",
-        "\uf114",
-        "\uf03e"
+        '\uf1c5',
+        '\uf2ba',
+        '\uf2bc',
+        '\uf097',
+        '\uf274',
+        '\uf2c3',
+        '\uf015',
+        '\uf114',
+        '\uf03e'
     ];
 
     public ObservableCollection<CardViewModel> Cards
@@ -103,7 +102,7 @@ public class GroupViewModel : ViewModelBase
         Id = group.Id;
         Title = group.Title;
         GroupId = group.GroupId;
-        Image = Regex.Unescape(group.Image);
+        Image = group.Image;
         Cards = new ObservableCollection<CardViewModel>();
         SubGroups = new ObservableCollection<GroupViewModel>();
         IsVisible = Id > 0 && GroupId == 0;
@@ -123,7 +122,7 @@ public class GroupViewModel : ViewModelBase
         Id = group.Id;
         Title = group.Title;
         GroupId = group.GroupId;
-        Image = Regex.Unescape(group.Image);
+        Image = group.Image;
     }
 
     private void Save()

@@ -15,5 +15,5 @@ public class Group
     public required string Title { get; init; }
 
     [JsonPropertyName("image")] 
-    public required string Image { get; init; }
+    public required char Image { get; init; }
 }

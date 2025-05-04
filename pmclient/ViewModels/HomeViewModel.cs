@@ -177,7 +177,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
             Id = 0,
             Title = "",
             Website = "",
-            Image = "\uf2bc",
+            Image = '\uf2bc',
             Username = "",
             Notes = "",
             Password = "",
@@ -207,7 +207,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             Id = -1,
             Title = "",
-            Image = "\uf097",
+            Image = '\uf097',
             GroupId = 0,
         };
 
@@ -230,7 +230,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             Id = -1,
             Title = "",
-            Image = "\uf097",
+            Image = '\uf097',
             GroupId = header.Id,
         };
 
@@ -493,7 +493,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             Id = -1,
             Title = "All Items",
-            Image = "\uf2ba",
+            Image = '\uf2ba',
             GroupId = 0
         });
 
@@ -501,7 +501,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             Id = -1,
             Title = "Favorites",
-            Image = "\uf006",
+            Image = '\uf006',
             GroupId = 0
         });
 
@@ -509,7 +509,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             Id = -1,
             Title = "Recently Deleted",
-            Image = "\uf014",
+            Image = '\uf014',
             GroupId = 0
         });
 

@@ -26,7 +26,7 @@ public sealed class Card
     public required string Notes { get; init; }
 
     [JsonPropertyName("image")] 
-    public required string Image { get; init; }
+    public required char Image { get; init; }
 
     [JsonPropertyName("is_favorite")] 
     public required bool IsFavorite { get; init; }

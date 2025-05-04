@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
-using System.Text.RegularExpressions;
 using System.Windows.Input;
 using pmclient.Models;
 using ReactiveUI;
@@ -17,7 +16,7 @@ public class CardViewModel : ViewModelBase
     private string _password;
     private string _website;
     private string _notes;
-    private string _image;
+    private char _image;
     private int _groupId;
     private bool _isFavorite;
     private bool _isEnable;
@@ -75,7 +74,7 @@ public class CardViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isFavorite, value);
     }
 
-    public string Image
+    public char Image
     {
         get => _image;
         set => this.RaiseAndSetIfChanged(ref _image, value);
@@ -143,7 +142,7 @@ public class CardViewModel : ViewModelBase
             Id = 0,
             Title = "Title",
             Website = "www.site.com",
-            Image = "\uf2bc",
+            Image = '\uf2bc',
             Username = "Username",
             Notes = "Notes",
             Password = "Password",
@@ -182,7 +181,7 @@ public class CardViewModel : ViewModelBase
         Password = card.Password;
         GroupId = card.GroupId;
         IsFavorite = card.IsFavorite;
-        Image = Regex.Unescape(card.Image);
+        Image = card.Image;
     }
 
     private void Edit()
