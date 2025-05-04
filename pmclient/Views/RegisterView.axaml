@@ -5,31 +5,52 @@
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
 			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
 			x:Class="pmclient.Views.RegisterView"
-			x:DataType="vm:RegisterViewModel"
-			Background="{StaticResource Light}">
+			x:DataType="vm:RegisterViewModel">
 	<Design.DataContext>
 		<vm:RegisterViewModel />
 	</Design.DataContext>
 
-	<Border Background="{StaticResource AspDark}" Padding="30" HorizontalAlignment="Center"
-			VerticalAlignment="Center" CornerRadius="25" BoxShadow="5 5 10 0 darkgray">
+	<Border Background="{DynamicResource BaseLow}" Padding="30" HorizontalAlignment="Center"
+			VerticalAlignment="Center" CornerRadius="25" >
 		<StackPanel Spacing="15">
-			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource Light}" />
-			<TextBox Classes="STextBox" Text="{Binding Email}" Watermark="Email" />
-			<TextBox Classes="STextBox" Text="{Binding Username}" Watermark="Username" />
-			<TextBox Classes="STextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
-			<TextBox Classes="STextBox PasswordBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" />
+			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource BaseHigh}" />
+			<TextBox Classes="ReversTextBox" Text="{Binding Email}" Watermark="Email" />
+			<TextBox Classes="ReversTextBox" Text="{Binding Username}" Watermark="Username" />
+			<TextBox Classes="ReversTextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
+			<TextBox Classes="ReversTextBox PasswordBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" />
 
-			<Button Classes="SButton" Command="{Binding BackCommand}"
-					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-					Background="{DynamicResource Dark}" Content="Back" />
+			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Back" CornerRadius="10"
+					Command="{Binding BackCommand}">
+				<Button.Styles>
+					<Style Selector="Button">
+						<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
+						<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 
-			<Button Classes="SButton" Command="{Binding RegisterCommand}"
-					HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-					Background="{DynamicResource Dark}" Content="Register" />
+						<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+							<Setter Property="Background" Value="{DynamicResource BaseHigh}" />
+						</Style>
+					</Style>
+				</Button.Styles>
+			</Button>
+			
+			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Register" CornerRadius="10"
+					Command="{Binding RegisterCommand}">
+				<Button.Styles>
+					<Style Selector="Button">
+						<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
+						<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 
+						<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+							<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+							<Setter Property="Background" Value="{DynamicResource BaseHigh}" />
+						</Style>
+					</Style>
+				</Button.Styles>
+			</Button>
+			
 			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-						Foreground="{DynamicResource Light}" />
+						Foreground="{DynamicResource BaseHigh}" />
 		</StackPanel>
 	</Border>
 </UserControl>

@@ -6,6 +6,8 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia;
+using Avalonia.Controls;
 using DynamicData;
 using pmclient.Models;
 using pmclient.RefitClients;
@@ -36,6 +38,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     private bool _isEnabled;
     private bool _isAddEnabled;
     private bool _isGroupAdd;
+    private bool _isDefaultTheme;
 
     public CardViewModel SelectedCard
     {
@@ -91,6 +94,12 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _isGroupAdd, value);
     }
 
+    public bool IsDefaultTheme
+    {
+        get => _isDefaultTheme;
+        set => this.RaiseAndSetIfChanged(ref _isDefaultTheme, value);
+    }
+
     public ICommand LoadDataCommand { get; }
 
     public ICommand LogoutCommand { get; }
@@ -103,6 +112,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     public ICommand EditGroupCommand { get; }
 
+    public ICommand ChangeThemeCommand { get; }
+
     public IScreen HostScreen { get; }
 
     public string UrlPathSegment => "/home";
@@ -113,38 +124,38 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         {
             new Card()
             {
-                Id = 1, Title = "card1", Username = "username", Image = "\uf2bc", Website = "www.card.com",
+                Id = 1, Title = "card1", Username = "username", Image = '\uf2bc', Website = "www.card.com",
                 Password = "123456", Notes = "notes", GroupId = 2, IsFavorite = true,
             },
             new Card()
             {
-                Id = 2, Title = "card2", Username = "username", Image = "\uf2bc", Website = "www.card.com",
+                Id = 2, Title = "card2", Username = "username", Image = '\uf2bc', Website = "www.card.com",
                 Password = "123456", Notes = "notes", GroupId = 2, IsFavorite = false,
             },
             new Card()
             {
-                Id = 3, Title = "card3", Username = "username", Image = "\uf2bc", Website = "www.card.com",
+                Id = 3, Title = "card3", Username = "username", Image = '\uf2bc', Website = "www.card.com",
                 Password = "123456", Notes = "notes", GroupId = 2, IsFavorite = false,
             },
             new Card()
             {
-                Id = 4, Title = "card4", Username = "username", Image = "\uf2bc", Website = "www.card.com",
+                Id = 4, Title = "card4", Username = "username", Image = '\uf2bc', Website = "www.card.com",
                 Password = "123456", Notes = "notes", GroupId = 3, IsFavorite = false,
             },
             new Card()
             {
-                Id = 5, Title = "card5", Username = "username", Image = "\uf2bc", Website = "www.card.com",
+                Id = 5, Title = "card5", Username = "username", Image = '\uf2bc', Website = "www.card.com",
                 Password = "123456", Notes = "notes", GroupId = 3, IsFavorite = false,
             },
         };
 
         var groups = new List<Group>()
         {
-            new Group() { Id = 1, Title = "Group1", Image = "\uf097", GroupId = 0 },
-            new Group() { Id = 2, Title = "group2", Image = "\uf097", GroupId = 1 },
-            new Group() { Id = 3, Title = "group3", Image = "\uf097", GroupId = 1 },
-            new Group() { Id = 4, Title = "Group4", Image = "\uf097", GroupId = 0 },
-            new Group() { Id = 5, Title = "group5", Image = "\uf097", GroupId = 4 },
+            new Group() { Id = 1, Title = "Group1", Image = '\uf097', GroupId = 0 },
+            new Group() { Id = 2, Title = "group2", Image = '\uf097', GroupId = 1 },
+            new Group() { Id = 3, Title = "group3", Image = '\uf097', GroupId = 1 },
+            new Group() { Id = 4, Title = "Group4", Image = '\uf097', GroupId = 0 },
+            new Group() { Id = 5, Title = "group5", Image = '\uf097', GroupId = 4 },
         };
 
         InitList();
@@ -164,8 +175,31 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         AddGroupCommand = ReactiveCommand.Create(AddHeaderGroup);
         EditGroupCommand = ReactiveCommand.Create(EditGroup, CanEditGroup());
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
+        ChangeThemeCommand = ReactiveCommand.Create(ChangeTheme);
         LogoutCommand = ReactiveCommand.CreateFromObservable(LogOut);
         LoadDataCommand.Execute(null);
+    }
+
+    private void ChangeTheme()
+    {
+        if (!IsDefaultTheme)
+        {
+            if (Application.Current != null)
+                Application.Current.Resources.MergedDictionaries.Clear();
+
+            Application.Current!.Resources.MergedDictionaries.Add(
+                (ResourceDictionary)Application.Current.Resources["Default"]!);
+            IsDefaultTheme = true;
+        }
+        else
+        {
+            if (Application.Current != null)
+                Application.Current.Resources.MergedDictionaries.Clear();
+
+            Application.Current!.Resources.MergedDictionaries.Add(
+                (ResourceDictionary)Application.Current.Resources["DarkTheme"]!);
+            IsDefaultTheme = false;
+        }
     }
 
     private void AddCard()
@@ -484,6 +518,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private void InitList()
     {
+        IsDefaultTheme = true;
         SelectedGroup = new GroupViewModel();
 
         CurrentCards = [];

@@ -12,16 +12,12 @@
 	</Design.DataContext>
 
 	<UserControl.Resources>
-		<conv:BoolToBrushConverter x:Key="Watermark" TrueBrush="DodgerBlue" FalseBrush="DarkRed" />
-		<conv:BoolToBrushConverter x:Key="Border" TrueBrush="LightGray" FalseBrush="Transparent" />
+		<conv:BoolToBrushConverter x:Key="Watermark" TrueBrush="#EE6055" FalseBrush="CornflowerBlue" />
+		<conv:BoolToBrushConverter x:Key="Border" TrueBrush="{StaticResource BaseMedium}" FalseBrush="Transparent" />
 	</UserControl.Resources>
 
 	<UserControl.Styles>
 		<Style Selector="TextBox.StyledBox">
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="HorizontalContentAlignment" Value="Left" />
-			<Setter Property="VerticalContentAlignment" Value="Center" />
-			<Setter Property="CornerRadius" Value="10" />
 			<Setter Property="IsReadOnly" Value="{Binding !IsEnable}" />
 
 			<Style Selector="^ /template/ Border#PART_BorderElement">
@@ -30,6 +26,7 @@
 			</Style>
 
 			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
+				<Setter Property="FontWeight" Value="SemiBold" />
 				<Setter Property="Foreground" Value="{Binding IsEnable, Converter={StaticResource Watermark}}" />
 			</Style>
 		</Style>

@@ -5,18 +5,20 @@
 		xmlns:vm="clr-namespace:pmclient.ViewModels"
 		xmlns:react="http://reactiveui.net"
 		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-		Width="800" Height="500" MinWidth="800" MinHeight="500"
+		Width="800" Height="500" MinWidth="850" MinHeight="500"
 		FontFamily="{DynamicResource MainFont}"
 		WindowStartupLocation="CenterScreen"
 		ExtendClientAreaToDecorationsHint="True"
 		ExtendClientAreaTitleBarHeightHint="0"
 		ExtendClientAreaChromeHints="NoChrome"
 		x:Class="pmclient.Views.MainWindow"
-		x:DataType="vm:MainWindowViewModel">
+		x:DataType="vm:MainWindowViewModel"
+		Background="{DynamicResource BaseHigh}">
+	
 	<Window.Styles>
 		<Style Selector="Button">
 			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="Foreground" Value="{DynamicResource Dark}" />
+			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 		</Style>
 	</Window.Styles>
 

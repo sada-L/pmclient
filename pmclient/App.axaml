@@ -3,8 +3,6 @@
 			x:Class="pmclient.App"
 			xmlns:local="using:pmclient"
 			RequestedThemeVariant="Default">
-	<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
 	<Application.DataTemplates>
 		<local:ViewLocator />
 	</Application.DataTemplates>
@@ -12,56 +10,171 @@
 	<Application.Styles>
 		<FluentTheme />
 
+		<!-- Global UserControl -->
 		<Style Selector="UserControl">
 			<Setter Property="Background" Value="Transparent" />
 		</Style>
 
+		<!-- Global TextBlock -->
+		<Style Selector="TextBlock">
+			<Setter Property="FontWeight" Value="Medium" />
+			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+		</Style>
+
+		<!-- Global ListBox -->
+		<Style Selector="ListBox">
+			<Setter Property="Background" Value="Transparent" />
+		</Style>
+
+		<!-- Global MenuFlyoutPresenter -->
+		<Style Selector="MenuFlyoutPresenter">
+			<Setter Property="Background" Value="{DynamicResource BaseHigh}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource BaseMedium}" />
+		</Style>
+
+		<!-- Global MenuItem -->
+		<Style Selector="MenuItem">
+			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+
+			<Style Selector="^:disabled">
+				<Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+					<Setter Property="Foreground" Value="{DynamicResource BaseMedium}" />
+				</Style>
+			</Style>
+		</Style>
+
+		<!-- Global Separator -->
+		<Style Selector="Separator">
+			<Setter Property="Background" Value="{DynamicResource BaseLow}" />
+		</Style>
+
+		<!-- Global TextBox -->
+		<Style Selector="TextBox">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+			<Setter Property="HorizontalContentAlignment" Value="Left" />
+			<Setter Property="VerticalContentAlignment" Value="Center" />
+			<Setter Property="CornerRadius" Value="10" />
+			<Setter Property="FontSize" Value="15" />
+			<Setter Property="FontWeight" Value="Medium" />
+			<Setter Property="BorderBrush" Value="{DynamicResource BaseMedium}" />
+		</Style>
+
+		<!-- Global ComboBox -->
+		<Style Selector="ComboBox">
+			<Setter Property="Background" Value="Transparent" />
+
+			<Style Selector="^ /template/ PathIcon#DropDownGlyph">
+				<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+			</Style>
+
+			<!--  Pressed State  -->
+			<Style Selector="^:pressed /template/ Border#Background">
+				<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
+			</Style>
+
+			<!--  Focused State  -->
+			<Style Selector="^:focused">
+				<Style Selector="^ /template/ Border#Background">
+					<Setter Property="Background" Value="Transparent" />
+				</Style>
+			</Style>
+
+			<!--  Disabled State  -->
+			<Style Selector="^:disabled">
+				<Style Selector="^ /template/ Border#Background">
+					<Setter Property="Background" Value="Transparent" />
+				</Style>
+			</Style>
+
+		</Style>
+
+		<!-- Border.SBorder -->
+		<Style Selector="Border.SBorder">
+			<Setter Property="BorderBrush" Value="{DynamicResource BaseMedium}" />
+			<Setter Property="BorderThickness" Value="2" />
+		</Style>
+
+		<!-- Button.SButton -->
 		<Style Selector="Button.SButton">
-			<Setter Property="Foreground" Value="{DynamicResource Light}" />
+			<Setter Property="Foreground" Value="{DynamicResource BaseMedium}" />
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="CornerRadius" Value="10" />
 
 			<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Foreground" Value="{DynamicResource Light}" />
-				<Setter Property="Background" Value="{DynamicResource AspNeutral}" />
+				<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+				<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
 			</Style>
 
 			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Foreground" Value="{DynamicResource Light}" />
-				<Setter Property="Background" Value="{DynamicResource AspNeutral}" />
+				<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+				<Setter Property="Background" Value="Transparent" />
 			</Style>
 
 			<Style Selector="^:disable /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Foreground" Value="{DynamicResource Light}" />
-				<Setter Property="Background" Value="{DynamicResource AspNeutral}" />
+				<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+				<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
 			</Style>
 		</Style>
 
-		<Style Selector="TextBox.STextBox">
+		<!-- TextBox.DefaultTextBox -->
+		<Style Selector="TextBox.DefaultTextBox">
+			<Setter Property="CaretBrush" Value="{DynamicResource BaseLow}" />
+			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 			<Setter Property="UseFloatingWatermark" Value="True" />
-			<Setter Property="CornerRadius" Value="10" />
 
 			<Style Selector="^:pointerover">
-				<Setter Property="Foreground" Value="{DynamicResource Light}" />
+				<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+				<Style Selector="^ /template/ Border#PART_BorderElement">
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="BorderBrush" Value="{DynamicResource BaseLow}" />
+				</Style>
 			</Style>
 
 			<Style Selector="^:focus">
-				<Setter Property="Foreground" Value="{DynamicResource Dark}" />
-
+				<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 				<Style Selector="^ /template/ Border#PART_BorderElement">
-					<Setter Property="Background" Value="{DynamicResource Neutral}" />
-					<Setter Property="BorderBrush" Value="{DynamicResource AspNeutral}" />
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="BorderBrush" Value="{DynamicResource BaseLow}" />
 				</Style>
 			</Style>
 
 			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
-				<Setter Property="Foreground" Value="{DynamicResource AspDark}" />
+				<Setter Property="Foreground" Value="{DynamicResource BaseMedium}" />
 			</Style>
 		</Style>
-		
+
+		<!-- TextBox.ReversTextBox -->
+		<Style Selector="TextBox.ReversTextBox">
+			<Setter Property="CaretBrush" Value="{DynamicResource BaseHigh}" />
+			<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+			<Setter Property="UseFloatingWatermark" Value="True" />
+
+			<Style Selector="^:pointerover">
+				<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+				<Style Selector="^ /template/ Border#PART_BorderElement">
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="BorderBrush" Value="{DynamicResource BaseHigh}" />
+				</Style>
+			</Style>
+
+			<Style Selector="^:focus">
+				<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+				<Style Selector="^ /template/ Border#PART_BorderElement">
+					<Setter Property="Background" Value="Transparent" />
+					<Setter Property="BorderBrush" Value="{DynamicResource BaseHigh}" />
+				</Style>
+			</Style>
+
+			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
+				<Setter Property="Foreground" Value="{DynamicResource BaseMedium}" />
+			</Style>
+		</Style>
+
+		<!-- TextBox.PasswordBox -->
 		<Style Selector="TextBox.PasswordBox[AcceptsReturn=False][IsReadOnly=False]:not(TextBox:empty)">
-			<Setter Property="PasswordChar" Value="*"/>
-			<Setter Property="TextInputOptions.ContentType" Value="Password"/>
+			<Setter Property="PasswordChar" Value="*" />
+			<Setter Property="TextInputOptions.ContentType" Value="Password" />
 			<Setter Property="InnerRightContent">
 				<Template>
 					<ToggleButton IsChecked="{Binding $parent[TextBox].RevealPassword, Mode=TwoWay}">
@@ -94,6 +207,7 @@
 			</Setter>
 		</Style>
 
+		<!-- TextBox.Icon -->
 		<Style Selector="TextBlock.Icon">
 			<Setter Property="FontFamily" Value="{DynamicResource Icons}" />
 			<Setter Property="HorizontalAlignment" Value="Center" />
@@ -104,12 +218,19 @@
 	<Application.Resources>
 		<FontFamily x:Key="MainFont">Roboto</FontFamily>
 		<FontFamily x:Key="Icons">avares://pmclient/Assets/FontAwesome.otf#FontAwesome</FontFamily>
-		<Color x:Key="Dark">#00171F</Color>
-		<Color x:Key="Neutral">#ECE5F0</Color>
-		<Color x:Key="Light">#FFFFFA</Color>
-		<Color x:Key="AspDark">#702632</Color>
-		<Color x:Key="AspNeutral">#912F40</Color>
+
+		<StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="BaseHigh" />
+
+		<ResourceDictionary x:Key="Default">
+			<Color x:Key="BaseHigh">#EEEEEE</Color>
+			<Color x:Key="BaseMedium">#666666</Color>
+			<Color x:Key="BaseLow">#2b2d30</Color>
+		</ResourceDictionary>
+
+		<ResourceDictionary x:Key="DarkTheme">
+			<Color x:Key="BaseHigh">#00171F</Color>
+			<Color x:Key="BaseMedium">#888888</Color>
+			<Color x:Key="BaseLow">#EEEEEE</Color>
+		</ResourceDictionary>
 	</Application.Resources>
-
-
 </Application>

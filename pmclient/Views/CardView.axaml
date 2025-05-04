@@ -12,16 +12,12 @@
 		<vm:CardViewModel />
 	</Design.DataContext>
 	<UserControl.Resources>
-		<conv:BoolToBrushConverter x:Key="Watermark" TrueBrush="DodgerBlue" FalseBrush="DarkRed" />
-		<conv:BoolToBrushConverter x:Key="Border" TrueBrush="LightGray" FalseBrush="Transparent" />
+		<conv:BoolToBrushConverter x:Key="Watermark" TrueBrush="#EE6055" FalseBrush="CornflowerBlue" />
+		<conv:BoolToBrushConverter x:Key="Border" TrueBrush="{StaticResource BaseMedium}" FalseBrush="Transparent" />
 	</UserControl.Resources>
 
 	<UserControl.Styles>
 		<Style Selector="TextBox.StyledBox">
-			<Setter Property="VerticalAlignment" Value="Center" />
-			<Setter Property="HorizontalContentAlignment" Value="Left" />
-			<Setter Property="VerticalContentAlignment" Value="Center" />
-			<Setter Property="CornerRadius" Value="10" />
 			<Setter Property="IsReadOnly" Value="{Binding !IsEnable}" />
 
 			<Style Selector="^ /template/ Border#PART_BorderElement">
@@ -30,6 +26,7 @@
 			</Style>
 
 			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
+				<Setter Property="FontWeight" Value="SemiBold" />
 				<Setter Property="Foreground" Value="{Binding IsEnable, Converter={StaticResource Watermark}}" />
 			</Style>
 		</Style>
@@ -169,13 +166,13 @@
 								HorizontalAlignment="Right" VerticalAlignment="Bottom"
 								IsVisible="{Binding IsFavorite}" />
 				</Panel>
-				<TextBox Classes="StyledBox" Text="{Binding Title}" FontSize="30" Watermark="Title" />
+				<TextBox Classes="StyledBox" Text="{Binding Title}" Foreground="{DynamicResource BaseLow}" FontSize="30" Watermark="Title" />
 			</StackPanel>
 
-			<TextBox Classes="StyledBox" Text="{Binding Username}" UseFloatingWatermark="True" Watermark="Username" />
-			<TextBox Classes="StyledBox" Text="{Binding Password}" UseFloatingWatermark="True" Watermark="Password" />
-			<TextBox Classes="StyledBox" Text="{Binding Website}" UseFloatingWatermark="True" Watermark="Website" />
-			<TextBox Classes="StyledBox" Text="{Binding Notes}" UseFloatingWatermark="True" Watermark="Notes" />
+			<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Username}" Watermark="Username" />
+			<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Password}" Watermark="Password" />
+			<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Website}" Watermark="Website" />
+			<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Notes}" Watermark="Notes" />
 		</StackPanel>
 	</Grid>
 </UserControl>
