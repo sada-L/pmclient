@@ -37,7 +37,7 @@
 			</Button>
 
 			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-						Foreground="{DynamicResource BaseHigh}" />
+						Foreground="{DynamicResource BaseHigh}" IsVisible="{Binding IsError}" />
 		</StackPanel>
 	</Border>
 </UserControl>

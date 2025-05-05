@@ -2,7 +2,6 @@ using System;
 using System.Reactive;
 using System.Reactive.Linq;
 using pmclient.Contracts.Requests.Auth;
-using pmclient.RefitClients;
 using pmclient.Services;
 using ReactiveUI;
 using Splat;
@@ -18,6 +17,7 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
     private string _password = string.Empty;
     private string _confirmPassword = string.Empty;
     private string _errorMessage = string.Empty;
+    private bool _isError;
 
     public string Email
     {
@@ -47,6 +47,12 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
     {
         get => _errorMessage;
         set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
+    }
+
+    public bool IsError
+    {
+        get => _isError;
+        set => this.RaiseAndSetIfChanged(ref _isError, value);
     }
 
     public IScreen HostScreen { get; }
@@ -88,12 +94,14 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
         if (!await _authService!.RegisterAsync(request, cancellationToken))
         {
             ErrorMessage = "Registration failed";
+            IsError = true;
             return null;
         }
 
         if (!await _userService!.GetUserAsync(cancellationToken))
         {
             ErrorMessage = "Registration failed";
+            IsError = true;
             return null;
         }
 
