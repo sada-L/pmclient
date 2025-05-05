@@ -10,30 +10,30 @@
 		<vm:RegisterViewModel />
 	</Design.DataContext>
 
-	<Border Background="{DynamicResource BaseLow}" Padding="30" HorizontalAlignment="Center"
-			VerticalAlignment="Center" CornerRadius="25" >
+	<Border Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10"
+			BorderBrush="{DynamicResource BaseMedium}" BorderThickness="2">
 		<StackPanel Spacing="15">
-			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource BaseHigh}" />
-			<TextBox Classes="ReversTextBox" Text="{Binding Email}" Watermark="Email" />
-			<TextBox Classes="ReversTextBox" Text="{Binding Username}" Watermark="Username" />
-			<TextBox Classes="ReversTextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
-			<TextBox Classes="ReversTextBox PasswordBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" />
+			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource BaseLow}" />
+			<TextBox Classes="DefaultTextBox" Text="{Binding Email}" Watermark="Email" />
+			<TextBox Classes="DefaultTextBox" Text="{Binding Username}" Watermark="Username" />
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" />
 
 			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Back" CornerRadius="10"
 					Command="{Binding BackCommand}">
 				<Button.Styles>
 					<Style Selector="Button">
-						<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
-						<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+						<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+						<Setter Property="Background" Value="{DynamicResource BaseLow}" />
 
 						<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-							<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
-							<Setter Property="Background" Value="{DynamicResource BaseHigh}" />
+							<Setter Property="Foreground" Value="{DynamicResource BaseHigh}" />
+							<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
 						</Style>
 					</Style>
 				</Button.Styles>
 			</Button>
-			
+
 			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Register" CornerRadius="10"
 					Command="{Binding RegisterCommand}">
 				<Button.Styles>
@@ -48,7 +48,7 @@
 					</Style>
 				</Button.Styles>
 			</Button>
-			
+
 			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
 						Foreground="{DynamicResource BaseHigh}" IsVisible="{Binding IsError}" />
 		</StackPanel>

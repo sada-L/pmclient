@@ -47,15 +47,15 @@
 									</MenuItem.Icon>
 								</MenuItem>
 								<Separator />
-								<MenuItem Header="Log Out" Command="{Binding LogoutCommand}">
-									<MenuItem.Icon>
-										<TextBlock Classes="Icon" Text="&#xf08b;" />
-									</MenuItem.Icon>
-								</MenuItem>
-								<Separator />
 								<MenuItem Header="Change theme" Command="{Binding ChangeThemeCommand}">
 									<MenuItem.Icon>
 										<TextBlock Classes="Icon" Text="{Binding IsDefaultTheme, Converter={StaticResource Theme}}" />
+									</MenuItem.Icon>
+								</MenuItem>
+								<Separator />
+								<MenuItem Header="Log Out" Command="{Binding LogoutCommand}">
+									<MenuItem.Icon>
+										<TextBlock Classes="Icon" Text="&#xf08b;" />
 									</MenuItem.Icon>
 								</MenuItem>
 							</MenuFlyout>
@@ -101,7 +101,8 @@
 
 					<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
 						<!--Search-->
-						<TextBox Classes="DefaultTextBox" Watermark="Search" Width="280" Text="{Binding Search}" />
+						<TextBox Classes="DefaultTextBox" Watermark="Search" Width="280" Text="{Binding Search}"
+								UseFloatingWatermark="False" />
 
 						<!--Add-->
 						<Button DockPanel.Dock="Right">

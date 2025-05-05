@@ -10,18 +10,17 @@
 		<vm:LoginViewModel />
 	</Design.DataContext>
 
-	<Border Background="{DynamicResource BaseLow}" Padding="30" HorizontalAlignment="Center"
-			VerticalAlignment="Center" CornerRadius="25" >
+	<Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10" Padding="20"
+			BorderBrush="{DynamicResource BaseMedium}" BorderThickness="2">
 		<StackPanel Spacing="15">
-			<TextBlock Text="Login" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource BaseHigh}" />
-			<TextBox Classes="ReversTextBox" Text="{Binding Email}" Watermark="Email" />
-			<TextBox Classes="ReversTextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
+			<TextBlock Text="Login" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource BaseLow}" />
+			<TextBox Classes="DefaultTextBox" Text="{Binding Email}" Watermark="Email" />
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
 
 			<Button Classes="SButton" Command="{Binding RegisterCommand}"
 					Padding="2" Margin="0" Content="Register new account" HorizontalAlignment="Center" />
 
-			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Log in"
-					CornerRadius="10"
+			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Log in" CornerRadius="10"
 					Command="{Binding LoginCommand}">
 				<Button.Styles>
 					<Style Selector="Button">

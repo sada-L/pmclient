@@ -11,8 +11,8 @@
 	</Design.DataContext>
 
 	<Border>
-		<DockPanel Margin="5">
-			<Panel>
+		<DockPanel>
+			<Panel Margin="5">
 				<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="40" />
 				<TextBlock Classes="Icon" Text="&#xf005;" FontSize="20" Foreground="Gold"
 							HorizontalAlignment="Right" VerticalAlignment="Bottom"
