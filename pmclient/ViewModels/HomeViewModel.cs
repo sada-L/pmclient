@@ -10,7 +10,6 @@ using Avalonia;
 using Avalonia.Controls;
 using DynamicData;
 using pmclient.Models;
-using pmclient.RefitClients;
 using pmclient.Services;
 using ReactiveUI;
 using Splat;
@@ -171,9 +170,9 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         InitList();
 
         SortCommand = ReactiveCommand.Create<int>(SortCards);
-        AddCardCommand = ReactiveCommand.Create(AddCard, CanAddCard());
+        AddCardCommand = ReactiveCommand.Create(AddCard, CanAddCard);
         AddGroupCommand = ReactiveCommand.Create(AddHeaderGroup);
-        EditGroupCommand = ReactiveCommand.Create(EditGroup, CanEditGroup());
+        EditGroupCommand = ReactiveCommand.Create(EditGroup, CanEditGroup);
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
         ChangeThemeCommand = ReactiveCommand.Create(ChangeTheme);
         LogoutCommand = ReactiveCommand.CreateFromObservable(LogOut);
@@ -209,12 +208,12 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         var card = new Card
         {
             Id = 0,
-            Title = "",
-            Website = "",
+            Title = "Title",
+            Website = "Website",
             Image = '\uf2bc',
-            Username = "",
-            Notes = "",
-            Password = "",
+            Username = "Username",
+            Notes = "Notes",
+            Password = "Password",
             GroupId = SelectedGroup.Id,
             IsFavorite = false,
         };
@@ -223,14 +222,14 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SetCardProperties(cardViewModel);
 
         SelectedGroup.Cards.Add(cardViewModel);
-        SelectedCard = cardViewModel;
+        SelectedCard = null!;
         SelectedCard = cardViewModel;
     }
 
-    private IObservable<bool> CanAddCard() =>
-        this.WhenAnyValue(x => x.SelectedGroup)
-            .WhereNotNull()
-            .Select(x => x.Id > 0);
+    private IObservable<bool> CanAddCard => this
+        .WhenAnyValue(x => x.SelectedGroup)
+        .WhereNotNull()
+        .Select(x => x.Id > 0);
 
     private void AddHeaderGroup()
     {
@@ -240,7 +239,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         var group = new Group
         {
             Id = -1,
-            Title = "",
+            Title = "Title",
             Image = '\uf097',
             GroupId = 0,
         };
@@ -284,12 +283,12 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         IsEnabled = false;
     }
 
-    private IObservable<bool> CanEditGroup() =>
-        this.WhenAnyValue(x => x.SelectedGroup)
-            .WhereNotNull()
-            .Select(x => x.Id > 0);
+    private IObservable<bool> CanEditGroup => this
+        .WhenAnyValue(x => x.SelectedGroup)
+        .WhereNotNull()
+        .Select(x => x.Id > 0);
 
-    private void DeleteCard()
+    private async Task DeleteCard()
     {
         var selectedGroup = SelectedGroup;
         var selectedCard = SelectedCard;
@@ -299,32 +298,48 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         selectedGroup.Cards.Remove(selectedCard);
         SetHandlers();
         SelectedGroup = selectedGroup;
+        await _cardService!.DeleteCard(selectedCard.Id);
     }
 
-    private async Task ConfirmCardChanges(bool confirmed)
+    private async Task DeleteGroup()
+    {
+        var group = SelectedGroup;
+        IsGroupAdd = false;
+
+        _userCards.Remove(_userCards.Where(x => x.GroupId == group.Id));
+        _userGroups.Remove(group);
+        SetHandlers();
+        await _groupService!.DeleteGroup(group.Id);
+        SelectedGroup = new GroupViewModel();
+        SelectedGroup = null!;
+    }
+
+    private async Task SaveCardChanges()
     {
         var card = SelectedCard;
 
-        if (confirmed)
+        if (card.Id == 0)
         {
-            if (card.Id == 0)
-            {
-                card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
-                card.Id = await _cardService!.CreateCard(card.GetCard());
-                _userCards.Add(card);
-            }
-            else
-            {
-                card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
-                await _cardService!.UpdateCard(card.GetCard());
-            }
-
-            SetCurrentCards(card);
+            card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
+            card.Id = await _cardService!.CreateCard(card.GetCard());
+            card.Save();
+            _userCards.Add(card);
         }
         else
         {
-            SetCurrentCards(SelectedCard.Id == 0 ? null : SelectedCard);
+            card.GroupId = card.CurrentGroup.Id == 0 ? card.HeaderGroup.Id : card.CurrentGroup.Id;
+            card.Save();
+            await _cardService!.UpdateCard(card.GetCard());
         }
+
+        SetCurrentCards(card);
+    }
+
+    private void CancelCardChanges()
+    {
+        var card = SelectedCard;
+        card.Cancel();
+        SetCurrentCards(SelectedCard.Id == 0 ? null : SelectedCard);
     }
 
     private async Task ConfirmGroupChanges(bool confirmed)
@@ -353,22 +368,30 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private void SetCurrentCards(CardViewModel? card = null)
     {
-        card ??= SelectedGroup.Cards.First();
-
+        var group = SelectedGroup;
         IsEnabled = true;
         SetHandlers();
-        SelectedGroup = _userGroups.FirstOrDefault(g => g.Id == card.GroupId) ?? new GroupViewModel();
-        SelectedCard = card;
+        SelectedGroup = _userGroups.FirstOrDefault(x => x.Id == card?.GroupId) ?? group;
+        SelectedCard = null!;
+        SelectedCard = card ?? null!;
     }
 
     private void SetCurrentGroup(GroupViewModel? group = null)
     {
-        group ??= _userGroups.FirstOrDefault() ?? new GroupViewModel();
+        group ??= SelectedGroup;
 
         IsEnabled = true;
         if (IsGroupAdd) IsGroupAdd = false;
         SetHandlers();
+        SelectedGroup = null!;
         SelectedGroup = group;
+    }
+
+    private async Task SetCardFavorite()
+    {
+        var card = SelectedCard;
+        card.Favorite();
+        await SaveCardChanges();
     }
 
     private void SearchCards()
@@ -444,6 +467,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
             group.Cards.Clear();
             group.Cards.AddRange(_userCards.Where(x => x.GroupId == group.Id));
             group.ConfirmCommand = ReactiveCommand.CreateFromTask<bool>(ConfirmGroupChanges);
+            group.DeleteCommand = ReactiveCommand.CreateFromTask(DeleteGroup);
         }
 
         SetList();
@@ -463,8 +487,10 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         card.CurrentGroup = card.CurrentGroups.FirstOrDefault(model => model.Id == card.GroupId) ??
                             card.CurrentGroups.First();
 
-        card.DeleteCommand = ReactiveCommand.Create(DeleteCard);
-        card.ConfirmCommand = ReactiveCommand.CreateFromTask<bool>(ConfirmCardChanges);
+        card.SaveCommand = ReactiveCommand.CreateFromTask(SaveCardChanges);
+        card.DeleteCommand = ReactiveCommand.CreateFromTask(DeleteCard);
+        card.CancelCommand = ReactiveCommand.Create(CancelCardChanges);
+        card.FavoriteCommand = ReactiveCommand.CreateFromTask(SetCardFavorite);
     }
 
     private void SetHandlers()

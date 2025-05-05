@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reactive;
 using System.Windows.Input;
 using pmclient.Models;
 using ReactiveUI;
@@ -123,17 +122,15 @@ public class CardViewModel : ViewModelBase
         "\uf03e"
     ];
 
-    public ICommand ConfirmCommand { get; set; }
+    public ICommand DeleteCommand { get; set; }
 
-    public ReactiveCommand<Unit, Unit> DeleteCommand { get; set; }
+    public ICommand SaveCommand { get; set; }
 
-    public ReactiveCommand<Unit, Unit> FavoriteCommand { get; }
+    public ICommand FavoriteCommand { get; set; }
 
-    public ReactiveCommand<Unit, Unit> EditCommand { get; }
+    public ICommand CancelCommand { get; set; }
 
-    public ReactiveCommand<Unit, Unit> SaveCommand { get; }
-
-    public ReactiveCommand<Unit, Unit> CancelCommand { get; }
+    public ICommand EditCommand { get; }
 
     public CardViewModel()
     {
@@ -152,22 +149,19 @@ public class CardViewModel : ViewModelBase
 
         SetData(card);
         EditCommand = ReactiveCommand.Create(Edit);
-        SaveCommand = ReactiveCommand.Create(Save);
-        CancelCommand = ReactiveCommand.Create(Cancel);
+        FavoriteCommand = ReactiveCommand.Create(Favorite);
     }
 
     public CardViewModel(Card card)
     {
         SetData(card);
         EditCommand = ReactiveCommand.Create(Edit);
-        SaveCommand = ReactiveCommand.Create(Save);
-        CancelCommand = ReactiveCommand.Create(Cancel);
         FavoriteCommand = ReactiveCommand.Create(Favorite);
     }
 
     public Card GetCard()
     {
-        return _card; 
+        return _card;
     }
 
     private void SetData(Card card)
@@ -186,12 +180,11 @@ public class CardViewModel : ViewModelBase
 
     private void Edit()
     {
-        IsEnable = !IsEnable;
+        IsEnable = true;
     }
 
-    private void Save()
+    public void Save()
     {
-        ConfirmCommand.Execute(true);
         var card = new Card
         {
             Id = Id,
@@ -205,19 +198,17 @@ public class CardViewModel : ViewModelBase
             Notes = Notes,
         };
         SetData(card);
-        IsEnable = !IsEnable;
+        IsEnable = false;
     }
 
-    private void Cancel()
+    public void Cancel()
     {
         SetData(_card);
-        IsEnable = !IsEnable;
-        ConfirmCommand.Execute(false);
+        IsEnable = false;
     }
 
-    private void Favorite()
+    public void Favorite()
     {
         IsFavorite = !IsFavorite;
-        ConfirmCommand.Execute(true);
     }
 }

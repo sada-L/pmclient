@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
@@ -105,10 +106,17 @@ public class GroupViewModel : ViewModelBase
         Image = group.Image;
         Cards = new ObservableCollection<CardViewModel>();
         SubGroups = new ObservableCollection<GroupViewModel>();
-        IsVisible = Id > 0 && GroupId == 0;
+
+        IsVisibleChanged();
 
         SaveCommand = ReactiveCommand.Create(Save);
         CancelCommand = ReactiveCommand.Create(Cancel);
+    }
+
+    private void IsVisibleChanged()
+    {
+        this.WhenAnyValue(x => x.Id)
+            .Subscribe(x => IsVisible = x > 0 && GroupId == 0);
     }
 
     public Group GetGroup()
@@ -127,7 +135,6 @@ public class GroupViewModel : ViewModelBase
 
     private void Save()
     {
-        ConfirmCommand.Execute(true);
         var group = new Group
         {
             Id = Id,
@@ -137,6 +144,7 @@ public class GroupViewModel : ViewModelBase
         };
         SetData(group);
         IsEnable = !IsEnable;
+        ConfirmCommand.Execute(true);
     }
 
     private void Cancel()
