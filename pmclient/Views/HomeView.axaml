@@ -70,7 +70,9 @@
 			<!--Groups-->
 			<TreeView Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEnabled}"
 					ItemsSource="{Binding CurrentGroups}"
-					SelectedItem="{Binding SelectedGroup}">
+					SelectedItem="{Binding SelectedGroup}"
+					AutoScrollToSelectedItem="True"
+					SelectionMode="AlwaysSelected">
 				<TreeView.ItemTemplate>
 					<TreeDataTemplate ItemsSource="{Binding SubGroups}">
 						<DockPanel Margin="5">
@@ -167,7 +169,9 @@
 					<!--Cards-->
 					<ListBox ItemsSource="{Binding CurrentCards}"
 							SelectedItem="{Binding SelectedCard}"
-							SelectedIndex="{Binding SelectedCardIndex}">
+							SelectedIndex="{Binding SelectedCardIndex}"
+							SelectionMode="AlwaysSelected"
+							WrapSelection="True">
 						<ListBox.ItemTemplate>
 							<DataTemplate>
 								<StackPanel>
@@ -182,7 +186,7 @@
 			<!--Card-->
 			<Panel Grid.Row="1" Grid.Column="2">
 				<ContentControl Content="{Binding SelectedCard}" />
-				<ContentControl Content="{Binding SelectedGroup}" Background="White"
+				<ContentControl Content="{Binding SelectedGroup}" Background="{DynamicResource BaseHigh}"
 								IsVisible="{Binding IsGroupAdd}" />
 			</Panel>
 		</Grid>

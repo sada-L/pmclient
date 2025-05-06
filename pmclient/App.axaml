@@ -36,6 +36,12 @@
 		<!-- Global MenuItem -->
 		<Style Selector="MenuItem">
 			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+			
+			<Style Selector="^:pointerover">
+				<Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
+					<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+				</Style>
+			</Style>	
 
 			<Style Selector="^:disabled">
 				<Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
@@ -68,9 +74,8 @@
 			<Style Selector="^ /template/ PathIcon#DropDownGlyph">
 				<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 			</Style>
-
-			<!--  Pressed State  -->
-			<Style Selector="^:pressed /template/ Border#Background">
+			<!--  PointerOver State  -->
+			<Style Selector="^:pointerover /template/ Border#Background">
 				<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
 			</Style>
 
@@ -183,13 +188,17 @@
 			<Setter Property="HorizontalAlignment" Value="Center" />
 			<Setter Property="VerticalAlignment" Value="Center" />
 		</Style>
+
 	</Application.Styles>
 
 	<Application.Resources>
 		<FontFamily x:Key="MainFont">Roboto</FontFamily>
 		<FontFamily x:Key="Icons">avares://pmclient/Assets/FontAwesome.otf#FontAwesome</FontFamily>
 
-		<StaticResource x:Key="ComboBoxDropDownBackground" ResourceKey="BaseHigh" />
+		<SolidColorBrush x:Key="ComboBoxDropDownBackground" Color="{DynamicResource BaseHigh}" />
+		<SolidColorBrush x:Key="ComboBoxDropDownGlyphForeground" Color="{DynamicResource BaseLow}" />
+		<SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundDisabled" Color="Transparent" />
+		<SolidColorBrush x:Key="TreeViewItemForeground" Color="{DynamicResource BaseLow}" />
 		<conv:BoolToCharConverter x:Key="Password" TrueChar="&#xf06e;" FalseChar="&#xf070;" />
 
 		<ResourceDictionary x:Key="Default">

@@ -166,8 +166,8 @@
 								HorizontalAlignment="Right" VerticalAlignment="Bottom"
 								IsVisible="{Binding IsFavorite}" />
 				</Panel>
-				<TextBox Classes="StyledBox" Text="{Binding Title}" Foreground="{DynamicResource BaseLow}" FontSize="30"
-						Watermark="Title" />
+				<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Title}" Foreground="{DynamicResource BaseLow}"
+						FontSize="30" Watermark="Title" UseFloatingWatermark="False"/>
 			</StackPanel>
 
 			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Username}" Watermark="Username" />

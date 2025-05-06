@@ -96,7 +96,8 @@
 						</Flyout>
 					</TextBlock.ContextFlyout>
 				</TextBlock>
-				<TextBox Classes="StyledBox" Text="{Binding Title}" FontSize="30" Watermark="Title" />
+				<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Title}" FontSize="30" Watermark="Title"
+						Foreground="{DynamicResource BaseLow}" UseFloatingWatermark="False" />
 			</StackPanel>
 		</StackPanel>
 	</Grid>
