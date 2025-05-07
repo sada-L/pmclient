@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace pmclient.Contracts.Requests.Auth;
+namespace pmclient.Contracts.Response.Auth;
 
 public sealed class AuthResponse
 {

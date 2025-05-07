@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using pmclient.Contracts.Requests.Auth;
+using pmclient.Contracts.Response.Auth;
 using pmclient.Helpers;
 using Refit;
 
