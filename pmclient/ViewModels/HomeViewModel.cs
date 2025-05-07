@@ -291,15 +291,15 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private async Task DeleteCard()
     {
-        var selectedGroup = SelectedGroup;
-        var selectedCard = SelectedCard;
+        var card = SelectedGroup;
+        var group = SelectedCard;
 
-        _userCards.Remove(selectedCard);
-        _deleted.Cards.Add(selectedCard);
-        selectedGroup.Cards.Remove(selectedCard);
+        _userCards.Remove(group);
+        _deleted.Cards.Add(group);
+        card.Cards.Remove(group);
         SetHandlers();
-        SelectedGroup = selectedGroup;
-        await _cardService!.DeleteCard(selectedCard.Id);
+        SelectedGroup = card;
+        await _cardService!.DeleteCard(group.Id);
     }
 
     private async Task DeleteGroup()
@@ -314,6 +314,11 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SelectedGroup = new GroupViewModel();
         SelectedGroup = null!;
     }
+
+    private IObservable<bool> CanDeleteGroup => this
+        .WhenAnyValue(x => x.SelectedGroup)
+        .WhereNotNull()
+        .Select(x => x.Cards.Count == 0 && x.SubGroups.Count == 0);
 
     private async Task SaveCardChanges()
     {
@@ -468,7 +473,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
             group.Cards.Clear();
             group.Cards.AddRange(_userCards.Where(x => x.GroupId == group.Id));
             group.ConfirmCommand = ReactiveCommand.CreateFromTask<bool>(ConfirmGroupChanges);
-            group.DeleteCommand = ReactiveCommand.CreateFromTask(DeleteGroup);
+            group.DeleteCommand = ReactiveCommand.CreateFromTask(DeleteGroup, CanDeleteGroup);
         }
 
         SetList();
