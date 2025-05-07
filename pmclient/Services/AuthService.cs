@@ -21,7 +21,7 @@ public class AuthService
         var response = await _identityWebApi!.LoginAsync(loginRequest, cancellationToken);
         if (!response.IsSuccessStatusCode) return false;
 
-        StaticStorage.JwtToken = response.Content!.AccessToken.Replace("\"", "");
+        UserSettings.JwtToken = response.Content!.AccessToken.Replace("\"", "");
         await TokenStorage.SaveTokenAsync(response.Content.RefreshToken);
 
         return true;
@@ -32,7 +32,7 @@ public class AuthService
         var response = await _identityWebApi!.RegisterAsync(registerRequest, cancellationToken);
         if (!response.IsSuccessStatusCode) return false;
 
-        StaticStorage.JwtToken = response.Content!.AccessToken.Replace("\"", "");
+        UserSettings.JwtToken = response.Content!.AccessToken.Replace("\"", "");
         await TokenStorage.SaveTokenAsync(response.Content.RefreshToken);
 
         return true;
@@ -47,7 +47,7 @@ public class AuthService
         var response = await _identityWebApi!.RefreshTokenAsync(request, cancellationToken);
         if (!response.IsSuccessStatusCode) return false;
 
-        StaticStorage.JwtToken = response.Content!.AccessToken.Replace("\"", "");
+        UserSettings.JwtToken = response.Content!.AccessToken.Replace("\"", "");
         await TokenStorage.SaveTokenAsync(response.Content.RefreshToken);
 
         return true;
@@ -55,8 +55,8 @@ public class AuthService
 
     public static async Task LogoutAsync()
     {
-        StaticStorage.JwtToken = null;
-        StaticStorage.User = null;
+        UserSettings.JwtToken = null;
+        UserSettings.User = null;
         await TokenStorage.DeleteTokenAsync();
     }
 }

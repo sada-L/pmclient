@@ -2,7 +2,7 @@ using pmclient.Models;
 
 namespace pmclient.Services;
 
-internal static class StaticStorage
+internal static class UserSettings
 {
     public static string? JwtToken { get; set; }
 

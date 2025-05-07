@@ -1,6 +1,5 @@
 using System.Threading;
 using System.Threading.Tasks;
-using pmclient.Models;
 using pmclient.RefitClients;
 
 namespace pmclient.Services;
@@ -19,7 +18,7 @@ public class UserService
         var response = await _usersWebApi.GetCurrentUser(cancellationToken);
         if (!response.IsSuccessStatusCode) return false;
 
-        StaticStorage.User = response.Content!;
+        UserSettings.User = response.Content!;
         return true;
     }
 }
