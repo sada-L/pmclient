@@ -172,8 +172,14 @@
 
 			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Username}"
 					Watermark="{DynamicResource UsernameWatermark}" />
-			<TextBox Classes="DefaultTextBox StyledBox PasswordBox" Text="{Binding Password}"
-					Watermark="{DynamicResource PasswordWatermark}" />
+
+			<StackPanel>
+				<TextBox Classes="DefaultTextBox StyledBox PasswordBox" Text="{Binding Password}"
+						Watermark="{DynamicResource PasswordWatermark}" />
+				<Button Classes="SButton" Command="{Binding GeneratePasswordCommand}"
+						Content="{DynamicResource ButtonGeneratePassword}" IsEnabled="{Binding IsEnable}" />
+			</StackPanel>
+
 			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Website}"
 					Watermark="{DynamicResource WebsiteWatermark}" />
 			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Notes}"

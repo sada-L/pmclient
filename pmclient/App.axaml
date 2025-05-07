@@ -118,9 +118,8 @@
 				<Setter Property="Background" Value="Transparent" />
 			</Style>
 
-			<Style Selector="^:disable /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
-				<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
+			<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="IsVisible" Value="False"></Setter>
 			</Style>
 		</Style>
 
@@ -230,6 +229,7 @@
 			<sys:String x:Key="ButtonNewItem">Добавить</sys:String>
 			<sys:String x:Key="ButtonNewCard">Карточка</sys:String>
 			<sys:String x:Key="ButtonNewGroup">Группа</sys:String>
+			<sys:String x:Key="ButtonGeneratePassword">Сгенерировать пароль</sys:String>
 		</ResourceDictionary>
 		
 		<ResourceDictionary x:Key="En">
@@ -260,6 +260,7 @@
 			<sys:String x:Key="ButtonNewItem">New Item</sys:String>
 			<sys:String x:Key="ButtonNewCard">New Card</sys:String>
 			<sys:String x:Key="ButtonNewGroup">New Group</sys:String>
+			<sys:String x:Key="ButtonGeneratePassword">Generate password</sys:String>
 		</ResourceDictionary>
 		
 		<ResourceDictionary x:Key="Light">
@@ -269,7 +270,7 @@
 		</ResourceDictionary>
 
 		<ResourceDictionary x:Key="Dark">
-			<Color x:Key="BaseHigh">#00171F</Color>
+			<Color x:Key="BaseHigh">#2b2d30</Color>
 			<Color x:Key="BaseMedium">#888888</Color>
 			<Color x:Key="BaseLow">#DDDDDD</Color>
 		</ResourceDictionary>

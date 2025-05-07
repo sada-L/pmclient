@@ -1,7 +1,8 @@
 using System;
-using System.Reactive;
 using System.Reactive.Linq;
+using System.Windows.Input;
 using pmclient.Contracts.Requests.Auth;
+using pmclient.Helpers;
 using pmclient.Services;
 using ReactiveUI;
 using Splat;
@@ -59,9 +60,11 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
 
     public string UrlPathSegment => "/register";
 
-    public ReactiveCommand<Unit, IRoutableViewModel> RegisterCommand { get; }
+    public ICommand RegisterCommand { get; }
 
-    public ReactiveCommand<Unit, IRoutableViewModel> BackCommand { get; }
+    public ICommand BackCommand { get; }
+
+    public ICommand GeneratePasswordCommand { get; }
 
     public RegisterViewModel()
     {
@@ -80,6 +83,14 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
 
         RegisterCommand = ReactiveCommand.CreateFromObservable(Register, CanExecRegister());
         BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
+        GeneratePasswordCommand = ReactiveCommand.Create(GeneratePassword);
+    }
+
+    private void GeneratePassword()
+    {
+        var password = PasswordGenerator.GenerateSecurePassword();
+        Password = password;
+        ConfirmPassword = password;
     }
 
     private IObservable<IRoutableViewModel> Register() => Observable.FromAsync(async cancellationToken =>

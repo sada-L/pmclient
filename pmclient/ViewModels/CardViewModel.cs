@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using pmclient.Helpers;
 using pmclient.Models;
 using ReactiveUI;
 
@@ -131,6 +132,8 @@ public class CardViewModel : ViewModelBase
     public ICommand CancelCommand { get; set; }
 
     public ICommand EditCommand { get; }
+    
+    public ICommand GeneratePasswordCommand { get; }
 
     public CardViewModel()
     {
@@ -157,11 +160,17 @@ public class CardViewModel : ViewModelBase
         SetData(card);
         EditCommand = ReactiveCommand.Create(Edit);
         FavoriteCommand = ReactiveCommand.Create(Favorite);
+        GeneratePasswordCommand = ReactiveCommand.Create(GeneratePassword);
     }
 
     public Card GetCard()
     {
         return _card;
+    }
+
+    private void GeneratePassword()
+    {
+        Password = PasswordGenerator.GenerateSecurePassword();
     }
 
     private void SetData(Card card)
