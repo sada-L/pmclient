@@ -13,14 +13,17 @@
 	<Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10" Padding="20"
 			BorderBrush="{DynamicResource BaseMedium}" BorderThickness="2">
 		<StackPanel Spacing="15">
-			<TextBlock Text="Login" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource BaseLow}" />
-			<TextBox Classes="DefaultTextBox" Text="{Binding Email}" Watermark="Email" />
-			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
+			<TextBlock Text="{DynamicResource LoginHeader}" FontSize="25" HorizontalAlignment="Center"
+						Foreground="{DynamicResource BaseLow}" />
+			<TextBox Classes="DefaultTextBox" Text="{Binding Email}" Watermark="{DynamicResource EmailWatermark}" />
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}"
+					Watermark="{DynamicResource PasswordWatermark}" />
 
 			<Button Classes="SButton" Command="{Binding RegisterCommand}"
-					Padding="2" Margin="0" Content="Register new account" HorizontalAlignment="Center" />
+					Padding="2" Margin="0" Content="{DynamicResource ButtonRegNewAcc}" HorizontalAlignment="Center" />
 
-			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Log in" CornerRadius="10"
+			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+					Content="{DynamicResource ButtonLogin}" CornerRadius="10"
 					Command="{Binding LoginCommand}">
 				<Button.Styles>
 					<Style Selector="Button">

@@ -89,7 +89,7 @@
 						<Button.Content>
 							<StackPanel Orientation="Horizontal" Spacing="2">
 								<TextBlock Classes="Icon" Text="&#xf0c7;" />
-								<TextBlock Text="Save" />
+								<TextBlock Text="{DynamicResource ButtonSave}" />
 							</StackPanel>
 						</Button.Content>
 					</Button>
@@ -98,7 +98,7 @@
 						<Button.Content>
 							<StackPanel Orientation="Horizontal" Spacing="2">
 								<TextBlock Classes="Icon" Text="&#xf0e2;" />
-								<TextBlock Text="Cancel" />
+								<TextBlock Text="{DynamicResource ButtonCancel}" />
 							</StackPanel>
 						</Button.Content>
 					</Button>
@@ -109,7 +109,7 @@
 					<Button.Content>
 						<StackPanel Orientation="Horizontal" Spacing="2">
 							<TextBlock Classes="Icon" Text="&#xf044;" />
-							<TextBlock Text="Edit" />
+							<TextBlock Text="{DynamicResource ButtonEdit}" />
 						</StackPanel>
 					</Button.Content>
 				</Button>
@@ -122,13 +122,13 @@
 				<Button.Flyout>
 					<Flyout>
 						<MenuFlyoutPresenter Margin="-15">
-							<MenuItem Header="Delete" Command="{Binding DeleteCommand}">
+							<MenuItem Header="{DynamicResource ButtonDelete}" Command="{Binding DeleteCommand}">
 								<MenuItem.Icon>
 									<TextBlock Classes="Icon" Text="&#xf014;" />
 								</MenuItem.Icon>
 							</MenuItem>
 
-							<MenuItem Header="Favorite" Command="{Binding FavoriteCommand}">
+							<MenuItem Header="{DynamicResource ButtonFavorite}" Command="{Binding FavoriteCommand}">
 								<MenuItem.Icon>
 									<TextBlock Classes="Icon" Text="&#xf006;" />
 								</MenuItem.Icon>
@@ -167,13 +167,17 @@
 								IsVisible="{Binding IsFavorite}" />
 				</Panel>
 				<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Title}" Foreground="{DynamicResource BaseLow}"
-						FontSize="30" Watermark="Title" UseFloatingWatermark="False"/>
+						FontSize="30" Watermark="{DynamicResource TitleWatermark}" UseFloatingWatermark="False" />
 			</StackPanel>
 
-			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Username}" Watermark="Username" />
-			<TextBox Classes="DefaultTextBox StyledBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
-			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Website}" Watermark="Website" />
-			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Notes}" Watermark="Notes" />
+			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Username}"
+					Watermark="{DynamicResource UsernameWatermark}" />
+			<TextBox Classes="DefaultTextBox StyledBox PasswordBox" Text="{Binding Password}"
+					Watermark="{DynamicResource PasswordWatermark}" />
+			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Website}"
+					Watermark="{DynamicResource WebsiteWatermark}" />
+			<TextBox Classes="DefaultTextBox StyledBox clearButton" Text="{Binding Notes}"
+					Watermark="{DynamicResource NotesWatermark}" />
 		</StackPanel>
 	</Grid>
 </UserControl>

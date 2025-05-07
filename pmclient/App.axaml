@@ -3,6 +3,7 @@
 			x:Class="pmclient.App"
 			xmlns:local="using:pmclient"
 			xmlns:conv="clr-namespace:pmclient.Converters"
+			xmlns:sys="clr-namespace:System;assembly=mscorlib"
 			RequestedThemeVariant="Default">
 	<Application.DataTemplates>
 		<local:ViewLocator />
@@ -201,13 +202,73 @@
 		<SolidColorBrush x:Key="TreeViewItemForeground" Color="{DynamicResource BaseLow}" />
 		<conv:BoolToCharConverter x:Key="Password" TrueChar="&#xf06e;" FalseChar="&#xf070;" />
 
-		<ResourceDictionary x:Key="Default">
+		<ResourceDictionary x:Key="Ru">
+			<sys:String x:Key="LoginHeader">Авторизация</sys:String>
+			<sys:String x:Key="RegisterHeader">Регистрация</sys:String>
+			<sys:String x:Key="EmailWatermark">Почта</sys:String>
+			<sys:String x:Key="PasswordWatermark">Пароль</sys:String>
+			<sys:String x:Key="UsernameWatermark">Имя</sys:String>
+			<sys:String x:Key="ConfirmPasswordWatermark">Подтвердите пароль</sys:String>
+			<sys:String x:Key="TitleWatermark">Название</sys:String>
+			<sys:String x:Key="WebsiteWatermark">Вебсайт</sys:String>
+			<sys:String x:Key="NotesWatermark">Заметки</sys:String>
+			<sys:String x:Key="SearchWatermark">Поиск</sys:String>
+			<sys:String x:Key="AutoWatermark">Авто</sys:String>
+			<sys:String x:Key="ButtonRegNewAcc">Зарегистрироваться</sys:String>
+			<sys:String x:Key="ButtonLogin">Войти</sys:String>
+			<sys:String x:Key="ButtonRegister">Зарегистрироваться</sys:String>
+			<sys:String x:Key="ButtonBack">Назад</sys:String>
+			<sys:String x:Key="ButtonSave">Сохранить</sys:String>
+			<sys:String x:Key="ButtonEdit">Изменить</sys:String>
+			<sys:String x:Key="ButtonCancel">Отмена</sys:String>
+			<sys:String x:Key="ButtonDelete">Удалить</sys:String>
+			<sys:String x:Key="ButtonFavorite">Избранное</sys:String>
+			<sys:String x:Key="ButtonEditGroup">Ред. Группу</sys:String>
+			<sys:String x:Key="ButtonChangeTheme">Изменить тему</sys:String>
+			<sys:String x:Key="ButtonChangeLanguage">Изменить язык</sys:String>
+			<sys:String x:Key="ButtonLogout">Выйти</sys:String>
+			<sys:String x:Key="ButtonNewItem">Добавить</sys:String>
+			<sys:String x:Key="ButtonNewCard">Карточка</sys:String>
+			<sys:String x:Key="ButtonNewGroup">Группа</sys:String>
+		</ResourceDictionary>
+		
+		<ResourceDictionary x:Key="En">
+			<sys:String x:Key="LoginHeader">Login</sys:String>
+			<sys:String x:Key="RegisterHeader">Registration</sys:String>
+			<sys:String x:Key="EmailWatermark">Email</sys:String>
+			<sys:String x:Key="PasswordWatermark">Password</sys:String>
+			<sys:String x:Key="UsernameWatermark">Username</sys:String>
+			<sys:String x:Key="ConfirmPasswordWatermark">Confirm password</sys:String>
+			<sys:String x:Key="TitleWatermark">Title</sys:String>
+			<sys:String x:Key="WebsiteWatermark">Website</sys:String>
+			<sys:String x:Key="NotesWatermark">Notes</sys:String>
+			<sys:String x:Key="SearchWatermark">Search</sys:String>
+			<sys:String x:Key="AutoWatermark">Auto</sys:String>
+			<sys:String x:Key="ButtonRegNewAcc">Register new account</sys:String>
+			<sys:String x:Key="ButtonLogin">Log in</sys:String>
+			<sys:String x:Key="ButtonRegister">Register</sys:String>
+			<sys:String x:Key="ButtonBack">Back</sys:String>
+			<sys:String x:Key="ButtonSave">Save</sys:String>
+			<sys:String x:Key="ButtonEdit">Edit</sys:String>
+			<sys:String x:Key="ButtonCancel">Cancel</sys:String>
+			<sys:String x:Key="ButtonDelete">Delete</sys:String>
+			<sys:String x:Key="ButtonFavorite">Favorite</sys:String>
+			<sys:String x:Key="ButtonEditGroup">Edit Group</sys:String>
+			<sys:String x:Key="ButtonChangeTheme">Change Theme</sys:String>
+			<sys:String x:Key="ButtonChangeLanguage">Change Language</sys:String>
+			<sys:String x:Key="ButtonLogout">Log Out</sys:String>
+			<sys:String x:Key="ButtonNewItem">New Item</sys:String>
+			<sys:String x:Key="ButtonNewCard">New Card</sys:String>
+			<sys:String x:Key="ButtonNewGroup">New Group</sys:String>
+		</ResourceDictionary>
+		
+		<ResourceDictionary x:Key="Light">
 			<Color x:Key="BaseHigh">#DDDDDD</Color>
 			<Color x:Key="BaseMedium">#666666</Color>
 			<Color x:Key="BaseLow">#2b2d30</Color>
 		</ResourceDictionary>
 
-		<ResourceDictionary x:Key="DarkTheme">
+		<ResourceDictionary x:Key="Dark">
 			<Color x:Key="BaseHigh">#00171F</Color>
 			<Color x:Key="BaseMedium">#888888</Color>
 			<Color x:Key="BaseLow">#DDDDDD</Color>

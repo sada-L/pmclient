@@ -6,8 +6,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Avalonia;
-using Avalonia.Controls;
 using DynamicData;
 using pmclient.Models;
 using pmclient.Services;
@@ -20,6 +18,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
     private readonly CardService? _cardService;
     private readonly GroupService? _groupService;
+    private readonly SettingsService? _settingsService;
     private List<CardViewModel> _userCards;
     private List<GroupViewModel> _userGroups;
 
@@ -113,6 +112,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     public ICommand ChangeThemeCommand { get; }
 
+    public ICommand ChangeLanguageCommand { get; }
+
     public IScreen HostScreen { get; }
 
     public string UrlPathSegment => "/home";
@@ -161,11 +162,13 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SetData(cards, groups);
     }
 
-    public HomeViewModel(IScreen? hostScreen = null, CardService? cardService = null, GroupService? groupService = null)
+    public HomeViewModel(IScreen? hostScreen = null, CardService? cardService = null, GroupService? groupService = null,
+        SettingsService? settingsService = null)
     {
         HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
         _cardService = cardService ?? Locator.Current.GetService<CardService>()!;
         _groupService = groupService ?? Locator.Current.GetService<GroupService>()!;
+        _settingsService = settingsService ?? Locator.Current.GetService<SettingsService>()!;
 
         InitList();
 
@@ -175,30 +178,28 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         EditGroupCommand = ReactiveCommand.Create(EditGroup, CanEditGroup);
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
         ChangeThemeCommand = ReactiveCommand.Create(ChangeTheme);
+        ChangeLanguageCommand = ReactiveCommand.Create(ChangeLanguage);
         LogoutCommand = ReactiveCommand.CreateFromObservable(LogOut);
         LoadDataCommand.Execute(null);
     }
 
     private void ChangeTheme()
     {
-        if (!IsDefaultTheme)
+        if (_settingsService!.CurrentSettings.Theme == "Dark")
         {
-            if (Application.Current != null)
-                Application.Current.Resources.MergedDictionaries.Clear();
-
-            Application.Current!.Resources.MergedDictionaries.Add(
-                (ResourceDictionary)Application.Current.Resources["Default"]!);
+            _settingsService!.SetTheme("Light");
             IsDefaultTheme = true;
         }
         else
         {
-            if (Application.Current != null)
-                Application.Current.Resources.MergedDictionaries.Clear();
-
-            Application.Current!.Resources.MergedDictionaries.Add(
-                (ResourceDictionary)Application.Current.Resources["DarkTheme"]!);
+            _settingsService!.SetTheme("Dark");
             IsDefaultTheme = false;
         }
+    }
+
+    private void ChangeLanguage()
+    {
+        _settingsService!.SetLanguage(_settingsService!.CurrentSettings.Language == "Ru" ? "En" : "Ru");
     }
 
     private void AddCard()
@@ -544,8 +545,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private void InitList()
     {
+        var isDefaultLanguage = _settingsService!.CurrentSettings.Language == "Ru";
         IsDefaultTheme = true;
-        SelectedGroup = new GroupViewModel();
 
         CurrentCards = [];
         _headerGroups = [];
@@ -553,7 +554,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _allItems = new GroupViewModel(new Group
         {
             Id = -1,
-            Title = "All Items",
+            Title = isDefaultLanguage ? "Все" : "All Items",
             Image = '\uf2ba',
             GroupId = 0
         });
@@ -561,7 +562,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _favorites = new GroupViewModel(new Group
         {
             Id = -1,
-            Title = "Favorites",
+            Title = isDefaultLanguage ? "Избранное" : "Favorites",
             Image = '\uf006',
             GroupId = 0
         });
@@ -569,11 +570,12 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _deleted = new GroupViewModel(new Group
         {
             Id = -1,
-            Title = "Recently Deleted",
+            Title = isDefaultLanguage ? "Недавно удаленное" : "Recently Deleted",
             Image = '\uf014',
             GroupId = 0
         });
 
         CurrentGroups = [_allItems, _favorites, _deleted];
+        SelectedGroup = CurrentGroups.First();
     }
 }

@@ -1,11 +1,10 @@
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using pmclient.Helpers;
+using pmclient.Services;
 using pmclient.ViewModels;
 using pmclient.Views;
-using ReactiveUI;
 using Splat;
 
 namespace pmclient;
@@ -21,8 +20,9 @@ public partial class App : Application
     {
         Bootstrapper.ConfigureServices();
 
-        Current!.Resources.MergedDictionaries.Add(
-            (ResourceDictionary)Current.Resources["Default"]!);
+        var settings = Locator.Current.GetService<SettingsService>()!;
+        settings.SetTheme(settings.CurrentSettings.Theme);
+        settings.SetLanguage(settings.CurrentSettings.Language);
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

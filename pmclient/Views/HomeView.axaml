@@ -41,19 +41,25 @@
 						</Button.Content>
 						<Button.Flyout>
 							<MenuFlyout>
-								<MenuItem Header="Edit Group" Command="{Binding EditGroupCommand}">
+								<MenuItem Header="{DynamicResource ButtonEditGroup}" Command="{Binding EditGroupCommand}">
 									<MenuItem.Icon>
 										<TextBlock Classes="Icon" Text="&#xf044;" />
 									</MenuItem.Icon>
 								</MenuItem>
 								<Separator />
-								<MenuItem Header="Change theme" Command="{Binding ChangeThemeCommand}">
+								<MenuItem Header="{DynamicResource ButtonChangeTheme}" Command="{Binding ChangeThemeCommand}">
 									<MenuItem.Icon>
 										<TextBlock Classes="Icon" Text="{Binding IsDefaultTheme, Converter={StaticResource Theme}}" />
 									</MenuItem.Icon>
 								</MenuItem>
 								<Separator />
-								<MenuItem Header="Log Out" Command="{Binding LogoutCommand}">
+								<MenuItem Header="{DynamicResource ButtonChangeLanguage}" Command="{Binding ChangeLanguageCommand}">
+									<MenuItem.Icon>
+										<TextBlock Classes="Icon" Text="&#xf1ab;" />
+									</MenuItem.Icon>
+								</MenuItem>
+								<Separator />
+								<MenuItem Header="{DynamicResource ButtonLogout}" Command="{Binding LogoutCommand}">
 									<MenuItem.Icon>
 										<TextBlock Classes="Icon" Text="&#xf08b;" />
 									</MenuItem.Icon>
@@ -103,26 +109,26 @@
 
 					<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
 						<!--Search-->
-						<TextBox Classes="DefaultTextBox" Watermark="Search" Width="280" Text="{Binding Search}"
-								UseFloatingWatermark="False" />
+						<TextBox Classes="DefaultTextBox" Watermark="{DynamicResource SearchWatermark}" Width="280"
+								Text="{Binding Search}" UseFloatingWatermark="False" />
 
 						<!--Add-->
 						<Button DockPanel.Dock="Right">
 							<Button.Content>
 								<StackPanel Orientation="Horizontal" Spacing="5">
 									<TextBlock Classes="Icon" Text="&#xf067;" />
-									<TextBlock Text="New Item" />
+									<TextBlock Text="{DynamicResource ButtonNewItem}" />
 								</StackPanel>
 							</Button.Content>
 							<Button.Flyout>
 								<MenuFlyout>
-									<MenuItem Header="New Card" Command="{Binding AddCardCommand}">
+									<MenuItem Header="{DynamicResource ButtonNewCard}" Command="{Binding AddCardCommand}">
 										<MenuItem.Icon>
 											<TextBlock Classes="Icon" Text="&#xf2c3;" />
 										</MenuItem.Icon>
 									</MenuItem>
 									<Separator />
-									<MenuItem Header="New Group" Command="{Binding AddGroupCommand}"
+									<MenuItem Header="{DynamicResource ButtonNewGroup}" Command="{Binding AddGroupCommand}"
 											IsEnabled="{Binding IsEnabled}">
 										<MenuItem.Icon>
 											<TextBlock Classes="Icon" Text="&#xf2ba;" />
@@ -149,16 +155,65 @@
 								<Button.Flyout>
 									<Flyout>
 										<MenuFlyoutPresenter x:Name="SortMenu" Margin="-15">
-											<MenuItem Classes="SMenuItem" Header="&#xf15d; Title" />
-											<MenuItem Classes="SMenuItem" Header="&#xf15e; Title" />
+											<MenuItem Classes="SMenuItem">
+												<MenuItem.Header>
+													<TextBlock>
+														<Run Text="&#xf15d;" />
+														<Run Text="{DynamicResource TitleWatermark}" />
+													</TextBlock>
+												</MenuItem.Header>
+											</MenuItem>
+											<MenuItem Classes="SMenuItem">
+												<MenuItem.Header>
+													<TextBlock>
+														<Run Text="&#xf15e;" />
+														<Run Text="{DynamicResource TitleWatermark}" />
+													</TextBlock>
+												</MenuItem.Header>
+											</MenuItem>
 											<Separator />
-											<MenuItem Classes="SMenuItem" Header="&#xf15d; Website" />
-											<MenuItem Classes="SMenuItem" Header="&#xf15e; Website" />
+											<MenuItem Classes="SMenuItem">
+												<MenuItem.Header>
+													<TextBlock>
+														<Run Text="&#xf15d;" />
+														<Run Text="{DynamicResource WebsiteWatermark}" />
+													</TextBlock>
+												</MenuItem.Header>
+											</MenuItem>
+											<MenuItem Classes="SMenuItem">
+												<MenuItem.Header>
+													<TextBlock>
+														<Run Text="&#xf15e;" />
+														<Run Text="{DynamicResource WebsiteWatermark}" />
+													</TextBlock>
+												</MenuItem.Header>
+											</MenuItem>
 											<Separator />
-											<MenuItem Classes="SMenuItem" Header="&#xf15d; Username" />
-											<MenuItem Classes="SMenuItem" Header="&#xf15e; Username" />
+											<MenuItem Classes="SMenuItem">
+												<MenuItem.Header>
+													<TextBlock>
+														<Run Text="&#xf15d;" />
+														<Run Text="{DynamicResource UsernameWatermark}" />
+													</TextBlock>
+												</MenuItem.Header>
+											</MenuItem>
+											<MenuItem Classes="SMenuItem">
+												<MenuItem.Header>
+													<TextBlock>
+														<Run Text="&#xf15e;" />
+														<Run Text="{DynamicResource UsernameWatermark}" />
+													</TextBlock>
+												</MenuItem.Header>
+											</MenuItem>
 											<Separator />
-											<MenuItem Classes="SMenuItem" Header="&#xf161; Auto" />
+											<MenuItem Classes="SMenuItem">
+												<MenuItem.Header>
+													<TextBlock>
+														<Run Text="&#xf161;" />
+														<Run Text="{DynamicResource AutoWatermark}" />
+													</TextBlock>
+												</MenuItem.Header>
+											</MenuItem>
 										</MenuFlyoutPresenter>
 									</Flyout>
 								</Button.Flyout>

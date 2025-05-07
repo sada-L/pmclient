@@ -43,7 +43,7 @@
 					<Button.Content>
 						<StackPanel Orientation="Horizontal" Spacing="2">
 							<TextBlock Classes="Icon" Text="&#xf0c7;" />
-							<TextBlock Text="Save" />
+							<TextBlock Text="{DynamicResource ButtonSave}" />
 						</StackPanel>
 					</Button.Content>
 				</Button>
@@ -52,7 +52,7 @@
 					<Button.Content>
 						<StackPanel Orientation="Horizontal" Spacing="2">
 							<TextBlock Classes="Icon" Text="&#xf0e2;" />
-							<TextBlock Text="Cancel" />
+							<TextBlock Text="{DynamicResource ButtonCancel}" />
 						</StackPanel>
 					</Button.Content>
 				</Button>
@@ -64,7 +64,7 @@
 				<Button.Flyout>
 					<Flyout>
 						<MenuFlyoutPresenter Margin="-15">
-							<MenuItem Header="Delete" Command="{Binding DeleteCommand}">
+							<MenuItem Header="{DynamicResource ButtonDelete}" Command="{Binding DeleteCommand}">
 								<MenuItem.Icon>
 									<TextBlock Classes="Icon" Text="&#xf014;" />
 								</MenuItem.Icon>
@@ -96,7 +96,8 @@
 						</Flyout>
 					</TextBlock.ContextFlyout>
 				</TextBlock>
-				<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Title}" FontSize="30" Watermark="Title"
+				<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Title}" FontSize="30"
+						Watermark="{DynamicResource TitleWatermark}"
 						Foreground="{DynamicResource BaseLow}" UseFloatingWatermark="False" />
 			</StackPanel>
 		</StackPanel>

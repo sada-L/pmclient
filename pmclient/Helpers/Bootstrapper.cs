@@ -1,16 +1,15 @@
 using System;
-using Avalonia.Controls;
 using Avalonia.ReactiveUI;
 using Microsoft.Extensions.DependencyInjection;
 using pmclient.Extensions;
-using pmclient.Settings;
-using ReactiveUI;
-using Splat;
 using pmclient.HttpHandlers;
 using pmclient.RefitClients;
 using pmclient.Services;
+using pmclient.Settings;
 using pmclient.ViewModels;
 using pmclient.Views;
+using ReactiveUI;
+using Splat;
 using Splat.Microsoft.Extensions.DependencyInjection;
 
 namespace pmclient.Helpers;
@@ -40,6 +39,7 @@ public static class Bootstrapper
         services.AddSingleton<UserService>();
         services.AddSingleton<CardService>();
         services.AddSingleton<GroupService>();
+        services.AddSingleton<SettingsService>();
 
         services.AddSingleton<IScreen, MainWindowViewModel>();
 

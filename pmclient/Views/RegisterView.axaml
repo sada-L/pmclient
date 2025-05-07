@@ -13,13 +13,17 @@
 	<Border Padding="20" HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10"
 			BorderBrush="{DynamicResource BaseMedium}" BorderThickness="2">
 		<StackPanel Spacing="15">
-			<TextBlock Text="Registration" FontSize="25" HorizontalAlignment="Center" Foreground="{DynamicResource BaseLow}" />
-			<TextBox Classes="DefaultTextBox" Text="{Binding Email}" Watermark="Email" />
-			<TextBox Classes="DefaultTextBox" Text="{Binding Username}" Watermark="Username" />
-			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}" Watermark="Password" />
-			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding ConfirmPassword}" Watermark="Confirm Password" />
+			<TextBlock Text="{DynamicResource RegisterHeader}" FontSize="25" HorizontalAlignment="Center"
+						Foreground="{DynamicResource BaseLow}" />
+			<TextBox Classes="DefaultTextBox" Text="{Binding Email}" Watermark="{DynamicResource EmailWatermark}" />
+			<TextBox Classes="DefaultTextBox" Text="{Binding Username}" Watermark="{DynamicResource UsernameWatermark}" />
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}"
+					Watermark="{DynamicResource PasswordWatermark}" />
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding ConfirmPassword}"
+					Watermark="{DynamicResource ConfirmPasswordWatermark}" />
 
-			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Back" CornerRadius="10"
+			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{DynamicResource ButtonBack}"
+					CornerRadius="10"
 					Command="{Binding BackCommand}">
 				<Button.Styles>
 					<Style Selector="Button">
@@ -34,7 +38,8 @@
 				</Button.Styles>
 			</Button>
 
-			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="Register" CornerRadius="10"
+			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" Content="{DynamicResource ButtonRegister}"
+					CornerRadius="10"
 					Command="{Binding RegisterCommand}">
 				<Button.Styles>
 					<Style Selector="Button">
