@@ -197,9 +197,18 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         }
     }
 
+    private void SetLanguage(bool isDefault)
+    {
+        _allItems.Title = isDefault ? "Все" : "All Items";
+        _favorites.Title = isDefault ? "Избранное" : "Favorites";
+        _deleted.Title = isDefault ? "Недавно удаленное" : "Recently Deleted";
+    }
+
     private void ChangeLanguage()
     {
-        _settingsService!.SetLanguage(_settingsService!.CurrentSettings.Language == "Ru" ? "En" : "Ru");
+        var isDefault = _settingsService!.CurrentSettings.Language == "Ru";
+        _settingsService!.SetLanguage(isDefault ? "En" : "Ru");
+        SetLanguage(!isDefault);
     }
 
     private void AddCard()
@@ -550,7 +559,6 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private void InitList()
     {
-        var isDefaultLanguage = _settingsService!.CurrentSettings.Language == "Ru";
         IsDefaultTheme = true;
 
         CurrentCards = [];
@@ -559,7 +567,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _allItems = new GroupViewModel(new Group
         {
             Id = -1,
-            Title = isDefaultLanguage ? "Все" : "All Items",
+            Title = "",
             Image = '\uf2ba',
             GroupId = 0
         });
@@ -567,7 +575,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _favorites = new GroupViewModel(new Group
         {
             Id = -1,
-            Title = isDefaultLanguage ? "Избранное" : "Favorites",
+            Title = "",
             Image = '\uf006',
             GroupId = 0
         });
@@ -575,12 +583,13 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _deleted = new GroupViewModel(new Group
         {
             Id = -1,
-            Title = isDefaultLanguage ? "Недавно удаленное" : "Recently Deleted",
+            Title = "",
             Image = '\uf014',
             GroupId = 0
         });
 
         CurrentGroups = [_allItems, _favorites, _deleted];
         SelectedGroup = CurrentGroups.First();
+        SetLanguage(_settingsService!.CurrentSettings.Language == "Ru");
     }
 }
