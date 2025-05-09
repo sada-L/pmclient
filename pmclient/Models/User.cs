@@ -13,4 +13,7 @@ public sealed class User
 
     [JsonPropertyName("email")] 
     public required string Email { get; init; }
+     
+    [JsonPropertyName("secret")]
+    public string? Secret { get; set; }
 }

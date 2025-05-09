@@ -7,10 +7,14 @@ public static class ApiEndpoints
     public static class Authentication
     {
         private const string Base = "/auth";
+        private const string TwoFa = "/2fa";
 
         public const string Login = Base + "/login";
         public const string Register = Base + "/register";
         public const string Token = Base + "/refresh";
+        public const string EnableTwoFa = Base + TwoFa + "/enable";
+        public const string VerifyTwoFa = Base + TwoFa + "/verify";
+        public const string DisableTwoFa = Base + TwoFa + "/disable";
     }
 
     public static class Users

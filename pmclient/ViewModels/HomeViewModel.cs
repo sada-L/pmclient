@@ -113,6 +113,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     public ICommand ChangeThemeCommand { get; }
 
     public ICommand ChangeLanguageCommand { get; }
+    
+    public ICommand AuthCommand { get; }
 
     public IScreen HostScreen { get; }
 
@@ -180,7 +182,13 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         ChangeThemeCommand = ReactiveCommand.Create(ChangeTheme);
         ChangeLanguageCommand = ReactiveCommand.Create(ChangeLanguage);
         LogoutCommand = ReactiveCommand.CreateFromObservable(LogOut);
+        AuthCommand = ReactiveCommand.CreateFromObservable(OpenAuth);
         LoadDataCommand.Execute(null);
+    }
+
+    private IObservable<IRoutableViewModel> OpenAuth()
+    {
+        return HostScreen.Router.Navigate.Execute(new AuthViewModel(HostScreen));
     }
 
     private void ChangeTheme()

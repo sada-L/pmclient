@@ -12,14 +12,15 @@ public static class TokenStorage
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "PassManager", "token.dat");
 
     private static readonly byte[] Key = Encoding.UTF8.GetBytes("your-32-char-long-key-here-12345");
-
+    private static readonly byte[] Iv = Encoding.UTF8.GetBytes("your-16-char-iv-");
+    
     public static async Task SaveTokenAsync(string token)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(StoragePath)!);
 
         using Aes aes = Aes.Create();
         aes.Key = Key;
-        aes.IV = new byte[16];
+        aes.IV = Iv;
 
         using var encryptor = aes.CreateEncryptor();
         await using var fileStream = new FileStream(StoragePath, FileMode.Create);

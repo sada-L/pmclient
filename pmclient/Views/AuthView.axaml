@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			x:Class="pmclient.Views.AuthView"
+			x:DataType="vm:AuthViewModel">
+
+	<Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10" Padding="20"
+			BorderBrush="{DynamicResource BaseMedium}" BorderThickness="2">
+		<StackPanel>
+			<Image Source="{Binding QrCode}" />
+
+			<Button Command="{Binding GenerateQrCodeCommand}">
+				<Button.Content>
+					<TextBlock Text="{DynamicResource ButtonGenerateQRCode}" />
+				</Button.Content>
+			</Button>
+			<Button Command="{Binding BackCommand}">
+				<Button.Content>
+					<TextBlock Text="{DynamicResource ButtonBack}" />
+				</Button.Content>
+			</Button>
+			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+						Foreground="{DynamicResource BaseHigh}" IsVisible="{Binding IsError}" />
+		</StackPanel>
+	</Border>
+</UserControl>
