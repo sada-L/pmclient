@@ -35,7 +35,7 @@ public static class TokenStorage
 
         using var aes = Aes.Create();
         aes.Key = Key;
-        aes.IV = new byte[16];
+        aes.IV = Iv;
 
         using var decryptor = aes.CreateDecryptor();
         await using var fileStream = new FileStream(StoragePath, FileMode.Open);
