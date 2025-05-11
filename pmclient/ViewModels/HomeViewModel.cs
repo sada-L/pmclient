@@ -16,6 +16,7 @@ namespace pmclient.ViewModels;
 
 public class HomeViewModel : ViewModelBase, IRoutableViewModel
 {
+    private readonly UserService? _userService;
     private readonly CardService? _cardService;
     private readonly GroupService? _groupService;
     private readonly SettingsService? _settingsService;
@@ -165,9 +166,10 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     }
 
     public HomeViewModel(IScreen? hostScreen = null, CardService? cardService = null, GroupService? groupService = null,
-        SettingsService? settingsService = null)
+        SettingsService? settingsService = null, UserService? userService = null)
     {
         HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
+        _userService = userService ?? Locator.Current.GetService<UserService>()!;
         _cardService = cardService ?? Locator.Current.GetService<CardService>()!;
         _groupService = groupService ?? Locator.Current.GetService<GroupService>()!;
         _settingsService = settingsService ?? Locator.Current.GetService<SettingsService>()!;
@@ -550,6 +552,9 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
             var groupResponse = await _groupService!.GetGroupsByUser(cancellationToken);
             var groups = groupResponse ?? [];
+
+            if (UserSettings.User == null)
+                await _userService!.GetUserAsync(cancellationToken);
 
             SetData(cards, groups);
         }

@@ -37,12 +37,12 @@
 		<!-- Global MenuItem -->
 		<Style Selector="MenuItem">
 			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
-			
+
 			<Style Selector="^:pointerover">
 				<Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
 					<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 				</Style>
-			</Style>	
+			</Style>
 
 			<Style Selector="^:disabled">
 				<Style Selector="^ /template/ ContentPresenter#PART_HeaderPresenter">
@@ -122,6 +122,24 @@
 				<Setter Property="IsVisible" Value="False"></Setter>
 			</Style>
 		</Style>
+		
+
+		<Style Selector="Button.DefaultButton">
+			<Setter Property="Background" Value="Gray" />
+			<Setter Property="Foreground" Value="White" />
+			<Setter Property="HorizontalAlignment" Value="Stretch" />
+			<Setter Property="HorizontalContentAlignment" Value="Center" />
+			<Setter Property="CornerRadius" Value="10" />
+			
+			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="White" />
+				<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
+			</Style>
+
+			<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="White" />
+			</Style>
+		</Style>
 
 		<!-- TextBox.DefaultTextBox -->
 		<Style Selector="TextBox.DefaultTextBox">
@@ -144,7 +162,7 @@
 					<Setter Property="BorderBrush" Value="{DynamicResource BaseLow}" />
 				</Style>
 			</Style>
-
+			
 			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
 				<Setter Property="Foreground" Value="{DynamicResource BaseMedium}" />
 			</Style>
@@ -213,6 +231,7 @@
 			<sys:String x:Key="NotesWatermark">Заметки</sys:String>
 			<sys:String x:Key="SearchWatermark">Поиск</sys:String>
 			<sys:String x:Key="AutoWatermark">Авто</sys:String>
+			<sys:String x:Key="CodeWatermark">Код</sys:String>
 			<sys:String x:Key="ButtonRegNewAcc">Зарегистрироваться</sys:String>
 			<sys:String x:Key="ButtonLogin">Войти</sys:String>
 			<sys:String x:Key="ButtonRegister">Зарегистрироваться</sys:String>
@@ -230,8 +249,12 @@
 			<sys:String x:Key="ButtonNewCard">Карточка</sys:String>
 			<sys:String x:Key="ButtonNewGroup">Группа</sys:String>
 			<sys:String x:Key="ButtonGeneratePassword">Сгенерировать пароль</sys:String>
+			<sys:String x:Key="ButtonAuth">Двухфакторная аутентификация</sys:String>
+			<sys:String x:Key="ButtonEnable">Активировать</sys:String>
+			<sys:String x:Key="ButtonDisable">Деактивировать</sys:String>
+			<sys:String x:Key="ButtonValidate">Подтвердить</sys:String>
 		</ResourceDictionary>
-		
+
 		<ResourceDictionary x:Key="En">
 			<sys:String x:Key="LoginHeader">Login</sys:String>
 			<sys:String x:Key="RegisterHeader">Registration</sys:String>
@@ -244,6 +267,7 @@
 			<sys:String x:Key="NotesWatermark">Notes</sys:String>
 			<sys:String x:Key="SearchWatermark">Search</sys:String>
 			<sys:String x:Key="AutoWatermark">Auto</sys:String>
+			<sys:String x:Key="CodeWatermark">Code</sys:String>
 			<sys:String x:Key="ButtonRegNewAcc">Register new account</sys:String>
 			<sys:String x:Key="ButtonLogin">Log in</sys:String>
 			<sys:String x:Key="ButtonRegister">Register</sys:String>
@@ -261,8 +285,12 @@
 			<sys:String x:Key="ButtonNewCard">New Card</sys:String>
 			<sys:String x:Key="ButtonNewGroup">New Group</sys:String>
 			<sys:String x:Key="ButtonGeneratePassword">Generate password</sys:String>
+			<sys:String x:Key="ButtonAuth">2FA</sys:String>
+			<sys:String x:Key="ButtonEnable">Enable</sys:String>
+			<sys:String x:Key="ButtonDisable">Disable</sys:String>
+			<sys:String x:Key="ButtonValidate">Validate</sys:String>
 		</ResourceDictionary>
-		
+
 		<ResourceDictionary x:Key="Light">
 			<Color x:Key="BaseHigh">#DDDDDD</Color>
 			<Color x:Key="BaseMedium">#666666</Color>

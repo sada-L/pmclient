@@ -33,14 +33,16 @@ public static class Bootstrapper
         services.AddWebApiClient<IIdentityWebApi, ApiKeyAuthorizationMessageHandler>()
             .AddWebApiClient<IUsersWebApi>()
             .AddWebApiClient<ICardWebApi>()
-            .AddWebApiClient<IGroupWebApi>();
+            .AddWebApiClient<IGroupWebApi>()
+            .AddWebApiClient<ITwoFaWebApi>();
 
         services.AddSingleton<AuthService>();
         services.AddSingleton<UserService>();
         services.AddSingleton<CardService>();
         services.AddSingleton<GroupService>();
         services.AddSingleton<SettingsService>();
-
+        services.AddSingleton<TwoFaService>();
+        
         services.AddSingleton<IScreen, MainWindowViewModel>();
 
         services.UseMicrosoftDependencyResolver();

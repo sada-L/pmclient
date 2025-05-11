@@ -27,28 +27,18 @@
 			<Button Classes="SButton" Command="{Binding RegisterCommand}"
 					Padding="2" Margin="0" Content="{DynamicResource ButtonRegNewAcc}" HorizontalAlignment="Center" />
 
-			<Button HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
-					Content="{DynamicResource ButtonLogin}" CornerRadius="10"
-					Command="{Binding LoginCommand}">
-				<Button.Styles>
-					<Style Selector="Button">
-						<Setter Property="Background" Value="Gray" />
-						<Setter Property="Foreground" Value="White" />
+			<Button Classes="DefaultButton" Content="{DynamicResource ButtonLogin}"
+					Command="{Binding LoginCommand}" />
 
-						<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-							<Setter Property="Foreground" Value="White"/>
-							<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
-						</Style>
-
-						<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-							<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
-						</Style>
-					</Style>
-				</Button.Styles>
-			</Button>
+			<StackPanel IsVisible="{Binding !IsValid}" Spacing="5">
+				<TextBox Classes="DefaultTextBox" Text="{Binding Code}"
+						Watermark="{DynamicResource CodeWatermark}" />
+				<Button Classes="DefaultButton" Command="{Binding ValidateCommand}"
+						Content="{DynamicResource ButtonValidate}" />
+			</StackPanel>
 
 			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-						Foreground="{DynamicResource BaseHigh}" IsVisible="{Binding IsError}" />
+						Foreground="{DynamicResource BaseLow}" IsVisible="{Binding IsError}" />
 		</StackPanel>
 	</Border>
 </UserControl>

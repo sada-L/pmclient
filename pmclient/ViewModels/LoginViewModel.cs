@@ -12,11 +12,14 @@ namespace pmclient.ViewModels;
 public class LoginViewModel : ViewModelBase, IRoutableViewModel
 {
     private readonly AuthService? _authService;
+    private readonly TwoFaService? _twoFaService;
     private readonly UserService? _userService;
     private string _errorMessage = string.Empty;
     private string _email = string.Empty;
     private string _password = string.Empty;
+    private string _code = string.Empty;
     private bool _isError;
+    private bool _isValid;
 
     public string Email
     {
@@ -28,6 +31,12 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
     {
         get => _password;
         set => this.RaiseAndSetIfChanged(ref _password, value);
+    }
+
+    public string Code
+    {
+        get => _code;
+        set => this.RaiseAndSetIfChanged(ref _code, value);
     }
 
     public string ErrorMessage
@@ -42,6 +51,12 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _isError, value);
     }
 
+    public bool IsValid
+    {
+        get => _isValid;
+        set => this.RaiseAndSetIfChanged(ref _isValid, value);
+    }
+
     public IScreen HostScreen { get; }
 
     public string UrlPathSegment => "/login";
@@ -52,6 +67,8 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
 
     public ICommand GeneratePasswordCommand { get; }
 
+    public ICommand ValidateCommand { get; }
+
     public LoginViewModel()
     {
         Email = "admin@gmail.com";
@@ -61,22 +78,41 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
         RegisterCommand = ReactiveCommand.CreateFromObservable(Login);
     }
 
-    public LoginViewModel(IScreen? screen = null, AuthService? authService = null, UserService? userService = null)
+    public LoginViewModel(IScreen? screen = null, AuthService? authService = null, UserService? userService = null,
+        TwoFaService? twoFaService = null)
     {
         _authService = authService ?? Locator.Current.GetService<AuthService>();
         _userService = userService ?? Locator.Current.GetService<UserService>();
+        _twoFaService = twoFaService ?? Locator.Current.GetService<TwoFaService>();
         HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
 
-        LoginCommand = ReactiveCommand.CreateFromObservable(Login, CanExecLogin());
+        LoginCommand = ReactiveCommand.CreateFromObservable(Login, CanExecLogin);
         RegisterCommand = ReactiveCommand.CreateFromObservable(() =>
             HostScreen.Router.Navigate.Execute(new RegisterViewModel(HostScreen, _authService, _userService)));
         GeneratePasswordCommand = ReactiveCommand.Create(GeneratePassword);
+        ValidateCommand = ReactiveCommand.CreateFromObservable(Validate, CanExecValid);
+
+        IsValid = true;
     }
 
     private void GeneratePassword()
     {
         Password = PasswordGenerator.GenerateSecurePassword();
     }
+
+    private IObservable<IRoutableViewModel> Validate() => Observable.FromAsync(async cancellationToken =>
+    {
+        var request = new ValidateRequest { Code = Code };
+
+        if (!await _twoFaService!.VerifyTwoFaAsync(request, cancellationToken))
+        {
+            ErrorMessage = "Invalid code";
+            IsError = true;
+            return null;
+        }
+
+        return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
+    }).ObserveOn(RxApp.MainThreadScheduler).WhereNotNull().SelectMany(x => x);
 
     private IObservable<IRoutableViewModel> Login() => Observable.FromAsync(async cancellationToken =>
     {
@@ -100,14 +136,24 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
             return null;
         }
 
-        return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
-    }).ObserveOn(RxApp.MainThreadScheduler).SelectMany(x => x!);
+        if (!string.IsNullOrEmpty(UserSettings.User!.Secret))
+        {
+            IsValid = false;
+            return null;
+        }
 
-    private IObservable<bool> CanExecLogin() => this
+        return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
+    }).ObserveOn(RxApp.MainThreadScheduler).WhereNotNull().SelectMany(x => x);
+
+    private IObservable<bool> CanExecLogin => this
         .WhenAnyValue(
             x => x.Email,
             x => x.Password,
             (username, password) =>
                 !string.IsNullOrWhiteSpace(username) &&
                 !string.IsNullOrWhiteSpace(password));
+
+    private IObservable<bool> CanExecValid => this
+        .WhenAnyValue(x => x.Code,
+            code => !string.IsNullOrWhiteSpace(code));
 }

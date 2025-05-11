@@ -3,27 +3,34 @@
 			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			xmlns:conv="clr-namespace:pmclient.Converters"
 			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
 			x:Class="pmclient.Views.AuthView"
 			x:DataType="vm:AuthViewModel">
 
+	<UserControl.Resources>
+		<conv:BoolToStringConverter TrueString="{StaticResource ButtonEnable}" x:Key="StringConverter"
+									FalseString="{StaticResource ButtonDisable}" />
+	</UserControl.Resources>
+
 	<Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10" Padding="20"
 			BorderBrush="{DynamicResource BaseMedium}" BorderThickness="2">
-		<StackPanel>
-			<Image Source="{Binding QrCode}" />
+		<StackPanel Spacing="10">
+			<Border Height="200" Width="200"  CornerRadius="10" ClipToBounds="True">
+				<Image Source="{Binding QrCode}" Stretch="UniformToFill"/>
+			</Border>
 
-			<Button Command="{Binding GenerateQrCodeCommand}">
+			<Button Classes="DefaultButton" Command="{Binding ChangeCommand}">
 				<Button.Content>
-					<TextBlock Text="{DynamicResource ButtonGenerateQRCode}" />
+					<TextBlock Text="{Binding !IsActive, Converter={StaticResource StringConverter}}" />
 				</Button.Content>
 			</Button>
-			<Button Command="{Binding BackCommand}">
+
+			<Button Classes="DefaultButton" Command="{Binding BackCommand}">
 				<Button.Content>
 					<TextBlock Text="{DynamicResource ButtonBack}" />
 				</Button.Content>
 			</Button>
-			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-						Foreground="{DynamicResource BaseHigh}" IsVisible="{Binding IsError}" />
 		</StackPanel>
 	</Border>
 </UserControl>

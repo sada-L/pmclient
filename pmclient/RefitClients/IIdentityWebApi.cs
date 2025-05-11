@@ -16,14 +16,6 @@ public interface IIdentityWebApi
     Task<IApiResponse<AuthResponse>> RegisterAsync([Body] RegisterRequest request, CancellationToken cancellationToken);
 
     [Post(ApiEndpoints.Authentication.Token)]
-    Task<IApiResponse<AuthResponse>> RefreshTokenAsync([Body] RefreshRequest request, CancellationToken cancellationToken);
-
-    [Post(ApiEndpoints.Authentication.EnableTwoFa)]
-    Task<IApiResponse<AuthResponse>> EnableTwoFaAsync(CancellationToken cancellationToken);
-
-    [Post(ApiEndpoints.Authentication.DisableTwoFa)]
-    Task<IApiResponse<AuthResponse>> DisableTwoFaAsync(CancellationToken cancellationToken);
-
-    [Post(ApiEndpoints.Authentication.VerifyTwoFa)]
-    Task<IApiResponse<AuthResponse>> VerifyTwoFaAsync(CancellationToken cancellationToken);
+    Task<IApiResponse<AuthResponse>> RefreshTokenAsync([Body] RefreshRequest request,
+        CancellationToken cancellationToken);
 }

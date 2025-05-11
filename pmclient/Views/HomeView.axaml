@@ -61,7 +61,7 @@
 								<Separator />
 								<MenuItem Header="{DynamicResource ButtonAuth}" Command="{Binding AuthCommand}">
 									<MenuItem.Icon>
-										<TextBlock Classes="Icon" Text="&#xf08b;" />
+										<TextBlock Classes="Icon" Text="&#xf023;" />
 									</MenuItem.Icon>
 								</MenuItem>
 								<Separator />
