@@ -117,7 +117,7 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
         }
 
         return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
-    }).ObserveOn(RxApp.MainThreadScheduler).SelectMany(x => x!);
+    }).ObserveOn(RxApp.MainThreadScheduler).WhereNotNull().SelectMany(x => x!);
 
     private IObservable<bool> CanExecRegister() =>
         this.WhenAnyValue(

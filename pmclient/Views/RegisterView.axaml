@@ -34,7 +34,7 @@
 					Command="{Binding RegisterCommand}" />
 
 			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
-						Foreground="{DynamicResource BaseHigh}" IsVisible="{Binding IsError}" />
+						Foreground="{DynamicResource BaseLow}" IsVisible="{Binding IsError}" />
 		</StackPanel>
 	</Border>
 </UserControl>
