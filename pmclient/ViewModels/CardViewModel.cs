@@ -1,127 +1,47 @@
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
+using pmclient.Extensions;
 using pmclient.Helpers;
 using pmclient.Models;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 
 namespace pmclient.ViewModels;
 
 public class CardViewModel : ViewModelBase
 {
-    private Card _card;
-    private int _id;
-    private string _title;
-    private string _username;
-    private string _password;
-    private string _website;
-    private string _notes;
-    private char _image;
-    private int _groupId;
-    private bool _isFavorite;
-    private bool _isEnable;
+    private Card _oldCard;
 
-    private GroupViewModel _headerGroup = new GroupViewModel();
-    private GroupViewModel _currentGroup = new GroupViewModel();
-    private ObservableCollection<GroupViewModel> _headerGroups = new ObservableCollection<GroupViewModel>();
-    private ObservableCollection<GroupViewModel> _currentGroups = new ObservableCollection<GroupViewModel>();
+    public ReactiveCollection<HeaderGroupViewModel> HeaderGroups { get; } = new();
 
-    public int Id
-    {
-        get => _id;
-        set => this.RaiseAndSetIfChanged(ref _id, value);
-    }
+    public ReactiveCollection<GroupViewModel> CurrentGroups { get; } = new();
 
-    public string Title
-    {
-        get => _title;
-        set => this.RaiseAndSetIfChanged(ref _title, value);
-    }
+    [Reactive] public int Id { get; set; }
 
-    public string Username
-    {
-        get => _username;
-        set => this.RaiseAndSetIfChanged(ref _username, value);
-    }
+    [Reactive] public string Title { get; set; }
 
-    public string Password
-    {
-        get => _password;
-        set => this.RaiseAndSetIfChanged(ref _password, value);
-    }
+    [Reactive] public string Username { get; set; }
 
-    public string Website
-    {
-        get => _website;
-        set => this.RaiseAndSetIfChanged(ref _website, value);
-    }
+    [Reactive] public string Password { get; set; }
 
-    public string Notes
-    {
-        get => _notes;
-        set => this.RaiseAndSetIfChanged(ref _notes, value);
-    }
+    [Reactive] public string Website { get; set; }
 
-    public int GroupId
-    {
-        get => _groupId;
-        set => this.RaiseAndSetIfChanged(ref _groupId, value);
-    }
+    [Reactive] public string Notes { get; set; }
 
-    public bool IsFavorite
-    {
-        get => _isFavorite;
-        set => this.RaiseAndSetIfChanged(ref _isFavorite, value);
-    }
+    [Reactive] public int GroupId { get; set; }
 
-    public char Image
-    {
-        get => _image;
-        set => this.RaiseAndSetIfChanged(ref _image, value);
-    }
+    [Reactive] public bool IsFavorite { get; set; }
 
-    public bool IsEnable
-    {
-        get => _isEnable;
-        set => this.RaiseAndSetIfChanged(ref _isEnable, value);
-    }
+    [Reactive] public char Image { get; set; }
 
-    public GroupViewModel HeaderGroup
-    {
-        get => _headerGroup;
-        set => this.RaiseAndSetIfChanged(ref _headerGroup, value);
-    }
+    [Reactive] public bool IsEnable { get; set; }
 
-    public GroupViewModel CurrentGroup
-    {
-        get => _currentGroup;
-        set => this.RaiseAndSetIfChanged(ref _currentGroup, value);
-    }
+    [Reactive] public HeaderGroupViewModel HeaderGroup { get; set; }
 
-    public ObservableCollection<GroupViewModel> HeaderGroups
-    {
-        get => _headerGroups;
-        set => this.RaiseAndSetIfChanged(ref _headerGroups, value);
-    }
+    [Reactive] public GroupViewModel CurrentGroup { get; set; }
 
-    public ObservableCollection<GroupViewModel> CurrentGroups
-    {
-        get => _currentGroups;
-        set => this.RaiseAndSetIfChanged(ref _currentGroups, value);
-    }
-
-    public List<string> Images { get; } =
-    [
-        "\uf1c5",
-        "\uf2ba",
-        "\uf2bc",
-        "\uf097",
-        "\uf274",
-        "\uf2c3",
-        "\uf015",
-        "\uf114",
-        "\uf03e"
-    ];
+    public List<string> Images { get; } = ["\uf1c5", "\uf2ba", "\uf2bc", "\uf097", "\uf274", "\uf2c3"];
 
     public ICommand DeleteCommand { get; set; }
 
@@ -131,70 +51,41 @@ public class CardViewModel : ViewModelBase
 
     public ICommand CancelCommand { get; set; }
 
-    public ICommand EditCommand { get; }
-    
+    public ICommand EditCommand { get; set; }
+
     public ICommand GeneratePasswordCommand { get; }
 
     public CardViewModel()
     {
-        var card = new Card
-        {
-            Id = 0,
-            Title = "Title",
-            Website = "www.site.com",
-            Image = '\uf2bc',
-            Username = "Username",
-            Notes = "Notes",
-            Password = "Password",
-            GroupId = 1,
-            IsFavorite = false,
-        };
-
-        SetData(card);
-        EditCommand = ReactiveCommand.Create(Edit);
-        FavoriteCommand = ReactiveCommand.Create(Favorite);
     }
 
     public CardViewModel(Card card)
     {
         SetData(card);
-        EditCommand = ReactiveCommand.Create(Edit);
-        FavoriteCommand = ReactiveCommand.Create(Favorite);
         GeneratePasswordCommand = ReactiveCommand.Create(GeneratePassword);
     }
 
-    public Card GetCard()
-    {
-        return _card;
-    }
+    public Card GetCard() => _oldCard;
 
-    private void GeneratePassword()
-    {
-        Password = PasswordGenerator.GenerateSecurePassword();
-    }
+    private void GeneratePassword() => Password = PasswordGenerator.GenerateSecurePassword();
 
-    private void SetData(Card card)
+    private void SetData(Card newCard)
     {
-        _card = card;
-        Id = card.Id;
-        Title = card.Title;
-        Website = card.Website;
-        Username = card.Username;
-        Notes = card.Notes;
-        Password = card.Password;
-        GroupId = card.GroupId;
-        IsFavorite = card.IsFavorite;
-        Image = card.Image;
-    }
-
-    private void Edit()
-    {
-        IsEnable = true;
+        _oldCard = newCard;
+        Id = newCard.Id;
+        Title = newCard.Title;
+        Website = newCard.Website;
+        Username = newCard.Username;
+        Notes = newCard.Notes;
+        Password = newCard.Password;
+        GroupId = newCard.GroupId;
+        IsFavorite = newCard.IsFavorite;
+        Image = newCard.Image;
     }
 
     public void Save()
     {
-        var card = new Card
+        var newCard = new Card
         {
             Id = Id,
             Title = Title,
@@ -206,15 +97,16 @@ public class CardViewModel : ViewModelBase
             Image = Image,
             Notes = Notes,
         };
-        SetData(card);
+        SetData(newCard);
         IsEnable = false;
     }
 
     public void Cancel()
     {
-        SetData(_card);
+        SetData(_oldCard);
         IsEnable = false;
     }
+}
 
     public void Favorite()
     {

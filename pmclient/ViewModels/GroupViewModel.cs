@@ -1,151 +1,80 @@
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Reactive;
+using System.Linq;
 using System.Windows.Input;
+using pmclient.Extensions;
+using pmclient.Models;
 using ReactiveUI;
-using Group = pmclient.Models.Group;
+using ReactiveUI.Fody.Helpers;
 
 namespace pmclient.ViewModels;
 
 public class GroupViewModel : ViewModelBase
 {
-    private Group _group;
-    private int _id;
-    private string _title;
-    private char _image;
-    private int _groupId;
-    private ObservableCollection<GroupViewModel> _subGroups;
-    private ObservableCollection<CardViewModel> _cards;
-    private bool _isEnable;
-    private bool _isVisible;
+    private Group _oldGroup;
 
-    public int Id
-    {
-        get => _id;
-        set => this.RaiseAndSetIfChanged(ref _id, value);
-    }
+    [Reactive] public int Id { get; set; }
 
-    public string Title
-    {
-        get => _title;
-        set => this.RaiseAndSetIfChanged(ref _title, value);
-    }
+    [Reactive] public string Title { get; set; }
 
-    public char Image
-    {
-        get => _image;
-        set => this.RaiseAndSetIfChanged(ref _image, value);
-    }
+    [Reactive] public char Image { get; set; }
 
-    public int GroupId
-    {
-        get => _groupId;
-        set => this.RaiseAndSetIfChanged(ref _groupId, value);
-    }
+    [Reactive] public int GroupId { get; set; }
 
-    public bool IsEnable
-    {
-        get => _isEnable;
-        set => this.RaiseAndSetIfChanged(ref _isEnable, value);
-    }
+    [Reactive] public bool IsEnable { get; set; } = true;
 
-    public bool IsVisible
-    {
-        get => _isVisible;
-        set => this.RaiseAndSetIfChanged(ref _isVisible, value);
-    }
+    public List<char> Images { get; } = ['\uf1c5', '\uf2ba', '\uf2bc', '\uf097', '\uf274', '\uf2c3', '\uf015'];
 
-    public List<char> Images { get; } =
-    [
-        '\uf1c5',
-        '\uf2ba',
-        '\uf2bc',
-        '\uf097',
-        '\uf274',
-        '\uf2c3',
-        '\uf015',
-        '\uf114',
-        '\uf03e'
-    ];
-
-    public ObservableCollection<CardViewModel> Cards
-    {
-        get => _cards;
-        set => this.RaiseAndSetIfChanged(ref _cards, value);
-    }
-
-    public ObservableCollection<GroupViewModel> SubGroups
-    {
-        get => _subGroups;
-        set => this.RaiseAndSetIfChanged(ref _subGroups, value);
-    }
-
-    public ICommand ConfirmCommand { get; set; }
-
-    public ICommand AddSubGroupCommand { get; set; }
+    public ReactiveCollection<CardViewModel> Cards { get; } = new();
 
     public ICommand DeleteCommand { get; set; }
 
-    public ReactiveCommand<Unit, Unit> SaveCommand { get; }
+    public ICommand SaveCommand { get; set; }
 
-    public ReactiveCommand<Unit, Unit> CancelCommand { get; }
+    public ICommand CancelCommand { get; set; }
+
+    public ICommand EditCommand { get; set; }
 
     public GroupViewModel()
     {
-        Cards = new ObservableCollection<CardViewModel>();
-        SubGroups = new ObservableCollection<GroupViewModel>();
     }
 
     public GroupViewModel(Group group)
     {
-        _group = group;
-        Id = group.Id;
-        Title = group.Title;
-        GroupId = group.GroupId;
-        Image = group.Image;
-        Cards = new ObservableCollection<CardViewModel>();
-        SubGroups = new ObservableCollection<GroupViewModel>();
-
-        IsVisibleChanged();
-
-        SaveCommand = ReactiveCommand.Create(Save);
-        CancelCommand = ReactiveCommand.Create(Cancel);
-    }
-
-    private void IsVisibleChanged()
-    {
-        this.WhenAnyValue(x => x.Id)
-            .Subscribe(x => IsVisible = x > 0 && GroupId == 0);
+        SetData(group);
+        EditCommand = ReactiveCommand.Create(Edit);
     }
 
     public Group GetGroup()
     {
-        return _group;
+        return _oldGroup;
     }
 
-    private void SetData(Group group)
+    private void Edit()
     {
-        _group = group;
-        Id = group.Id;
-        Title = group.Title;
-        GroupId = group.GroupId;
-        Image = group.Image;
+        IsEnable = true;
     }
 
-    private void Save()
+    public void Save()
     {
-        var group = new Group
-        {
-            Id = Id,
-            Title = Title,
-            GroupId = GroupId,
-            Image = Image,
-        };
-        SetData(group);
-        IsEnable = !IsEnable;
-        ConfirmCommand.Execute(true);
+        SetData(new Group { Id = Id, GroupId = GroupId, Title = Title, Image = Image });
+        IsEnable = false;
     }
+
+    public void Cancel()
+    {
+        SetData(_oldGroup);
+        IsEnable = false;
+    }
+
+    protected void SetData(Group newGroup)
+    {
+        _oldGroup = newGroup;
+        Id = newGroup.Id;
+        Title = newGroup.Title;
+        GroupId = newGroup.GroupId;
+        Image = newGroup.Image;
+    }
+}
 
     private void Cancel()
     {

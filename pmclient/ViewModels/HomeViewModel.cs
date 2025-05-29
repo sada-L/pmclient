@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Avalonia.Threading;
 using DynamicData;
+using pmclient.Extensions;
 using pmclient.Models;
 using pmclient.Services;
 using pmclient.Settings;
@@ -23,6 +24,11 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     private readonly SettingsService? _settingsService;
     private List<CardViewModel> _userCards;
     private List<GroupViewModel> _userGroups;
+
+    private readonly List<Card> _cards = [];
+    private readonly List<Group> _groups = [];
+    private readonly List<CardViewModel> _currentCards = [];
+    private readonly List<GroupViewModel> _subGroups = [];
 
     private CardViewModel _selectedCard;
     private GroupViewModel _selectedGroup;
@@ -58,47 +64,27 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         set => this.RaiseAndSetIfChanged(ref _currentCards, value);
     }
 
-    public ObservableCollection<GroupViewModel> CurrentGroups
-    {
-        get => _currentGroups;
-        set => this.RaiseAndSetIfChanged(ref _currentGroups, value);
-    }
+    public ReactiveCollection<CardViewModel> CurrentCards { get; } = new();
 
-    public int SelectedCardIndex
-    {
-        get => _selectedCardIndex;
-        set => this.RaiseAndSetIfChanged(ref _selectedCardIndex, value);
-    }
+    [Reactive] public GroupViewModel SelectedGroup { get; set; }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
-    }
+    [Reactive] public CardViewModel? SelectedCard { get; set; }
 
-    public string Search
-    {
-        get => _search;
-        set => this.RaiseAndSetIfChanged(ref _search, value);
-    }
+    [Reactive] public ViewModelBase? CurrentItem { get; set; }
 
-    public bool IsEnabled
-    {
-        get => _isEnabled;
-        set => this.RaiseAndSetIfChanged(ref _isEnabled, value);
-    }
+    [Reactive] public string ErrorMessage { get; set; }
 
-    public bool IsGroupAdd
-    {
-        get => _isGroupAdd;
-        set => this.RaiseAndSetIfChanged(ref _isGroupAdd, value);
-    }
+    [Reactive] public string Search { get; set; }
 
-    public bool IsDefaultTheme
-    {
-        get => _isDefaultTheme;
-        set => this.RaiseAndSetIfChanged(ref _isDefaultTheme, value);
-    }
+    [Reactive] public bool IsEnabled { get; set; }
+
+    [Reactive] public bool IsDefaultTheme { get; set; }
+
+    private IDisposable? SelectedGroupChanged { get; set; }
+
+    private IDisposable? SelectedCardChanged { get; set; }
+
+    private IDisposable? SearchChanged { get; set; }
 
     public ICommand LoadDataCommand { get; }
 
@@ -115,7 +101,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     public ICommand ChangeThemeCommand { get; }
 
     public ICommand ChangeLanguageCommand { get; }
-    
+
     public ICommand AuthCommand { get; }
 
     public IScreen HostScreen { get; }
@@ -124,63 +110,25 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     public HomeViewModel()
     {
-        var cards = new List<Card>()
-        {
-            new Card()
-            {
-                Id = 1, Title = "card1", Username = "username", Image = '\uf2bc', Website = "www.card.com",
-                Password = "123456", Notes = "notes", GroupId = 2, IsFavorite = true,
-            },
-            new Card()
-            {
-                Id = 2, Title = "card2", Username = "username", Image = '\uf2bc', Website = "www.card.com",
-                Password = "123456", Notes = "notes", GroupId = 2, IsFavorite = false,
-            },
-            new Card()
-            {
-                Id = 3, Title = "card3", Username = "username", Image = '\uf2bc', Website = "www.card.com",
-                Password = "123456", Notes = "notes", GroupId = 2, IsFavorite = false,
-            },
-            new Card()
-            {
-                Id = 4, Title = "card4", Username = "username", Image = '\uf2bc', Website = "www.card.com",
-                Password = "123456", Notes = "notes", GroupId = 3, IsFavorite = false,
-            },
-            new Card()
-            {
-                Id = 5, Title = "card5", Username = "username", Image = '\uf2bc', Website = "www.card.com",
-                Password = "123456", Notes = "notes", GroupId = 3, IsFavorite = false,
-            },
-        };
-
-        var groups = new List<Group>()
-        {
-            new Group() { Id = 1, Title = "Group1", Image = '\uf097', GroupId = 0 },
-            new Group() { Id = 2, Title = "group2", Image = '\uf097', GroupId = 1 },
-            new Group() { Id = 3, Title = "group3", Image = '\uf097', GroupId = 1 },
-            new Group() { Id = 4, Title = "Group4", Image = '\uf097', GroupId = 0 },
-            new Group() { Id = 5, Title = "group5", Image = '\uf097', GroupId = 4 },
-        };
-
-        InitList();
-        SetData(cards, groups);
     }
 
-    public HomeViewModel(IScreen? hostScreen = null, CardService? cardService = null, GroupService? groupService = null,
-        SettingsService? settingsService = null, UserService? userService = null)
+    public HomeViewModel(IScreen? screen = null)
     {
-        HostScreen = hostScreen ?? Locator.Current.GetService<IScreen>()!;
-        _userService = userService ?? Locator.Current.GetService<UserService>()!;
-        _cardService = cardService ?? Locator.Current.GetService<CardService>()!;
-        _groupService = groupService ?? Locator.Current.GetService<GroupService>()!;
-        _settingsService = settingsService ?? Locator.Current.GetService<SettingsService>()!;
+        HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
+        _userService = Locator.Current.GetService<UserService>()!;
+        _cardService = Locator.Current.GetService<CardService>()!;
+        _groupService = Locator.Current.GetService<GroupService>()!;
+        _settingsService = Locator.Current.GetService<SettingsService>()!;
 
-        InitList();
+        var canEditGroup = this
+            .WhenAnyValue(x => x.SelectedGroup)
+            .WhereNotNull()
+            .Select(x => x.Id > 0);
 
         SortCommand = ReactiveCommand.Create<int>(SortCards);
-        AddCardCommand = ReactiveCommand.Create(AddCard, CanAddCard);
+        AddCardCommand = ReactiveCommand.Create(AddCard, canEditGroup);
         AddGroupCommand = ReactiveCommand.Create(AddHeaderGroup);
-        EditGroupCommand = ReactiveCommand.Create(EditGroup, CanEditGroup);
+        EditGroupCommand = ReactiveCommand.Create(EditGroup, canEditGroup);
         LoadDataCommand = ReactiveCommand.CreateFromTask(LoadDataAsync);
         ChangeThemeCommand = ReactiveCommand.Create(ChangeTheme);
         ChangeLanguageCommand = ReactiveCommand.Create(ChangeLanguage);
@@ -212,7 +160,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     {
         _allItems.Title = isDefault ? "Все" : "All Items";
         _favorites.Title = isDefault ? "Избранное" : "Favorites";
-        _deleted.Title = isDefault ? "Недавно удаленное" : "Recently Deleted";
+        _deleted.Title = isDefault ? "Удаленное" : "Deleted";
     }
 
     private void ChangeLanguage()
@@ -224,19 +172,19 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
     private void AddCard()
     {
-        IsEnabled = false;
+        var group = SelectedGroup;
 
         var card = new Card
         {
             Id = 0,
-            Title = "Title",
-            Website = "Website",
+            GroupId = group.Id,
+            Title = "",
+            Username = "",
+            Password = "",
+            Website = "",
+            Notes = "",
             Image = '\uf2bc',
-            Username = "Username",
-            Notes = "Notes",
-            Password = "Password",
-            GroupId = SelectedGroup.Id,
-            IsFavorite = false,
+            IsFavorite = false
         };
 
         var cardViewModel = new CardViewModel(card) { IsEnable = true };
@@ -246,11 +194,6 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SelectedCard = null!;
         SelectedCard = cardViewModel;
     }
-
-    private IObservable<bool> CanAddCard => this
-        .WhenAnyValue(x => x.SelectedGroup)
-        .WhereNotNull()
-        .Select(x => x.Id > 0);
 
     private void AddHeaderGroup()
     {
@@ -569,41 +512,5 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
     {
         await AuthService.LogoutAsync();
         return HostScreen.Router.Navigate.Execute(new LoginViewModel(HostScreen));
-    }).ObserveOn(RxApp.MainThreadScheduler).SelectMany(x => x);
-
-    private void InitList()
-    {
-        IsDefaultTheme = true;
-
-        CurrentCards = [];
-        _headerGroups = [];
-
-        _allItems = new GroupViewModel(new Group
-        {
-            Id = -1,
-            Title = "",
-            Image = '\uf2ba',
-            GroupId = 0
-        });
-
-        _favorites = new GroupViewModel(new Group
-        {
-            Id = -1,
-            Title = "",
-            Image = '\uf006',
-            GroupId = 0
-        });
-
-        _deleted = new GroupViewModel(new Group
-        {
-            Id = -1,
-            Title = "",
-            Image = '\uf014',
-            GroupId = 0
-        });
-
-        CurrentGroups = [_allItems, _favorites, _deleted];
-        SelectedGroup = CurrentGroups.First();
-        SetLanguage(_settingsService!.CurrentSettings.Language == "Ru");
-    }
+    }).SelectMany(x => x);
 }

@@ -5,6 +5,7 @@ using Avalonia.Media.Imaging;
 using pmclient.Services;
 using pmclient.Settings;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 using static pmclient.Helpers.QrCodeGeneratorHelper;
 
@@ -12,24 +13,11 @@ namespace pmclient.ViewModels;
 
 public class AuthViewModel : ViewModelBase, IRoutableViewModel
 {
-    private TwoFaService? _twoFaService;
+    private readonly TwoFaService? _twoFaService;
 
-    private Bitmap _qrCode;
-    private string _errorMessage;
-    private bool _isError;
-    private bool _isActive;
+    [Reactive] public Bitmap QrCode { get; set; }
 
-    public Bitmap QrCode
-    {
-        get => _qrCode;
-        set => this.RaiseAndSetIfChanged(ref _qrCode, value);
-    }
-
-    public bool IsActive
-    {
-        get => _isActive;
-        set => this.RaiseAndSetIfChanged(ref _isActive, value);
-    }
+    [Reactive] public bool IsActive { get; set; }
 
     public IScreen HostScreen { get; }
 
@@ -39,12 +27,11 @@ public class AuthViewModel : ViewModelBase, IRoutableViewModel
 
     public ICommand BackCommand { get; }
 
-    public AuthViewModel(IScreen? screen = null, TwoFaService? twoFaService = null)
+    public AuthViewModel(IScreen? screen = null)
     {
         HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
-        _twoFaService = twoFaService ?? Locator.Current.GetService<TwoFaService>()!;
+        _twoFaService = Locator.Current.GetService<TwoFaService>();
         IsActive = !string.IsNullOrEmpty(UserSettings.User!.Secret);
-        QrCode = new Bitmap("./Assets/picture.png");
 
         ChangeCommand = ReactiveCommand.CreateFromTask(Change);
         BackCommand = ReactiveCommand.CreateFromObservable(HostScreen.Router.NavigateBack.Execute);
@@ -72,6 +59,5 @@ public class AuthViewModel : ViewModelBase, IRoutableViewModel
     private async Task Disable(CancellationToken cancellationToken)
     {
         await _twoFaService!.DisableTwoFaAsync(cancellationToken);
-        QrCode = new Bitmap("./Assets/picture.png");
     }
 }

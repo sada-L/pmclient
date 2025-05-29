@@ -5,6 +5,7 @@ using pmclient.Contracts.Requests.Auth;
 using pmclient.Helpers;
 using pmclient.Services;
 using ReactiveUI;
+using ReactiveUI.Fody.Helpers;
 using Splat;
 
 namespace pmclient.ViewModels;
@@ -13,48 +14,18 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
 {
     private readonly AuthService? _authService;
     private readonly UserService? _userService;
-    private string _email = string.Empty;
-    private string _username = string.Empty;
-    private string _password = string.Empty;
-    private string _confirmPassword = string.Empty;
-    private string _errorMessage = string.Empty;
-    private bool _isError;
 
-    public string Email
-    {
-        get => _email;
-        set => this.RaiseAndSetIfChanged(ref _email, value);
-    }
+    [Reactive] public string Email { get; set; }
 
-    public string Username
-    {
-        get => _username;
-        set => this.RaiseAndSetIfChanged(ref _username, value);
-    }
+    [Reactive] public string Username { get; set; }
 
-    public string Password
-    {
-        get => _password;
-        set => this.RaiseAndSetIfChanged(ref _password, value);
-    }
+    [Reactive] public string Password { get; set; }
 
-    public string ConfirmPassword
-    {
-        get => _confirmPassword;
-        set => this.RaiseAndSetIfChanged(ref _confirmPassword, value);
-    }
+    [Reactive] public string ConfirmPassword { get; set; }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
-    }
+    [Reactive] public string ErrorMessage { get; set; }
 
-    public bool IsError
-    {
-        get => _isError;
-        set => this.RaiseAndSetIfChanged(ref _isError, value);
-    }
+    [Reactive] public bool IsError { get; set; }
 
     public IScreen HostScreen { get; }
 
@@ -75,11 +46,11 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
         RegisterCommand = ReactiveCommand.CreateFromObservable(Register);
     }
 
-    public RegisterViewModel(IScreen? screen = null, AuthService? authService = null, UserService? userService = null)
+    public RegisterViewModel(IScreen? screen = null)
     {
         HostScreen = screen ?? Locator.Current.GetService<IScreen>()!;
-        _userService = userService ?? Locator.Current.GetService<UserService>()!;
-        _authService = authService ?? Locator.Current.GetService<AuthService>()!;
+        _userService = Locator.Current.GetService<UserService>();
+        _authService = Locator.Current.GetService<AuthService>();
 
         RegisterCommand = ReactiveCommand.CreateFromObservable(Register, CanExecRegister());
         BackCommand = ReactiveCommand.CreateFromObservable(() => HostScreen.Router.NavigateBack.Execute());
@@ -117,7 +88,7 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
         }
 
         return HostScreen.Router.Navigate.Execute(new HomeViewModel(HostScreen));
-    }).ObserveOn(RxApp.MainThreadScheduler).WhereNotNull().SelectMany(x => x!);
+    }).WhereNotNull().SelectMany(x => x);
 
     private IObservable<bool> CanExecRegister() =>
         this.WhenAnyValue(
