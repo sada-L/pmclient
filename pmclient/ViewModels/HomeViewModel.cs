@@ -9,6 +9,7 @@ using System.Windows.Input;
 using DynamicData;
 using pmclient.Models;
 using pmclient.Services;
+using pmclient.Settings;
 using ReactiveUI;
 using Splat;
 

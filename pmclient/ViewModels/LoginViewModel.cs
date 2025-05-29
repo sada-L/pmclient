@@ -4,6 +4,7 @@ using System.Windows.Input;
 using pmclient.Contracts.Requests.Auth;
 using pmclient.Helpers;
 using pmclient.Services;
+using pmclient.Settings;
 using ReactiveUI;
 using Splat;
 

@@ -1,6 +1,6 @@
 using pmclient.Models;
 
-namespace pmclient.Services;
+namespace pmclient.Settings;
 
 internal static class UserSettings
 {

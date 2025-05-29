@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using pmclient.Contracts.Requests.Auth;
 using pmclient.Helpers;
 using pmclient.RefitClients;
+using pmclient.Settings;
 using Splat;
 
 namespace pmclient.Services;

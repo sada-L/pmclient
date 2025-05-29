@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using pmclient.Contracts.Requests.Auth;
 using pmclient.RefitClients;
+using pmclient.Settings;
 
 namespace pmclient.Services;
 

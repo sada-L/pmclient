@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Avalonia.Media.Imaging;
 using pmclient.Services;
+using pmclient.Settings;
 using ReactiveUI;
 using Splat;
 using static pmclient.Helpers.QrCodeGeneratorHelper;
