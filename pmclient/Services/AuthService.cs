@@ -58,6 +58,8 @@ public class AuthService
     {
         UserSettings.JwtToken = null;
         UserSettings.User = null;
-        await TokenStorage.DeleteTokenAsync();
+        UserSettings.Pin = null;
+        await FileStorage.DeleteFileAsync("token.dat");
+        await FileStorage.DeleteFileAsync("pin.dat");
     }
 }

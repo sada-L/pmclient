@@ -1,0 +1,61 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			xmlns:converters="clr-namespace:pmclient.Converters"
+			mc:Ignorable="d" d:DesignWidth="325" d:DesignHeight="750"
+			x:Class="pmclient.Views.PinView"
+			x:DataType="vm:PinViewModel">
+
+
+	<UserControl.Resources>
+		<converters:DotMaskConverter x:Key="DotMaskConverter" />
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<Style Selector="Button">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="Margin" Value=" 0" />
+			<Setter Property="FontSize" Value="30" />
+			<Setter Property="CornerRadius" Value="100" />
+			<Setter Property="Padding" Value="30 20" />
+			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
+		</Style>
+	</UserControl.Styles>
+
+	<Grid RowDefinitions="*, Auto">
+		<ItemsControl Grid.Row="0" ItemsSource="{Binding EnteredDigits}"
+					HorizontalAlignment="Center" VerticalAlignment="Center">
+			<ItemsControl.ItemsPanel>
+				<ItemsPanelTemplate>
+					<StackPanel Orientation="Horizontal" />
+				</ItemsPanelTemplate>
+			</ItemsControl.ItemsPanel>
+			<ItemsControl.ItemTemplate>
+				<DataTemplate>
+					<TextBlock Text="{Binding Converter={StaticResource DotMaskConverter}}"
+								FontSize="32" Margin="5" FontFamily="{StaticResource Icons}"
+								Foreground="{DynamicResource BaseLow}" />
+				</DataTemplate>
+			</ItemsControl.ItemTemplate>
+		</ItemsControl>
+
+		<TextBlock Grid.Row="0" Text="{Binding Status}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
+
+		<UniformGrid Grid.Row="1" Columns="3" HorizontalAlignment="Center">
+			<Button Content="1" Command="{Binding EnterDigitCommand}" CommandParameter="1" />
+			<Button Content="2" Command="{Binding EnterDigitCommand}" CommandParameter="2" />
+			<Button Content="3" Command="{Binding EnterDigitCommand}" CommandParameter="3" />
+			<Button Content="4" Command="{Binding EnterDigitCommand}" CommandParameter="4" />
+			<Button Content="5" Command="{Binding EnterDigitCommand}" CommandParameter="5" />
+			<Button Content="6" Command="{Binding EnterDigitCommand}" CommandParameter="6" />
+			<Button Content="7" Command="{Binding EnterDigitCommand}" CommandParameter="7" />
+			<Button Content="8" Command="{Binding EnterDigitCommand}" CommandParameter="8" />
+			<Button Content="9" Command="{Binding EnterDigitCommand}" CommandParameter="9" />
+			<TextBlock />
+			<Button Content="0" Command="{Binding EnterDigitCommand}" CommandParameter="0" />
+			<Button Content="⌫" Command="{Binding BackspaceCommand}" FontSize="25" />
+		</UniformGrid>
+	</Grid>
+</UserControl>
