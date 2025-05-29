@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			xmlns:converters="clr-namespace:pmclient.Converters"
+			xmlns:controls="clr-namespace:pmclient.Controls"
+			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+			x:Class="pmclient.Views.HeaderGroupView"
+			x:DataType="vm:HeaderGroupViewModel">
+	<UserControl.Resources>
+		<converters:BoolToBrushConverter x:Key="Watermark" TrueBrush="#EE6055" FalseBrush="CornflowerBlue" />
+		<converters:BoolToBrushConverter x:Key="Border" TrueBrush="{StaticResource BaseMedium}" FalseBrush="Transparent" />
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<Style Selector="TextBox.StyledBox">
+			<Setter Property="IsReadOnly" Value="{Binding !IsEnable}" />
+
+			<Style Selector="^ /template/ Border#PART_BorderElement">
+				<Setter Property="BorderBrush" Value="{Binding IsEnable, Converter={StaticResource Border}}" />
+				<Setter Property="Background" Value="Transparent" />
+			</Style>
+
+			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
+				<Setter Property="FontWeight" Value="SemiBold" />
+				<Setter Property="Foreground" Value="{Binding IsEnable, Converter={StaticResource Watermark}}" />
+			</Style>
+		</Style>
+
+		<Style Selector="Button">
+			<Setter Property="Background" Value="Transparent" />
+		</Style>
+	</UserControl.Styles>
+
+	<Grid RowDefinitions="Auto, *">
+		<StackPanel Grid.Row="0" Margin="10" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+			<StackPanel Spacing="10" Orientation="Horizontal">
+				<Button Command="{Binding SaveCommand}">
+					<Button.Content>
+						<controls:IconControl Icon="&#xf0c7;" Header="{DynamicResource ButtonSave}" />
+					</Button.Content>
+				</Button>
+
+				<Button Command="{Binding CancelCommand}">
+					<Button.Content>
+						<controls:IconControl Icon="&#xf0e2;" Header="{DynamicResource ButtonCancel}" />
+					</Button.Content>
+				</Button>
+			</StackPanel>
+			<Button>
+				<Button.Content>
+					<TextBlock Classes="Icon" Text="&#xf142;" FontSize="20" />
+				</Button.Content>
+				<Button.Flyout>
+					<Flyout>
+						<MenuFlyoutPresenter Margin="-15">
+							<MenuItem Header="{DynamicResource ButtonDelete}" Command="{Binding DeleteCommand}">
+								<MenuItem.Icon>
+									<TextBlock Classes="Icon" Text="&#xf014;" />
+								</MenuItem.Icon>
+							</MenuItem>
+						</MenuFlyoutPresenter>
+					</Flyout>
+				</Button.Flyout>
+			</Button>
+		</StackPanel>
+
+		<StackPanel Grid.Row="1" Margin="10" Spacing="10">
+			<StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
+				<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="45">
+					<TextBlock.ContextFlyout>
+						<Flyout>
+							<ListBox ItemsSource="{Binding Images}" Margin="10"
+									SelectedItem="{Binding Image}">
+								<ListBox.ItemsPanel>
+									<ItemsPanelTemplate>
+										<WrapPanel />
+									</ItemsPanelTemplate>
+								</ListBox.ItemsPanel>
+								<ListBox.ItemTemplate>
+									<DataTemplate>
+										<TextBlock FontSize="25" Classes="Icon" Text="{Binding}" />
+									</DataTemplate>
+								</ListBox.ItemTemplate>
+							</ListBox>
+						</Flyout>
+					</TextBlock.ContextFlyout>
+				</TextBlock>
+				<TextBox Classes="DefaultTextBox StyledBox" Text="{Binding Title}" FontSize="30"
+						Watermark="{DynamicResource TitleWatermark}"
+						Foreground="{DynamicResource BaseLow}" UseFloatingWatermark="False" />
+			</StackPanel>
+		</StackPanel>
+	</Grid>
+</UserControl>
