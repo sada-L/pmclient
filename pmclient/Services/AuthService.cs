@@ -22,7 +22,7 @@ public class AuthService
         if (!response.IsSuccessStatusCode) return false;
 
         UserSettings.JwtToken = response.Content!.AccessToken.Replace("\"", "");
-        await TokenStorage.SaveTokenAsync(response.Content.RefreshToken);
+        await FileStorage.SaveFileAsync(response.Content.RefreshToken.Replace("\"", ""), "token.dat");
 
         return true;
     }
@@ -33,14 +33,14 @@ public class AuthService
         if (!response.IsSuccessStatusCode) return false;
 
         UserSettings.JwtToken = response.Content!.AccessToken.Replace("\"", "");
-        await TokenStorage.SaveTokenAsync(response.Content.RefreshToken);
+        await FileStorage.SaveFileAsync(response.Content.RefreshToken.Replace("\"", ""), "token.dat");
 
         return true;
     }
 
     public async Task<bool> GetAccessTokenAsync(CancellationToken cancellationToken)
     {
-        var refreshToken = await TokenStorage.LoadTokenAsync();
+        var refreshToken = await FileStorage.LoadFileAsync("token.dat");
         if (refreshToken == null) return false;
 
         var request = new RefreshRequest { RefreshToken = refreshToken };
@@ -48,7 +48,7 @@ public class AuthService
         if (!response.IsSuccessStatusCode) return false;
 
         UserSettings.JwtToken = response.Content!.AccessToken.Replace("\"", "");
-        await TokenStorage.SaveTokenAsync(response.Content.RefreshToken);
+        await FileStorage.SaveFileAsync(response.Content.RefreshToken.Replace("\"", ""), "token.dat");
 
         return true;
     }
