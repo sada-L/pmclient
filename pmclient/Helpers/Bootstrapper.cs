@@ -1,4 +1,6 @@
 using System;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.ReactiveUI;
 using Microsoft.Extensions.DependencyInjection;
 using pmclient.Extensions;
@@ -42,8 +44,8 @@ public static class Bootstrapper
         services.AddSingleton<GroupService>();
         services.AddSingleton<SettingsService>();
         services.AddSingleton<TwoFaService>();
-        
-        services.AddSingleton<IScreen, MainWindowViewModel>();
+
+        services.AddSingleton<IScreen, MainViewModel>();
 
         services.UseMicrosoftDependencyResolver();
 
@@ -55,11 +57,21 @@ public static class Bootstrapper
         Locator.CurrentMutable.RegisterConstant<IServiceProvider>(serviceProvider);
         Locator.CurrentMutable.Register<IViewFor<LoginViewModel>>(() => new LoginView());
         Locator.CurrentMutable.Register<IViewFor<RegisterViewModel>>(() => new RegisterView());
-        Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
-        Locator.CurrentMutable.Register<IViewFor<CardViewModel>>(() => new CardListView());
         Locator.CurrentMutable.Register<IViewFor<CardViewModel>>(() => new CardView());
-        Locator.CurrentMutable.Register<IViewFor<GroupViewModel>>(() => new GroupListView());
+        Locator.CurrentMutable.Register<IViewFor<GroupViewModel>>(() => new GroupView());
+        Locator.CurrentMutable.Register<IViewFor<HeaderGroupViewModel>>(() => new HeaderGroupView());
         Locator.CurrentMutable.Register<IViewFor<AuthViewModel>>(() => new AuthView());
+
+        if (Application.Current!.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime)
+        {
+            Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeView());
+        }
+        else
+        {
+            Locator.CurrentMutable.Register<IViewFor<HomeViewModel>>(() => new HomeMobileView());
+            Locator.CurrentMutable.Register<IViewFor<MainViewModel>>(() => new MainView());
+            Locator.CurrentMutable.Register<IViewFor<PinViewModel>>(() => new PinView());
+        }
 
         RxApp.MainThreadScheduler = AvaloniaScheduler.Instance;
     }

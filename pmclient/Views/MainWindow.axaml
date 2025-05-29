@@ -12,9 +12,9 @@
 		ExtendClientAreaTitleBarHeightHint="0"
 		ExtendClientAreaChromeHints="NoChrome"
 		x:Class="pmclient.Views.MainWindow"
-		x:DataType="vm:MainWindowViewModel"
+		x:DataType="vm:MainViewModel"
 		Background="{DynamicResource BaseHigh}">
-	
+
 	<Window.Styles>
 		<Style Selector="Button">
 			<Setter Property="Background" Value="Transparent" />

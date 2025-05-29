@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			xmlns:react="http://reactiveui.net"
+			mc:Ignorable="d" d:DesignWidth="325" d:DesignHeight="750"
+			x:Class="pmclient.Views.MainView"
+			x:DataType="vm:MainViewModel"
+			Background="{DynamicResource BaseHigh}">
+	<react:RoutedViewHost Router="{Binding Router}" Margin="0 35 0 25" />
+</UserControl>

@@ -1,0 +1,264 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:c="clr-namespace:pmclient.Controls"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			xmlns:converters="clr-namespace:pmclient.Converters"
+			xmlns:views="clr-namespace:pmclient.Views"
+			mc:Ignorable="d" d:DesignWidth="325" d:DesignHeight="750"
+			x:Class="pmclient.Views.HomeMobileView"
+			x:DataType="vm:HomeViewModel">
+	<Design.DataContext>
+		<vm:HomeViewModel />
+	</Design.DataContext>
+
+	<UserControl.Resources>
+		<converters:BoolToCharConverter x:Key="Theme" TrueChar="&#xf185;" FalseChar="&#xf186;" />
+		<converters:BoolToCharConverter x:Key="Pane" TrueChar="&#xf060;" FalseChar="&#xf0c9;" />
+
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<Style Selector="TextBlock">
+			<Setter Property="FontSize" Value="20" />
+		</Style>
+
+		<Style Selector="Button">
+			<Setter Property="FontSize" Value="15" />
+			<Setter Property="CornerRadius" Value="10" />
+			<Setter Property="Background" Value="Transparent" />
+		</Style>
+
+		<Style Selector="MenuItem">
+			<Setter Property="FontSize" Value="15" />
+		</Style>
+
+		<Style Selector="MenuItem.SMenuItem">
+			<Setter Property="FontFamily" Value="{DynamicResource Icons}" />
+			<Setter Property="Command" Value="{Binding SortCommand}" />
+			<Setter Property="CommandParameter" Value="{Binding SelectedIndex, ElementName=SortMenu}" />
+		</Style>
+	</UserControl.Styles>
+
+	<Border Classes="SBorder">
+		<SplitView PanePlacement="Left" CompactPaneLength="45" DisplayMode="CompactOverlay" OpenPaneLength="250"
+					PaneBackground="{DynamicResource BaseHigh}" Background="{DynamicResource BaseHigh}">
+			<SplitView.Pane>
+				<Border BorderThickness="0 0 2 0" BorderBrush="{DynamicResource BaseMedium}">
+					<StackPanel>
+						<DockPanel Margin="5">
+							<!-- PaneButton -->
+							<ToggleButton DockPanel.Dock="Left" FontSize="20"
+										IsChecked="{Binding  $parent[SplitView].IsPaneOpen, Mode=TwoWay}">
+								<ToggleButton.Content>
+									<TextBlock Classes="Icon" Text="{Binding $parent[SplitView].IsPaneOpen, Converter={StaticResource Pane}}" />
+								</ToggleButton.Content>
+							</ToggleButton>
+
+							<!--Menu-->
+							<Button DockPanel.Dock="Left" VerticalAlignment="Center" IsVisible="{Binding $parent[SplitView].IsPaneOpen}"
+									Margin="5 0 5 0" FontSize="20">
+								<Button.Content>
+									<TextBlock Classes="Icon" Text="&#xf141;" />
+								</Button.Content>
+								<Button.Flyout>
+									<MenuFlyout>
+										<MenuItem Header="{DynamicResource ButtonEditGroup}" Command="{Binding EditGroupCommand}">
+											<MenuItem.Icon>
+												<TextBlock Classes="Icon" Text="&#xf044;" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Header="{DynamicResource ButtonChangeTheme}" Command="{Binding ChangeThemeCommand}">
+											<MenuItem.Icon>
+												<TextBlock Classes="Icon" Text="{Binding IsDefaultTheme, Converter={StaticResource Theme}}" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Header="{DynamicResource ButtonChangeLanguage}" Command="{Binding ChangeLanguageCommand}">
+											<MenuItem.Icon>
+												<TextBlock Classes="Icon" Text="&#xf1ab;" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Header="{DynamicResource ButtonAuth}" Command="{Binding AuthCommand}">
+											<MenuItem.Icon>
+												<TextBlock Classes="Icon" Text="&#xf023;" />
+											</MenuItem.Icon>
+										</MenuItem>
+										<Separator />
+										<MenuItem Header="{DynamicResource ButtonLogout}" Command="{Binding LogoutCommand}">
+											<MenuItem.Icon>
+												<TextBlock Classes="Icon" Text="&#xf08b;" />
+											</MenuItem.Icon>
+										</MenuItem>
+									</MenuFlyout>
+								</Button.Flyout>
+							</Button>
+
+							<!--AppName-->
+							<TextBlock Text="PassManager" VerticalAlignment="Center" HorizontalAlignment="Right"
+										IsVisible="{Binding $parent[SplitView].IsPaneOpen}" />
+						</DockPanel>
+
+						<!--Groups-->
+						<TreeView IsEnabled="{Binding IsEnabled}"
+								ItemsSource="{Binding CurrentGroups.Items}"
+								SelectedItem="{Binding SelectedGroup}"
+								AutoScrollToSelectedItem="True"
+								ScrollViewer.HorizontalScrollBarVisibility="Hidden">
+							<TreeView.DataTemplates>
+
+								<TreeDataTemplate ItemsSource="{Binding SubGroups.Items}" DataType="vm:HeaderGroupViewModel">
+									<DockPanel Margin="5">
+										<Panel DockPanel.Dock="Right" IsVisible="{Binding  $parent[SplitView].IsPaneOpen}">
+											<Button IsVisible="{Binding IsVisible}"
+													Command="{Binding AddSubGroupCommand}"
+													CommandParameter="{Binding}">
+												<Button.Content>
+													<TextBlock Classes="Icon" Text="&#xf067;" />
+												</Button.Content>
+											</Button>
+										</Panel>
+										<c:IconControl Icon="{Binding Image}" FontSize="20"
+														Header="{Binding Title}"
+														HeaderVisible="{Binding $parent[SplitView].IsPaneOpen}" />
+									</DockPanel>
+								</TreeDataTemplate>
+
+								<TreeDataTemplate DataType="vm:GroupViewModel">
+									<c:IconControl Icon="{Binding Image}" FontSize="20"
+													Header="{Binding Title}" Margin="5"
+													HeaderVisible="{Binding $parent[SplitView].IsPaneOpen}" />
+								</TreeDataTemplate>
+
+							</TreeView.DataTemplates>
+						</TreeView>
+					</StackPanel>
+				</Border>
+			</SplitView.Pane>
+			<Grid RowDefinitions="Auto, Auto, *">
+				<Border Grid.Row="0" IsEnabled="{Binding IsEnabled}" Classes="SBorder" BorderThickness=" 0 0 0 2">
+					<Grid ColumnDefinitions="*, Auto, Auto" Margin="10">
+
+						<!-- Search -->
+						<TextBox Classes="DefaultTextBox" Grid.Column="0"
+								Watermark="{DynamicResource SearchWatermark}"
+								Text="{Binding Search}" UseFloatingWatermark="False" />
+
+						<!-- Sort -->
+						<Button Grid.Column="1" Margin="5 0">
+							<Button.Content>
+								<TextBlock Classes="Icon" Text="&#xf161;" />
+							</Button.Content>
+							<Button.Flyout>
+								<Flyout>
+									<MenuFlyoutPresenter x:Name="SortMenu" Margin="-15">
+										<MenuItem Classes="SMenuItem">
+											<MenuItem.Header>
+												<TextBlock>
+													<Run Text="&#xf15d;" />
+													<Run Text="{DynamicResource TitleWatermark}" />
+												</TextBlock>
+											</MenuItem.Header>
+										</MenuItem>
+										<MenuItem Classes="SMenuItem">
+											<MenuItem.Header>
+												<TextBlock>
+													<Run Text="&#xf15e;" />
+													<Run Text="{DynamicResource TitleWatermark}" />
+												</TextBlock>
+											</MenuItem.Header>
+										</MenuItem>
+										<Separator />
+										<MenuItem Classes="SMenuItem">
+											<MenuItem.Header>
+												<TextBlock>
+													<Run Text="&#xf15d;" />
+													<Run Text="{DynamicResource WebsiteWatermark}" />
+												</TextBlock>
+											</MenuItem.Header>
+										</MenuItem>
+										<MenuItem Classes="SMenuItem">
+											<MenuItem.Header>
+												<TextBlock>
+													<Run Text="&#xf15e;" />
+													<Run Text="{DynamicResource WebsiteWatermark}" />
+												</TextBlock>
+											</MenuItem.Header>
+										</MenuItem>
+										<Separator />
+										<MenuItem Classes="SMenuItem">
+											<MenuItem.Header>
+												<TextBlock>
+													<Run Text="&#xf15d;" />
+													<Run Text="{DynamicResource UsernameWatermark}" />
+												</TextBlock>
+											</MenuItem.Header>
+										</MenuItem>
+										<MenuItem Classes="SMenuItem">
+											<MenuItem.Header>
+												<TextBlock>
+													<Run Text="&#xf15e;" />
+													<Run Text="{DynamicResource UsernameWatermark}" />
+												</TextBlock>
+											</MenuItem.Header>
+										</MenuItem>
+										<Separator />
+										<MenuItem Classes="SMenuItem">
+											<MenuItem.Header>
+												<TextBlock>
+													<Run Text="&#xf161;" />
+													<Run Text="{DynamicResource AutoWatermark}" />
+												</TextBlock>
+											</MenuItem.Header>
+										</MenuItem>
+									</MenuFlyoutPresenter>
+								</Flyout>
+							</Button.Flyout>
+						</Button>
+
+						<!--Add-->
+						<Button Grid.Column="2">
+							<Button.Content>
+								<TextBlock Classes="Icon" Text="&#xf067;" />
+							</Button.Content>
+							<Button.Flyout>
+								<MenuFlyout>
+									<MenuItem Header="{DynamicResource ButtonNewCard}" Command="{Binding AddCardCommand}">
+										<MenuItem.Icon>
+											<TextBlock Classes="Icon" Text="&#xf2c3;" />
+										</MenuItem.Icon>
+									</MenuItem>
+									<Separator />
+									<MenuItem Header="{DynamicResource ButtonNewGroup}" Command="{Binding AddGroupCommand}"
+											IsEnabled="{Binding IsEnabled}">
+										<MenuItem.Icon>
+											<TextBlock Classes="Icon" Text="&#xf2ba;" />
+										</MenuItem.Icon>
+									</MenuItem>
+								</MenuFlyout>
+							</Button.Flyout>
+						</Button>
+					</Grid>
+				</Border>
+
+				<Border Grid.Row="2" BorderThickness="0 2 0 0" Classes="SBorder"
+						IsEnabled="{Binding IsEnabled}">
+					<ListBox ItemsSource="{Binding CurrentCards.Items}"
+							SelectedItem="{Binding SelectedCard}"
+							SelectionMode="AlwaysSelected" WrapSelection="True">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<views:CardListView />
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+				</Border>
+
+				<ContentControl Content="{Binding CurrentItem}" Grid.Row="1" FontSize="20" />
+			</Grid>
+		</SplitView>
+	</Border>
+</UserControl>

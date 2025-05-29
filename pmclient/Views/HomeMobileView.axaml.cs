@@ -3,9 +3,9 @@ using pmclient.ViewModels;
 
 namespace pmclient.Views;
 
-public partial class GroupListView : ReactiveUserControl<GroupViewModel>
+public partial class HomeMobileView : ReactiveUserControl<HomeViewModel>
 {
-    public GroupListView()
+    public HomeMobileView()
     {
         InitializeComponent();
     }

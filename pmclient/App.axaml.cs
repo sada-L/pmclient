@@ -27,10 +27,19 @@ public partial class App : Application
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = new MainWindow();
-            var vm = new MainWindowViewModel(desktop.MainWindow);
-            desktop.MainWindow.DataContext = vm;
+            desktop.MainWindow.DataContext = new MainViewModel(desktop.MainWindow);
+        }
+        else if (ApplicationLifetime is ISingleViewApplicationLifetime singleView)
+        {
+            singleView.MainView = new MainView();
+            singleView.MainView.DataContext = new MainViewModel();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    public static bool IsMobileApp()
+    {
+        return Current!.ApplicationLifetime is not IClassicDesktopStyleApplicationLifetime;
     }
 }
