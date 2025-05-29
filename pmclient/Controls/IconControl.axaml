@@ -1,0 +1,46 @@
+<Styles xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:controls="using:pmclient.Controls"
+		xmlns:converters="clr-namespace:pmclient.Converters">
+	<Design.PreviewWith>
+		<controls:IconControl />
+	</Design.PreviewWith>
+
+	<Styles.Resources>
+		<converters:AddValueConverter x:Key="IconSize" Offset="5" />
+		<converters:AddValueConverter x:Key="IconBox" Offset="10" />
+		<converters:DoubleToGridLengthConverter x:Key="GridLength" />
+		<converters:ChainedConverter x:Key="IconWidth" First="{StaticResource IconBox}" Second="{StaticResource GridLength}" />
+	</Styles.Resources>
+
+	<Style Selector="controls|IconControl">
+		<Setter Property="Template">
+			<ControlTemplate>
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition
+							Width="{Binding FontSize, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource IconWidth}}" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+
+					<Border Grid.Column="0" Height="{TemplateBinding FontSize, Converter={StaticResource IconBox}}"
+							HorizontalAlignment="Center" VerticalAlignment="Center">
+						<TextBlock Text="{TemplateBinding Icon}"
+									FontSize="{TemplateBinding FontSize, Converter={StaticResource IconSize}}"
+									FontFamily="{StaticResource Icons}"
+									HorizontalAlignment="Center"
+									VerticalAlignment="Center" />
+					</Border>
+
+					<Border Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+							IsVisible="{TemplateBinding HeaderVisible}">
+						<TextBlock Text="{TemplateBinding Header}"
+									FontSize="{TemplateBinding FontSize}"
+									HorizontalAlignment="Stretch"
+									VerticalAlignment="Center" />
+					</Border>
+				</Grid>
+			</ControlTemplate>
+		</Setter>
+	</Style>
+</Styles>
