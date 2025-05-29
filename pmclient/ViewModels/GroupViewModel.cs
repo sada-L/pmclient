@@ -76,10 +76,12 @@ public class GroupViewModel : ViewModelBase
     }
 }
 
-    private void Cancel()
+public static class GroupViewModelExtensions
+{
+    public static GroupViewModel SetCards(this GroupViewModel vm, List<CardViewModel> cards)
     {
-        SetData(_group);
-        IsEnable = !IsEnable;
-        ConfirmCommand.Execute(false);
+        vm.Cards.Replace(cards.Where(x => x.GroupId == vm.Id));
+
+        return vm;
     }
 }

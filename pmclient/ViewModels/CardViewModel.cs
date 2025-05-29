@@ -108,8 +108,26 @@ public class CardViewModel : ViewModelBase
     }
 }
 
-    public void Favorite()
+public static class CardViewModelExtensions
+{
+    public static CardViewModel SetHeaderGroups(this CardViewModel vm, List<HeaderGroupViewModel> groups)
     {
-        IsFavorite = !IsFavorite;
+        vm.HeaderGroups.Replace(groups);
+        vm.HeaderGroup = vm.HeaderGroups.Items.First(h =>
+            h.SubGroups.Items.Any(s => s.Id == vm.GroupId) || h.Id == vm.GroupId);
+
+        return vm;
+    }
+
+    public static CardViewModel SetCurrentGroups(this CardViewModel vm, HeaderGroupViewModel? headerGroup)
+    {
+        if (headerGroup is null) return vm;
+
+        vm.CurrentGroups.Replace(headerGroup.SubGroups.Items);
+        vm.CurrentGroups.AddAt(new GroupViewModel(), 0);
+        vm.CurrentGroup = vm.CurrentGroups.Items.FirstOrDefault(model => model.Id == vm.GroupId) ??
+                          vm.CurrentGroups.Items.First();
+
+        return vm;
     }
 }
