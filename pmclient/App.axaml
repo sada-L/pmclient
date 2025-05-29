@@ -4,6 +4,7 @@
 			xmlns:local="using:pmclient"
 			xmlns:conv="clr-namespace:pmclient.Converters"
 			xmlns:sys="clr-namespace:System;assembly=mscorlib"
+			xmlns:converters="clr-namespace:Avalonia.Controls.Converters;assembly=Avalonia.Controls"
 			RequestedThemeVariant="Default">
 	<Application.DataTemplates>
 		<local:ViewLocator />
@@ -11,6 +12,7 @@
 
 	<Application.Styles>
 		<FluentTheme />
+		<StyleInclude Source="avares://pmclient/Controls/IconControl.axaml" />
 
 		<!-- Global UserControl -->
 		<Style Selector="UserControl">
@@ -68,6 +70,136 @@
 			<Setter Property="BorderBrush" Value="{DynamicResource BaseMedium}" />
 		</Style>
 
+		<!-- Global MenuItem -->
+		<Style Selector="MenuItem">
+			<Setter Property="Template">
+				<ControlTemplate>
+					<Panel>
+						<Border Name="PART_LayoutRoot"
+								Padding="{TemplateBinding Padding}"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								CornerRadius="{TemplateBinding CornerRadius}">
+							<Grid>
+								<Grid.ColumnDefinitions>
+									<ColumnDefinition Width="Auto" SharedSizeGroup="ToggleIcon" />
+									<ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIcon" />
+									<ColumnDefinition Width="*" />
+									<ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemIGT" />
+									<ColumnDefinition Width="Auto" SharedSizeGroup="MenuItemChevron" />
+								</Grid.ColumnDefinitions>
+
+								<ContentControl Grid.Column="0"
+												x:Name="PART_ToggleIconPresenter"
+												IsVisible="False"
+												Theme="{StaticResource FluentMenuItemIconTheme}"
+												Margin="{DynamicResource MenuIconPresenterMargin}" />
+
+								<ContentControl Grid.Column="1"
+												x:Name="PART_IconPresenter"
+												IsVisible="False"
+												HorizontalAlignment="Center"
+												VerticalAlignment="Center"
+												Margin="5 0"
+												Content="{TemplateBinding Icon}" />
+
+								<ContentPresenter Name="PART_HeaderPresenter"
+												Content="{TemplateBinding Header}"
+												ContentTemplate="{TemplateBinding HeaderTemplate}"
+												VerticalAlignment="Center"
+												HorizontalAlignment="Stretch"
+												RecognizesAccessKey="True"
+												Grid.Column="2" />
+
+								<TextBlock x:Name="PART_InputGestureText"
+											Grid.Column="3"
+											Margin="{DynamicResource MenuInputGestureTextMargin}"
+											Text="{TemplateBinding InputGesture, Converter={StaticResource KeyGestureConverter}}"
+											HorizontalAlignment="Right"
+											VerticalAlignment="Center"
+											Foreground="{DynamicResource MenuFlyoutItemKeyboardAcceleratorTextForeground}" />
+
+								<Path Name="PART_ChevronPath"
+									Stretch="Uniform"
+									Width="8"
+									Height="16"
+									Data="{StaticResource MenuItemChevronPathData}"
+									Fill="{DynamicResource MenuFlyoutSubItemChevron}"
+									Margin="{DynamicResource MenuFlyoutItemChevronMargin}"
+									VerticalAlignment="Center"
+									Grid.Column="4" />
+							</Grid>
+						</Border>
+
+						<Popup Name="PART_Popup"
+								WindowManagerAddShadowHint="False"
+								Placement="RightEdgeAlignedTop"
+								HorizontalOffset="{DynamicResource MenuFlyoutSubItemPopupHorizontalOffset}"
+								IsLightDismissEnabled="False"
+								IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}">
+							<Border Background="{DynamicResource MenuFlyoutPresenterBackground}"
+									BorderBrush="{DynamicResource MenuFlyoutPresenterBorderBrush}"
+									BorderThickness="{DynamicResource MenuFlyoutPresenterBorderThemeThickness}"
+									Padding="{DynamicResource MenuFlyoutPresenterThemePadding}"
+									MaxWidth="{DynamicResource FlyoutThemeMaxWidth}"
+									MinHeight="{DynamicResource MenuFlyoutThemeMinHeight}"
+									HorizontalAlignment="Stretch"
+									CornerRadius="{DynamicResource OverlayCornerRadius}">
+								<ScrollViewer Theme="{StaticResource FluentMenuScrollViewer}">
+									<ItemsPresenter Name="PART_ItemsPresenter"
+													ItemsPanel="{TemplateBinding ItemsPanel}"
+													Margin="{DynamicResource MenuFlyoutScrollerMargin}"
+													Grid.IsSharedSizeScope="True" />
+								</ScrollViewer>
+							</Border>
+						</Popup>
+					</Panel>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+
+		<!-- Global TreeViewItem -->
+		<Style Selector="TreeViewItem">
+			<Setter Property="Template">
+				<ControlTemplate>
+					<StackPanel>
+						<Border Name="PART_LayoutRoot"
+								Classes="TreeViewItemLayoutRoot"
+								Focusable="True"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								CornerRadius="{TemplateBinding CornerRadius}"
+								MinHeight="{TemplateBinding MinHeight}"
+								TemplatedControl.IsTemplateFocusTarget="False">
+							<Grid Name="PART_Header" ColumnDefinitions="*, Auto" HorizontalAlignment="Stretch">
+								<ContentPresenter Name="PART_HeaderPresenter"
+												Grid.Column="0"
+												Focusable="False"
+												Background="Transparent"
+												Content="{TemplateBinding Header}"
+												ContentTemplate="{TemplateBinding HeaderTemplate}"
+												HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+												VerticalAlignment="{TemplateBinding VerticalAlignment}"
+												Margin="{TemplateBinding Padding}" />
+								<Panel Grid.Column="1" Name="PART_ExpandCollapseChevronContainer"
+										Margin="{StaticResource TreeViewItemExpandCollapseChevronMargin}">
+									<ToggleButton Name="PART_ExpandCollapseChevron"
+												Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
+												Focusable="False"
+												IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+								</Panel>
+							</Grid>
+						</Border>
+						<ItemsPresenter Name="PART_ItemsPresenter"
+										IsVisible="{TemplateBinding IsExpanded}"
+										ItemsPanel="{TemplateBinding ItemsPanel}" />
+					</StackPanel>
+				</ControlTemplate>
+			</Setter>
+		</Style>
+
 		<!-- Global ComboBox -->
 		<Style Selector="ComboBox">
 			<Setter Property="Background" Value="Transparent" />
@@ -119,18 +251,18 @@
 			</Style>
 
 			<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="IsVisible" Value="False"></Setter>
+				<Setter Property="IsVisible" Value="False" />
 			</Style>
 		</Style>
-		
 
+		<!-- Button.DefaultButton -->
 		<Style Selector="Button.DefaultButton">
 			<Setter Property="Background" Value="Gray" />
 			<Setter Property="Foreground" Value="White" />
 			<Setter Property="HorizontalAlignment" Value="Stretch" />
 			<Setter Property="HorizontalContentAlignment" Value="Center" />
 			<Setter Property="CornerRadius" Value="10" />
-			
+
 			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
 				<Setter Property="Foreground" Value="White" />
 				<Setter Property="Background" Value="{DynamicResource BaseMedium}" />
@@ -162,7 +294,7 @@
 					<Setter Property="BorderBrush" Value="{DynamicResource BaseLow}" />
 				</Style>
 			</Style>
-			
+
 			<Style Selector="^ /template/ TextBlock#PART_Watermark, ^ /template/ TextBlock#PART_FloatingWatermark">
 				<Setter Property="Foreground" Value="{DynamicResource BaseMedium}" />
 			</Style>
@@ -206,7 +338,6 @@
 			<Setter Property="HorizontalAlignment" Value="Center" />
 			<Setter Property="VerticalAlignment" Value="Center" />
 		</Style>
-
 	</Application.Styles>
 
 	<Application.Resources>
@@ -218,6 +349,9 @@
 		<SolidColorBrush x:Key="ComboBoxDropDownGlyphForegroundDisabled" Color="Transparent" />
 		<SolidColorBrush x:Key="TreeViewItemForeground" Color="{DynamicResource BaseLow}" />
 		<conv:BoolToCharConverter x:Key="Password" TrueChar="&#xf06e;" FalseChar="&#xf070;" />
+		<x:Double x:Key="TreeViewItemIndent">5</x:Double>
+		<converters:MarginMultiplierConverter Indent="{StaticResource TreeViewItemIndent}" Left="True"
+											x:Key="TreeViewItemLeftMarginConverter" />
 
 		<ResourceDictionary x:Key="Ru">
 			<sys:String x:Key="LoginHeader">Авторизация</sys:String>

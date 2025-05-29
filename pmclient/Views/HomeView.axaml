@@ -5,6 +5,7 @@
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
 			xmlns:view="clr-namespace:pmclient.Views"
 			xmlns:conv="clr-namespace:pmclient.Converters"
+			xmlns:controls="clr-namespace:pmclient.Controls"
 			mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
 			x:Class="pmclient.Views.HomeView"
 			x:DataType="vm:HomeViewModel">
@@ -30,12 +31,11 @@
 
 	<Border Classes="SBorder">
 		<Grid RowDefinitions="Auto, *" ColumnDefinitions="auto, *, 2*">
-
 			<!--Header_Left-->
 			<Border Grid.Row="0" Grid.Column="0" Padding="10" Classes="SBorder" BorderThickness="0 0 0 2">
 				<DockPanel>
 					<!--Menu-->
-					<Button DockPanel.Dock="Right" VerticalAlignment="Center">
+					<Button DockPanel.Dock="Right" VerticalAlignment="Center" IsEnabled="{Binding IsEnabled}">
 						<Button.Content>
 							<TextBlock Classes="Icon" Text="&#xf141;" FontSize="20" />
 						</Button.Content>
@@ -81,12 +81,11 @@
 
 			<!--Groups-->
 			<TreeView Grid.Row="1" Grid.Column="0" IsEnabled="{Binding IsEnabled}"
-					ItemsSource="{Binding CurrentGroups}"
+					ItemsSource="{Binding CurrentGroups.Items}"
 					SelectedItem="{Binding SelectedGroup}"
-					AutoScrollToSelectedItem="True"
-					SelectionMode="AlwaysSelected">
-				<TreeView.ItemTemplate>
-					<TreeDataTemplate ItemsSource="{Binding SubGroups}">
+					AutoScrollToSelectedItem="True">
+				<TreeView.DataTemplates>
+					<TreeDataTemplate ItemsSource="{Binding SubGroups.Items}" DataType="vm:HeaderGroupViewModel">
 						<DockPanel Margin="5">
 							<Button DockPanel.Dock="Right" IsVisible="{Binding IsVisible}"
 									Command="{Binding AddSubGroupCommand}" CommandParameter="{Binding}">
@@ -94,10 +93,17 @@
 									<TextBlock Classes="Icon" Text="&#xf067;" />
 								</Button.Content>
 							</Button>
-							<view:GroupListView />
+							<controls:IconControl Icon="{Binding Image}" FontSize="20"
+												Header="{Binding Title}"
+												HeaderVisible="{Binding $parent[SplitView].IsPaneOpen}" />
 						</DockPanel>
 					</TreeDataTemplate>
-				</TreeView.ItemTemplate>
+					<TreeDataTemplate DataType="vm:GroupViewModel">
+						<controls:IconControl Icon="{Binding Image}" FontSize="20"
+											Header="{Binding Title}" Margin="5"
+											HeaderVisible="{Binding $parent[SplitView].IsPaneOpen}" />
+					</TreeDataTemplate>
+				</TreeView.DataTemplates>
 			</TreeView>
 
 			<!--Header_Right-->
@@ -121,10 +127,7 @@
 						<!--Add-->
 						<Button DockPanel.Dock="Right">
 							<Button.Content>
-								<StackPanel Orientation="Horizontal" Spacing="5">
-									<TextBlock Classes="Icon" Text="&#xf067;" />
-									<TextBlock Text="{DynamicResource ButtonNewItem}" />
-								</StackPanel>
+								<controls:IconControl Icon="&#xf067;" Header="{DynamicResource ButtonNewItem}" FontSize="15" />
 							</Button.Content>
 							<Button.Flyout>
 								<MenuFlyout>
@@ -228,28 +231,19 @@
 					</Border>
 
 					<!--Cards-->
-					<ListBox ItemsSource="{Binding CurrentCards}"
-							SelectedItem="{Binding SelectedCard}"
-							SelectedIndex="{Binding SelectedCardIndex}"
-							SelectionMode="AlwaysSelected"
-							WrapSelection="True">
+					<ListBox ItemsSource="{Binding CurrentCards.Items}"
+							SelectedItem="{Binding SelectedCard, Mode=TwoWay}"
+							SelectionMode="AlwaysSelected">
 						<ListBox.ItemTemplate>
 							<DataTemplate>
-								<StackPanel>
-									<view:CardListView />
-								</StackPanel>
+								<view:CardListView />
 							</DataTemplate>
 						</ListBox.ItemTemplate>
 					</ListBox>
 				</DockPanel>
 			</Border>
 
-			<!--Card-->
-			<Panel Grid.Row="1" Grid.Column="2">
-				<ContentControl Content="{Binding SelectedCard}" />
-				<ContentControl Content="{Binding SelectedGroup}" Background="{DynamicResource BaseHigh}"
-								IsVisible="{Binding IsGroupAdd}" />
-			</Panel>
+			<ContentControl Content="{Binding CurrentItem}" Grid.Row="1" Grid.Column="2" />
 		</Grid>
 	</Border>
 </UserControl>

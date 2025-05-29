@@ -17,12 +17,8 @@
 						Foreground="{DynamicResource BaseLow}" />
 			<TextBox Classes="DefaultTextBox" Text="{Binding Email}" Watermark="{DynamicResource EmailWatermark}" />
 
-			<StackPanel>
-				<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}"
-						Watermark="{DynamicResource PasswordWatermark}" />
-				<Button Classes="SButton" Command="{Binding GeneratePasswordCommand}"
-						Content="{DynamicResource ButtonGeneratePassword}" />
-			</StackPanel>
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}"
+					Watermark="{DynamicResource PasswordWatermark}" />
 
 			<Button Classes="SButton" Command="{Binding RegisterCommand}"
 					Padding="2" Margin="0" Content="{DynamicResource ButtonRegNewAcc}" HorizontalAlignment="Center" />

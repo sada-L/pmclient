@@ -4,6 +4,7 @@
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			xmlns:vm="clr-namespace:pmclient.ViewModels"
 			xmlns:conv="clr-namespace:pmclient.Converters"
+			xmlns:controls="clr-namespace:pmclient.Controls"
 			mc:Ignorable="d" d:DesignWidth="400"
 			x:DataType="vm:GroupViewModel"
 			x:Class="pmclient.Views.GroupView">
@@ -41,19 +42,13 @@
 			<StackPanel Spacing="10" Orientation="Horizontal">
 				<Button Command="{Binding SaveCommand}">
 					<Button.Content>
-						<StackPanel Orientation="Horizontal" Spacing="2">
-							<TextBlock Classes="Icon" Text="&#xf0c7;" />
-							<TextBlock Text="{DynamicResource ButtonSave}" />
-						</StackPanel>
+						<controls:IconControl Icon="&#xf0c7;" Header="{DynamicResource ButtonSave}" />
 					</Button.Content>
 				</Button>
 
 				<Button Command="{Binding CancelCommand}">
 					<Button.Content>
-						<StackPanel Orientation="Horizontal" Spacing="2">
-							<TextBlock Classes="Icon" Text="&#xf0e2;" />
-							<TextBlock Text="{DynamicResource ButtonCancel}" />
-						</StackPanel>
+						<controls:IconControl Icon="&#xf0e2;" Header="{DynamicResource ButtonCancel}" />
 					</Button.Content>
 				</Button>
 			</StackPanel>
