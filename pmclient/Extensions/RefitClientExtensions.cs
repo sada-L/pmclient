@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http;
-using Avalonia.Utilities;
 using Microsoft.Extensions.DependencyInjection;
 using pmclient.Helpers;
 using pmclient.HttpHandlers;
