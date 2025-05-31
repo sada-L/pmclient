@@ -33,7 +33,7 @@
 						Content="{DynamicResource ButtonValidate}" />
 			</StackPanel>
 
-			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+			<TextBlock Text="{DynamicResource ErrorLogin}" TextWrapping="Wrap"
 						Foreground="{DynamicResource BaseLow}" IsVisible="{Binding IsError}" />
 		</StackPanel>
 	</Border>

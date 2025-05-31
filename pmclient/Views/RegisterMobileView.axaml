@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			mc:Ignorable="d" d:DesignWidth="325" d:DesignHeight="750"
+			x:Class="pmclient.Views.RegisterMobileView"
+			x:DataType="vm:RegisterViewModel">
+	<Design.DataContext>
+		<vm:RegisterViewModel />
+	</Design.DataContext>
+
+	<UserControl.Styles>
+		<Style Selector="Button">
+			<Setter Property="FontSize" Value="20" />
+			<Setter Property="Padding" Value="10" />
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="FontSize" Value="25" />
+			<Setter Property="Padding" Value="10" />
+		</Style>
+	</UserControl.Styles>
+
+	<StackPanel Spacing="15" Margin="40 50">
+		<TextBlock Text="{DynamicResource RegisterHeader}" FontSize="35" HorizontalAlignment="Center"
+					Foreground="{DynamicResource BaseLow}" />
+		<TextBox Classes="DefaultTextBox" Text="{Binding Email}"
+				Watermark="{DynamicResource EmailWatermark}" />
+		<TextBox Classes="DefaultTextBox" Text="{Binding Username}"
+				Watermark="{DynamicResource UsernameWatermark}" />
+		<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding Password}"
+				Watermark="{DynamicResource PasswordWatermark}" />
+		<StackPanel>
+			<TextBox Classes="DefaultTextBox PasswordBox" Text="{Binding ConfirmPassword}"
+					Watermark="{DynamicResource ConfirmPasswordWatermark}" />
+
+			<Button Classes="SButton" Command="{Binding GeneratePasswordCommand}"
+					Content="{DynamicResource ButtonGeneratePassword}" />
+		</StackPanel>
+
+		<Button Classes="DefaultButton" Content="{DynamicResource ButtonRegister}"
+				Command="{Binding RegisterCommand}" />
+
+		<Button Content="{DynamicResource ButtonBack}" Classes="DefaultButton"
+				Command="{Binding BackCommand}" />
+
+		<TextBlock Text="{DynamicResource ErrorRegister}" TextWrapping="Wrap"
+					Foreground="{DynamicResource BaseLow}" IsVisible="{Binding IsError}" />
+	</StackPanel>
+</UserControl>

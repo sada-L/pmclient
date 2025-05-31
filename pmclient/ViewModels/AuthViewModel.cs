@@ -17,6 +17,8 @@ public class AuthViewModel : ViewModelBase, IRoutableViewModel
 
     [Reactive] public Bitmap QrCode { get; set; }
 
+    [Reactive] public string Secret { get; set; } = string.Empty;
+
     [Reactive] public bool IsActive { get; set; }
 
     public IScreen HostScreen { get; }
@@ -53,11 +55,14 @@ public class AuthViewModel : ViewModelBase, IRoutableViewModel
         var user = UserSettings.User;
         var uri = GenerateQrCodeUri(user!.Secret!, user.Email);
         var qrCodeBitmap = GenerateQrCodeImage(uri);
+        Secret = user.Secret!;
         QrCode = ConvertToBitmap(qrCodeBitmap);
     }
 
     private async Task Disable(CancellationToken cancellationToken)
     {
+        QrCode = null!;
+        Secret = string.Empty;
         await _twoFaService!.DisableTwoFaAsync(cancellationToken);
     }
 }

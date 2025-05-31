@@ -33,7 +33,7 @@
 			<Button Classes="DefaultButton" Content="{DynamicResource ButtonRegister}"
 					Command="{Binding RegisterCommand}" />
 
-			<TextBlock Text="{Binding ErrorMessage}" TextWrapping="Wrap"
+			<TextBlock Text="{DynamicResource ErrorRegister}" TextWrapping="Wrap"
 						Foreground="{DynamicResource BaseLow}" IsVisible="{Binding IsError}" />
 		</StackPanel>
 	</Border>

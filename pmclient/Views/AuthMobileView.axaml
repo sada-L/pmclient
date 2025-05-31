@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			xmlns:vm="clr-namespace:pmclient.ViewModels"
+			xmlns:conv="clr-namespace:pmclient.Converters"
+			mc:Ignorable="d" d:DesignWidth="325" d:DesignHeight="750"
+			x:Class="pmclient.Views.AuthMobileView"
+			x:DataType="vm:AuthViewModel">
+
+	<UserControl.Resources>
+		<conv:BoolToStringConverter TrueString="{StaticResource ButtonEnable}" x:Key="StringConverter"
+									FalseString="{StaticResource ButtonDisable}" />
+		<conv:StringToBoolConverter x:Key="StringToBool" />
+	</UserControl.Resources>
+
+	<UserControl.Styles>
+		<Style Selector="Button">
+			<Setter Property="FontSize" Value="20" />
+			<Setter Property="Padding" Value="10" />
+		</Style>
+		<Style Selector="TextBox">
+			<Setter Property="FontSize" Value="25" />
+			<Setter Property="Padding" Value="10" />
+		</Style>
+	</UserControl.Styles>
+
+	<StackPanel Spacing="10" Margin="20 50">
+		<TextBlock Text="{DynamicResource ButtonAuth}" HorizontalAlignment="Center" FontSize="35" TextWrapping="Wrap" />
+
+		<TextBox Classes="DefaultTextBox" Text="{Binding Secret}" TextWrapping="Wrap"
+				IsVisible="{Binding Secret, Converter={StaticResource StringToBool}}" />
+
+		<Button Classes="DefaultButton" Command="{Binding ChangeCommand}"
+				Content="{Binding !IsActive, Converter={StaticResource StringConverter}}" />
+
+		<Button Classes="DefaultButton" Command="{Binding BackCommand}"
+				Content="{DynamicResource ButtonBack}" />
+	</StackPanel>
+</UserControl>

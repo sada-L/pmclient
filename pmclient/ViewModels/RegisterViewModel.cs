@@ -23,8 +23,6 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
 
     [Reactive] public string ConfirmPassword { get; set; }
 
-    [Reactive] public string ErrorMessage { get; set; }
-
     [Reactive] public bool IsError { get; set; }
 
     public IScreen HostScreen { get; }
@@ -75,14 +73,12 @@ public class RegisterViewModel : ViewModelBase, IRoutableViewModel
 
         if (!await _authService!.RegisterAsync(request, cancellationToken))
         {
-            ErrorMessage = "Registration failed";
             IsError = true;
             return null;
         }
 
         if (!await _userService!.GetUserAsync(cancellationToken))
         {
-            ErrorMessage = "Registration failed";
             IsError = true;
             return null;
         }

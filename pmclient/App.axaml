@@ -36,6 +36,12 @@
 			<Setter Property="BorderBrush" Value="{DynamicResource BaseMedium}" />
 		</Style>
 
+		<!-- Global ToolTip -->
+		<Style Selector="ToolTip">
+			<Setter Property="Background" Value="{DynamicResource BaseHigh}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource BaseMedium}" />
+		</Style>
+		
 		<!-- Global MenuItem -->
 		<Style Selector="MenuItem">
 			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
@@ -269,7 +275,13 @@
 			</Style>
 
 			<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Foreground" Value="White" />
+				<Setter Property="Foreground" Value="Black" />
+				<Setter Property="Background" Value="LightGray" />
+			</Style>
+			
+			<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="Black" />
+				<Setter Property="Background" Value="LightGray" />
 			</Style>
 		</Style>
 
@@ -361,11 +373,11 @@
 			<sys:String x:Key="UsernameWatermark">Имя</sys:String>
 			<sys:String x:Key="ConfirmPasswordWatermark">Подтвердите пароль</sys:String>
 			<sys:String x:Key="TitleWatermark">Название</sys:String>
-			<sys:String x:Key="WebsiteWatermark">Вебсайт</sys:String>
+			<sys:String x:Key="WebsiteWatermark">Сервис</sys:String>
 			<sys:String x:Key="NotesWatermark">Заметки</sys:String>
 			<sys:String x:Key="SearchWatermark">Поиск</sys:String>
 			<sys:String x:Key="AutoWatermark">Авто</sys:String>
-			<sys:String x:Key="CodeWatermark">Код</sys:String>
+			<sys:String x:Key="CodeWatermark">Код подтверждения</sys:String>
 			<sys:String x:Key="ButtonRegNewAcc">Зарегистрироваться</sys:String>
 			<sys:String x:Key="ButtonLogin">Войти</sys:String>
 			<sys:String x:Key="ButtonRegister">Зарегистрироваться</sys:String>
@@ -387,6 +399,8 @@
 			<sys:String x:Key="ButtonEnable">Активировать</sys:String>
 			<sys:String x:Key="ButtonDisable">Деактивировать</sys:String>
 			<sys:String x:Key="ButtonValidate">Подтвердить</sys:String>
+			<sys:String x:Key="ErrorLogin">Неверный логин или пароль</sys:String>
+			<sys:String x:Key="ErrorRegister">Ошибка регистрации</sys:String>
 		</ResourceDictionary>
 
 		<ResourceDictionary x:Key="En">
@@ -397,11 +411,11 @@
 			<sys:String x:Key="UsernameWatermark">Username</sys:String>
 			<sys:String x:Key="ConfirmPasswordWatermark">Confirm password</sys:String>
 			<sys:String x:Key="TitleWatermark">Title</sys:String>
-			<sys:String x:Key="WebsiteWatermark">Website</sys:String>
+			<sys:String x:Key="WebsiteWatermark">Service</sys:String>
 			<sys:String x:Key="NotesWatermark">Notes</sys:String>
 			<sys:String x:Key="SearchWatermark">Search</sys:String>
 			<sys:String x:Key="AutoWatermark">Auto</sys:String>
-			<sys:String x:Key="CodeWatermark">Code</sys:String>
+			<sys:String x:Key="CodeWatermark">Validate Code</sys:String>
 			<sys:String x:Key="ButtonRegNewAcc">Register new account</sys:String>
 			<sys:String x:Key="ButtonLogin">Log in</sys:String>
 			<sys:String x:Key="ButtonRegister">Register</sys:String>
@@ -423,6 +437,8 @@
 			<sys:String x:Key="ButtonEnable">Enable</sys:String>
 			<sys:String x:Key="ButtonDisable">Disable</sys:String>
 			<sys:String x:Key="ButtonValidate">Validate</sys:String>
+			<sys:String x:Key="ErrorLogin">Invalid username or password</sys:String>
+			<sys:String x:Key="ErrorRegister">Registration failed</sys:String>
 		</ResourceDictionary>
 
 		<ResourceDictionary x:Key="Light">

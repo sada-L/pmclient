@@ -85,50 +85,49 @@
 				</StackPanel>
 			</ScrollViewer>
 
-			<StackPanel Grid.Column="1" Margin="10" Orientation="Horizontal" Spacing="10" HorizontalAlignment="Right">
+			<StackPanel Grid.Column="1" Margin="10" Orientation="Horizontal" Spacing="3" HorizontalAlignment="Right">
 				<Panel>
-					<StackPanel Spacing="10" Orientation="Horizontal" IsVisible="{Binding IsEnable}">
-						<Button Command="{Binding SaveCommand}">
+					<StackPanel Spacing="3" Orientation="Horizontal" IsVisible="{Binding IsEnable}">
+						<Button Command="{Binding SaveCommand}" ToolTip.Tip="{DynamicResource ButtonSave}">
 							<Button.Content>
-								<c:IconControl Icon="&#xf0c7;" Header="{DynamicResource ButtonSave}" />
+								<c:IconControl Icon="&#xf0c7;" />
 							</Button.Content>
 						</Button>
 
-						<Button Command="{Binding CancelCommand}">
+						<Button Command="{Binding CancelCommand}" ToolTip.Tip="{DynamicResource ButtonCancel}">
 							<Button.Content>
-								<c:IconControl Icon="&#xf0e2;" Header="{DynamicResource ButtonCancel}" />
+								<c:IconControl Icon="&#xf05e;" />
 							</Button.Content>
 						</Button>
 					</StackPanel>
 
 					<Button Command="{Binding EditCommand}"
-							IsVisible="{Binding !IsEnable}">
+							IsVisible="{Binding !IsEnable}"
+							ToolTip.Tip="{DynamicResource ButtonEdit}">
 						<Button.Content>
-							<c:IconControl Icon="&#xf044;" Header="{DynamicResource ButtonEdit}" />
+							<c:IconControl Icon="&#xf044;" />
 						</Button.Content>
 					</Button>
 				</Panel>
 
 				<Button>
 					<Button.Content>
-						<TextBlock Classes="Icon" Text="&#xf142;" />
+						<c:IconControl Icon="&#xf142;" />
 					</Button.Content>
 					<Button.Flyout>
-						<Flyout>
-							<MenuFlyoutPresenter Margin="-15">
-								<MenuItem Header="{DynamicResource ButtonDelete}" Command="{Binding DeleteCommand}">
-									<MenuItem.Icon>
-										<TextBlock Classes="Icon" Text="&#xf014;" />
-									</MenuItem.Icon>
-								</MenuItem>
+						<MenuFlyout>
+							<MenuItem Header="{DynamicResource ButtonDelete}" Command="{Binding DeleteCommand}">
+								<MenuItem.Icon>
+									<TextBlock Classes="Icon" Text="&#xf014;" />
+								</MenuItem.Icon>
+							</MenuItem>
 
-								<MenuItem Header="{DynamicResource ButtonFavorite}" Command="{Binding FavoriteCommand}">
-									<MenuItem.Icon>
-										<TextBlock Classes="Icon" Text="&#xf006;" />
-									</MenuItem.Icon>
-								</MenuItem>
-							</MenuFlyoutPresenter>
-						</Flyout>
+							<MenuItem Header="{DynamicResource ButtonFavorite}" Command="{Binding FavoriteCommand}">
+								<MenuItem.Icon>
+									<TextBlock Classes="Icon" Text="&#xf006;" />
+								</MenuItem.Icon>
+							</MenuItem>
+						</MenuFlyout>
 					</Button.Flyout>
 				</Button>
 			</StackPanel>
@@ -137,11 +136,13 @@
 		<StackPanel Grid.Row="1" Margin="10" Spacing="10">
 			<StackPanel Orientation="Horizontal" Margin="20 0 0 0" Spacing="10">
 				<Panel>
-					<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="45" IsEnabled="{Binding IsEnable}">
+					<TextBlock Classes="Icon" Text="{Binding Image}" FontSize="45"
+								IsEnabled="{Binding IsEnable}" Margin="5">
 						<TextBlock.ContextFlyout>
-							<Flyout>
-								<ListBox ItemsSource="{Binding Images}" Margin="10"
-										SelectedItem="{Binding Image}">
+							<MenuFlyout>
+								<ListBox ItemsSource="{Binding Images}" Margin="-15"
+										SelectedItem="{Binding Image}"
+										Background="Transparent">
 									<ListBox.ItemsPanel>
 										<ItemsPanelTemplate>
 											<WrapPanel />
@@ -149,11 +150,11 @@
 									</ListBox.ItemsPanel>
 									<ListBox.ItemTemplate>
 										<DataTemplate>
-											<TextBlock FontSize="25" Classes="Icon" Text="{Binding}" />
+											<TextBlock FontSize="25" Classes="Icon" Text="{Binding}" Margin="10" />
 										</DataTemplate>
 									</ListBox.ItemTemplate>
 								</ListBox>
-							</Flyout>
+							</MenuFlyout>
 						</TextBlock.ContextFlyout>
 					</TextBlock>
 

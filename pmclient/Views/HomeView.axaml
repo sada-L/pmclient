@@ -109,44 +109,41 @@
 			<!--Header_Right-->
 			<Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Classes="SBorder" BorderThickness="2 0 0 2"
 					IsEnabled="{Binding IsEnabled}">
-				<Grid ColumnDefinitions="*, Auto, *">
-					<StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Left" Spacing="10" Margin="10">
-						<!--Refresh-->
-						<Button DockPanel.Dock="Right" VerticalAlignment="Center" Command="{Binding LoadDataCommand}">
-							<Button.Content>
-								<TextBlock Classes="Icon" Text="&#xf021;" FontSize="20" />
-							</Button.Content>
-						</Button>
-					</StackPanel>
+				<Grid ColumnDefinitions="Auto, *, 5*, Auto, *, 120">
+					<!--Refresh-->
+					<Button Grid.Column="0" VerticalAlignment="Center" Command="{Binding LoadDataCommand}">
+						<Button.Content>
+							<controls:IconControl Icon="&#xf021;" FontSize="20" />
+						</Button.Content>
+					</Button>
 
-					<StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" Margin="10">
-						<!--Search-->
-						<TextBox Classes="DefaultTextBox" Watermark="{DynamicResource SearchWatermark}" Width="280"
-								Text="{Binding Search}" UseFloatingWatermark="False" />
+					<!--Search-->
+					<TextBox Grid.Column="2" Classes="DefaultTextBox" Watermark="{DynamicResource SearchWatermark}"
+							Text="{Binding Search}" UseFloatingWatermark="False"
+							HorizontalAlignment="Stretch" Margin="10" />
 
-						<!--Add-->
-						<Button DockPanel.Dock="Right">
-							<Button.Content>
-								<controls:IconControl Icon="&#xf067;" Header="{DynamicResource ButtonNewItem}" FontSize="15" />
-							</Button.Content>
-							<Button.Flyout>
-								<MenuFlyout>
-									<MenuItem Header="{DynamicResource ButtonNewCard}" Command="{Binding AddCardCommand}">
-										<MenuItem.Icon>
-											<TextBlock Classes="Icon" Text="&#xf2c3;" />
-										</MenuItem.Icon>
-									</MenuItem>
-									<Separator />
-									<MenuItem Header="{DynamicResource ButtonNewGroup}" Command="{Binding AddGroupCommand}"
-											IsEnabled="{Binding IsEnabled}">
-										<MenuItem.Icon>
-											<TextBlock Classes="Icon" Text="&#xf2ba;" />
-										</MenuItem.Icon>
-									</MenuItem>
-								</MenuFlyout>
-							</Button.Flyout>
-						</Button>
-					</StackPanel>
+					<!--Add-->
+					<Button Grid.Column="3" DockPanel.Dock="Right" ToolTip.Tip="{DynamicResource ButtonNewItem}">
+						<Button.Content>
+							<controls:IconControl Icon="&#xf067;" />
+						</Button.Content>
+						<Button.Flyout>
+							<MenuFlyout>
+								<MenuItem Header="{DynamicResource ButtonNewCard}" Command="{Binding AddCardCommand}">
+									<MenuItem.Icon>
+										<TextBlock Classes="Icon" Text="&#xf2c3;" />
+									</MenuItem.Icon>
+								</MenuItem>
+								<Separator />
+								<MenuItem Header="{DynamicResource ButtonNewGroup}" Command="{Binding AddGroupCommand}"
+										IsEnabled="{Binding IsEnabled}">
+									<MenuItem.Icon>
+										<TextBlock Classes="Icon" Text="&#xf2ba;" />
+									</MenuItem.Icon>
+								</MenuItem>
+							</MenuFlyout>
+						</Button.Flyout>
+					</Button>
 				</Grid>
 			</Border>
 

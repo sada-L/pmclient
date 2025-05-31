@@ -31,7 +31,7 @@
 		</Style>
 
 		<Style Selector="MenuItem">
-			<Setter Property="FontSize" Value="15" />
+			<Setter Property="FontSize" Value="20" />
 		</Style>
 
 		<Style Selector="MenuItem.SMenuItem">
@@ -42,25 +42,26 @@
 	</UserControl.Styles>
 
 	<Border Classes="SBorder">
-		<SplitView PanePlacement="Left" CompactPaneLength="45" DisplayMode="CompactOverlay" OpenPaneLength="250"
+		<SplitView PanePlacement="Left" CompactPaneLength="55" DisplayMode="CompactOverlay" OpenPaneLength="250"
 					PaneBackground="{DynamicResource BaseHigh}" Background="{DynamicResource BaseHigh}">
 			<SplitView.Pane>
 				<Border BorderThickness="0 0 2 0" BorderBrush="{DynamicResource BaseMedium}">
 					<StackPanel>
 						<DockPanel Margin="5">
 							<!-- PaneButton -->
-							<ToggleButton DockPanel.Dock="Left" FontSize="20"
-										IsChecked="{Binding  $parent[SplitView].IsPaneOpen, Mode=TwoWay}">
+							<ToggleButton DockPanel.Dock="Left" IsChecked="{Binding  $parent[SplitView].IsPaneOpen, Mode=TwoWay}"
+										Background="Transparent">
 								<ToggleButton.Content>
-									<TextBlock Classes="Icon" Text="{Binding $parent[SplitView].IsPaneOpen, Converter={StaticResource Pane}}" />
+									<TextBlock Classes="Icon" Text="{Binding $parent[SplitView].IsPaneOpen, Converter={StaticResource Pane}}"
+												FontSize="30" />
 								</ToggleButton.Content>
 							</ToggleButton>
 
 							<!--Menu-->
 							<Button DockPanel.Dock="Left" VerticalAlignment="Center" IsVisible="{Binding $parent[SplitView].IsPaneOpen}"
-									Margin="5 0 5 0" FontSize="20">
+									Margin="5 0 5 0">
 								<Button.Content>
-									<TextBlock Classes="Icon" Text="&#xf141;" />
+									<c:IconControl Icon="&#xf141;" FontSize="23" />
 								</Button.Content>
 								<Button.Flyout>
 									<MenuFlyout>
@@ -109,7 +110,6 @@
 								AutoScrollToSelectedItem="True"
 								ScrollViewer.HorizontalScrollBarVisibility="Hidden">
 							<TreeView.DataTemplates>
-
 								<TreeDataTemplate ItemsSource="{Binding SubGroups.Items}" DataType="vm:HeaderGroupViewModel">
 									<DockPanel Margin="5">
 										<Panel DockPanel.Dock="Right" IsVisible="{Binding  $parent[SplitView].IsPaneOpen}">
@@ -121,14 +121,14 @@
 												</Button.Content>
 											</Button>
 										</Panel>
-										<c:IconControl Icon="{Binding Image}" FontSize="20"
+										<c:IconControl Icon="{Binding Image}" FontSize="30"
 														Header="{Binding Title}"
 														HeaderVisible="{Binding $parent[SplitView].IsPaneOpen}" />
 									</DockPanel>
 								</TreeDataTemplate>
 
 								<TreeDataTemplate DataType="vm:GroupViewModel">
-									<c:IconControl Icon="{Binding Image}" FontSize="20"
+									<c:IconControl Icon="{Binding Image}" FontSize="30"
 													Header="{Binding Title}" Margin="5"
 													HeaderVisible="{Binding $parent[SplitView].IsPaneOpen}" />
 								</TreeDataTemplate>
@@ -222,7 +222,7 @@
 						<!--Add-->
 						<Button Grid.Column="2">
 							<Button.Content>
-								<TextBlock Classes="Icon" Text="&#xf067;" />
+								<c:IconControl Icon="&#xf067;" />
 							</Button.Content>
 							<Button.Flyout>
 								<MenuFlyout>

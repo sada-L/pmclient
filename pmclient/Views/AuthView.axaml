@@ -11,26 +11,25 @@
 	<UserControl.Resources>
 		<conv:BoolToStringConverter TrueString="{StaticResource ButtonEnable}" x:Key="StringConverter"
 									FalseString="{StaticResource ButtonDisable}" />
+		<conv:StringToBoolConverter x:Key="StringToBool" />
 	</UserControl.Resources>
 
 	<Border HorizontalAlignment="Center" VerticalAlignment="Center" CornerRadius="10" Padding="20"
 			BorderBrush="{DynamicResource BaseMedium}" BorderThickness="2">
 		<StackPanel Spacing="10">
-			<Border Height="200" Width="200" CornerRadius="10" ClipToBounds="True">
+			<Border Height="200" Width="200" CornerRadius="10" ClipToBounds="True"
+					IsVisible="{Binding Secret, Converter={StaticResource StringToBool}}">
 				<Image Source="{Binding QrCode}" Stretch="UniformToFill" />
 			</Border>
 
-			<Button Classes="DefaultButton" Command="{Binding ChangeCommand}">
-				<Button.Content>
-					<TextBlock Text="{Binding !IsActive, Converter={StaticResource StringConverter}}" />
-				</Button.Content>
-			</Button>
+			<TextBox Text="{Binding Secret}" TextWrapping="Wrap" MaxWidth="200"
+					IsVisible="{Binding Secret, Converter={StaticResource StringToBool}}" />
 
-			<Button Classes="DefaultButton" Command="{Binding BackCommand}">
-				<Button.Content>
-					<TextBlock Text="{DynamicResource ButtonBack}" />
-				</Button.Content>
-			</Button>
+			<Button Classes="DefaultButton" Command="{Binding ChangeCommand}"
+					Content="{Binding !IsActive, Converter={StaticResource StringConverter}}" />
+
+			<Button Classes="DefaultButton" Command="{Binding BackCommand}"
+					Content="{DynamicResource ButtonBack}" />
 		</StackPanel>
 	</Border>
 </UserControl>

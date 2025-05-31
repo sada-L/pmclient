@@ -22,8 +22,6 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
 
     [Reactive] public string Code { get; set; }
 
-    [Reactive] public string ErrorMessage { get; set; }
-
     [Reactive] public bool IsError { get; set; }
 
     [Reactive] public bool IsValid { get; set; }
@@ -68,7 +66,6 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
 
         if (!await _twoFaService!.VerifyTwoFaAsync(request, cancellationToken))
         {
-            ErrorMessage = "Invalid code";
             IsError = true;
             return null;
         }
@@ -86,14 +83,12 @@ public class LoginViewModel : ViewModelBase, IRoutableViewModel
 
         if (!await _authService!.LoginAsync(request, cancellationToken))
         {
-            ErrorMessage = "Invalid username or password";
             IsError = true;
             return null;
         }
 
         if (!await _userService!.GetUserAsync(cancellationToken))
         {
-            ErrorMessage = "Invalid username or password";
             IsError = true;
             return null;
         }

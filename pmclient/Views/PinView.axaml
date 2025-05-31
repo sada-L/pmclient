@@ -14,12 +14,13 @@
 	</UserControl.Resources>
 
 	<UserControl.Styles>
-		<Style Selector="Button">
+		<Style Selector="Button.Button">
 			<Setter Property="Background" Value="Transparent" />
 			<Setter Property="Margin" Value=" 0" />
 			<Setter Property="FontSize" Value="30" />
 			<Setter Property="CornerRadius" Value="100" />
 			<Setter Property="Padding" Value="30 20" />
+			<Setter Property="HorizontalAlignment" Value="Center" />
 			<Setter Property="Foreground" Value="{DynamicResource BaseLow}" />
 		</Style>
 	</UserControl.Styles>
@@ -44,18 +45,18 @@
 		<TextBlock Grid.Row="0" Text="{Binding Status}" HorizontalAlignment="Center" VerticalAlignment="Bottom" />
 
 		<UniformGrid Grid.Row="1" Columns="3" HorizontalAlignment="Center">
-			<Button Content="1" Command="{Binding EnterDigitCommand}" CommandParameter="1" />
-			<Button Content="2" Command="{Binding EnterDigitCommand}" CommandParameter="2" />
-			<Button Content="3" Command="{Binding EnterDigitCommand}" CommandParameter="3" />
-			<Button Content="4" Command="{Binding EnterDigitCommand}" CommandParameter="4" />
-			<Button Content="5" Command="{Binding EnterDigitCommand}" CommandParameter="5" />
-			<Button Content="6" Command="{Binding EnterDigitCommand}" CommandParameter="6" />
-			<Button Content="7" Command="{Binding EnterDigitCommand}" CommandParameter="7" />
-			<Button Content="8" Command="{Binding EnterDigitCommand}" CommandParameter="8" />
-			<Button Content="9" Command="{Binding EnterDigitCommand}" CommandParameter="9" />
+			<Button Classes="DefaultButton Button" Content="1" Command="{Binding EnterDigitCommand}" CommandParameter="1" />
+			<Button Classes="DefaultButton Button" Content="2" Command="{Binding EnterDigitCommand}" CommandParameter="2" />
+			<Button Classes="DefaultButton Button" Content="3" Command="{Binding EnterDigitCommand}" CommandParameter="3" />
+			<Button Classes="DefaultButton Button" Content="4" Command="{Binding EnterDigitCommand}" CommandParameter="4" />
+			<Button Classes="DefaultButton Button" Content="5" Command="{Binding EnterDigitCommand}" CommandParameter="5" />
+			<Button Classes="DefaultButton Button" Content="6" Command="{Binding EnterDigitCommand}" CommandParameter="6" />
+			<Button Classes="DefaultButton Button" Content="7" Command="{Binding EnterDigitCommand}" CommandParameter="7" />
+			<Button Classes="DefaultButton Button" Content="8" Command="{Binding EnterDigitCommand}" CommandParameter="8" />
+			<Button Classes="DefaultButton Button" Content="9" Command="{Binding EnterDigitCommand}" CommandParameter="9" />
 			<TextBlock />
-			<Button Content="0" Command="{Binding EnterDigitCommand}" CommandParameter="0" />
-			<Button Content="⌫" Command="{Binding BackspaceCommand}" FontSize="25" />
+			<Button Classes="DefaultButton Button" Content="0" Command="{Binding EnterDigitCommand}" CommandParameter="0" />
+			<Button Classes="DefaultButton Button" Content="⌫" Command="{Binding BackspaceCommand}" FontSize="25" />
 		</UniformGrid>
 	</Grid>
 </UserControl>
