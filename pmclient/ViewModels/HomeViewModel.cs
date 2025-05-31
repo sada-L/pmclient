@@ -177,7 +177,7 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
 
         var currentCard = new CardViewModel(card) { IsEnable = true }
             .SetHeaderGroups(_headerGroups)
-            .SetCurrentGroups(group as HeaderGroupViewModel);
+            .SetCurrentGroups(group);
 
         SetCardCommand(currentCard);
 
@@ -239,9 +239,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         _deleted.Cards.Add(card);
         group.Cards.Remove(card);
 
-        SetList();
-        SelectedGroup = group;
-        CurrentItem = null;
+
+        SetCurrentGroup();
 
         await _cardService!.DeleteCard(group.Id);
     }
@@ -330,8 +329,8 @@ public class HomeViewModel : ViewModelBase, IRoutableViewModel
         SetList();
         SelectedGroup = CurrentGroups.Items.FirstOrDefault(x => x.Id == group.Id) ?? group;
         CurrentCards.Replace(SelectedGroup.Cards.Items);
-        Dispatcher.UIThread.Post(() => SelectedCard = CurrentCards.Items.FirstOrDefault(x => x.Id == card?.Id),
-            DispatcherPriority.Send);
+        var curCard = CurrentCards.Items.FirstOrDefault(x => x.Id == card?.Id);
+        Dispatcher.UIThread.Post(() => SelectedCard = curCard, DispatcherPriority.Send);
         CurrentItem = SelectedCard;
         IsEnabled = true;
         SetObservers();

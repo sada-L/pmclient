@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
@@ -119,14 +120,28 @@ public static class CardViewModelExtensions
         return vm;
     }
 
-    public static CardViewModel SetCurrentGroups(this CardViewModel vm, HeaderGroupViewModel? headerGroup)
+    public static CardViewModel SetCurrentGroups(this CardViewModel vm, GroupViewModel group)
     {
-        if (headerGroup is null) return vm;
-
-        vm.CurrentGroups.Replace(headerGroup.SubGroups.Items);
-        vm.CurrentGroups.AddAt(new GroupViewModel(), 0);
-        vm.CurrentGroup = vm.CurrentGroups.Items.FirstOrDefault(model => model.Id == vm.GroupId) ??
-                          vm.CurrentGroups.Items.First();
+        if (group is HeaderGroupViewModel hg)
+        {
+            vm.CurrentGroups.Replace(hg.SubGroups.Items);
+            vm.CurrentGroups.AddAt(new GroupViewModel(), 0);
+            vm.CurrentGroup = vm.CurrentGroups.Items.FirstOrDefault(model => model.Id == vm.GroupId) ??
+                              vm.CurrentGroups.Items.First();
+        }
+        else
+        {
+            vm.HeaderGroup = vm.HeaderGroups.Items.First(x => x.Id == group.GroupId);
+            vm.WhenAnyValue(x => x.HeaderGroup)
+                .WhereNotNull()
+                .Subscribe(x =>
+                {
+                    vm.CurrentGroups.Replace(x.SubGroups.Items);
+                    vm.CurrentGroups.AddAt(new GroupViewModel(), 0);
+                    vm.CurrentGroup = vm.CurrentGroups.Items.FirstOrDefault(model => model.Id == vm.GroupId) ??
+                                      vm.CurrentGroups.Items.First();
+                });
+        }
 
         return vm;
     }
