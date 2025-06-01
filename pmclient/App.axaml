@@ -368,7 +368,7 @@
 		<ResourceDictionary x:Key="Ru">
 			<sys:String x:Key="LoginHeader">Авторизация</sys:String>
 			<sys:String x:Key="RegisterHeader">Регистрация</sys:String>
-			<sys:String x:Key="EmailWatermark">Почта</sys:String>
+			<sys:String x:Key="EmailWatermark">Логин</sys:String>
 			<sys:String x:Key="PasswordWatermark">Пароль</sys:String>
 			<sys:String x:Key="UsernameWatermark">Имя</sys:String>
 			<sys:String x:Key="ConfirmPasswordWatermark">Подтвердите пароль</sys:String>
@@ -406,7 +406,7 @@
 		<ResourceDictionary x:Key="En">
 			<sys:String x:Key="LoginHeader">Login</sys:String>
 			<sys:String x:Key="RegisterHeader">Registration</sys:String>
-			<sys:String x:Key="EmailWatermark">Email</sys:String>
+			<sys:String x:Key="EmailWatermark">Login</sys:String>
 			<sys:String x:Key="PasswordWatermark">Password</sys:String>
 			<sys:String x:Key="UsernameWatermark">Username</sys:String>
 			<sys:String x:Key="ConfirmPasswordWatermark">Confirm password</sys:String>
@@ -442,7 +442,7 @@
 		</ResourceDictionary>
 
 		<ResourceDictionary x:Key="Light">
-			<Color x:Key="BaseHigh">#DDDDDD</Color>
+			<Color x:Key="BaseHigh">#FFFFFF</Color>
 			<Color x:Key="BaseMedium">#666666</Color>
 			<Color x:Key="BaseLow">#2b2d30</Color>
 		</ResourceDictionary>
